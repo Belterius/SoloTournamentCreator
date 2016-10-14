@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,8 @@ namespace SoloTournamentCreator.Model
 {
     public class TournamentTree
     {
+        [Key]
+        public int TournamentTreeId { get; set; }
         //Separated Right and Left starting position so we are sure to never have a double Bye on the first round
         List<Match> _LeftEndPoint;
         List<Match> _RightEndPoint;

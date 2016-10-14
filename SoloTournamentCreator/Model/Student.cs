@@ -6,11 +6,14 @@ using System.Text;
 using System.Threading.Tasks;
 using RiotApi.Net.RestClient.Dto.League;
 using SoloTournamentCreator.Helper;
+using System.ComponentModel.DataAnnotations;
 
 namespace SoloTournamentCreator.Model
 {
     public class Student
     {
+        [Key]
+        public int StudentId { get; set; }
         private string _Mail;
         private string _FirstName;
         private string _LastName;

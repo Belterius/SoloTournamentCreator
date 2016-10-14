@@ -1,6 +1,7 @@
 ﻿using MoreLinq;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,8 @@ namespace SoloTournamentCreator.Model
 {
     public class Tournament
     {
+        [Key]
+        public int TournamentId { get; set; }
         private readonly int nbPlayerPerTeam = 5;
         private readonly int nbTeam = 8;
         bool _isStarted;

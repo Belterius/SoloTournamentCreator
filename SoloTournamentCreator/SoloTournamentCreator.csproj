@@ -86,16 +86,18 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Data\NonPublicColumnAttributeConvention.cs" />
     <Compile Include="Helper\Converters.cs" />
     <Compile Include="Helper\DialogCloser.cs" />
     <Compile Include="Helper\IClosableViewModel.cs" />
     <Compile Include="Helper\RelayCommand.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Match.cs" />
     <Compile Include="Model\Student.cs" />
     <Compile Include="Model\Team.cs" />
     <Compile Include="Model\Tournament.cs" />
     <Compile Include="Model\TournamentTree.cs" />
-    <Compile Include="MyDatabase.cs" />
+    <Compile Include="Data\SavingContext.cs" />
     <Compile Include="RiotToEntity\ApiRequest.cs" />
     <Compile Include="RiotToEntity\MyRiotClient.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />

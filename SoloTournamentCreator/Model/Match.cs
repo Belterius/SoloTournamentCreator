@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,8 @@ namespace SoloTournamentCreator.Model
 {
     public class Match
     {
+        [Key]
+        public int MatchId { get; set; }
         Team _Winner;
         Match _LeftContendant;
         Match _RightContendant;
