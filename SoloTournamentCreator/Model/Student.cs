@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RiotApi.Net.RestClient.Dto.League;
+using SoloTournamentCreator.Helper;
 
 namespace SoloTournamentCreator.Model
 {
@@ -14,6 +16,7 @@ namespace SoloTournamentCreator.Model
         private string _LastName;
         private int _GraduationYear;
         private RiotApi.Net.RestClient.Dto.Summoner.SummonerDto _SummonerData;
+        private LeagueDto _SummonerSoloQueueData;
 
         public string Mail
         {
@@ -88,6 +91,30 @@ namespace SoloTournamentCreator.Model
             }
         }
 
+        public LeagueDto SummonerLeagueData
+        {
+            get
+            {
+                return _SummonerSoloQueueData;
+            }
+
+            set
+            {
+                _SummonerSoloQueueData = value;
+            }
+        }
+        public int EstimatedStrenght
+        {
+            get
+            {
+                if(SummonerLeagueData == null)
+                {
+                    return 8;
+                }
+                return Converters.RankingToPoint(SummonerLeagueData.Tier, SummonerLeagueData.Entries.First().Division);
+            }
+        }
+
         public Student(string mail, string firstName, string lastName, string pseudo, int gradYear)
         {
             Mail = mail;
@@ -97,6 +124,28 @@ namespace SoloTournamentCreator.Model
             try
             {
                 SummonerData = ApiRequest.GetSummonerData(pseudo);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            try
+            {
+                SummonerLeagueData = ApiRequest.GetSummonerSoloQueueRating(SummonerData.Id);
+            }
+            catch (Exception)
+            {
+                SummonerLeagueData = null; //Unranked
+            }
+        }
+
+        public bool RefreshData()
+        {
+            try
+            {
+                SummonerData = ApiRequest.GetSummonerData(this.SummonerData.Id);
+                SummonerLeagueData = ApiRequest.GetSummonerSoloQueueRating(SummonerData.Id);
+                return true;
             }
             catch (Exception)
             {

@@ -8,7 +8,9 @@ namespace SoloTournamentCreator.Model
 {
     public class Team
     {
+        private int NbPlayerMax;
         HashSet<Student> _TeamMember;
+        string _TeamName;
 
         public HashSet<Student> TeamMember
         {
@@ -23,9 +25,38 @@ namespace SoloTournamentCreator.Model
             }
         }
 
+        public int TeamPower
+        {
+            get
+            {
+                return TeamMember.Sum(x => x.EstimatedStrenght);
+            }
+        }
+
+        public string TeamName
+        {
+            get
+            {
+                return _TeamName;
+            }
+
+            set
+            {
+                _TeamName = value;
+            }
+        }
+
+        public Team(int nbPlayerMax = 5, string teamName = "NoName")
+        {
+            TeamMember = new HashSet<Student>();
+            TeamName = teamName;
+            NbPlayerMax = nbPlayerMax;
+        }
 
         public bool AddMember(Student member)
         {
+            if (TeamMember.Count >= NbPlayerMax)
+                return false;
             return TeamMember.Add(member);
         }
 

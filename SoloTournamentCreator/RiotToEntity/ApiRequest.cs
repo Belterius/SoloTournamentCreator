@@ -36,5 +36,49 @@ namespace SoloTournamentCreator.RiotToEntity
                 throw;
             }
         }
+        public static RiotApi.Net.RestClient.Dto.Summoner.SummonerDto GetSummonerData(long summonerID)
+        {
+            try
+            {
+                return MyRiotClient.Instance.riotClient.Summoner.GetSummonersById(RiotApiConfig.Regions.EUW, summonerID.ToString())[summonerID.ToString()];
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public static RiotApi.Net.RestClient.Dto.League.LeagueDto GetSummonerSoloQueueRating(long summonerID)
+        {
+            try
+            {
+                return MyRiotClient.Instance.riotClient.League.GetSummonerLeagueEntriesByIds(RiotApiConfig.Regions.EUW, summonerID)[summonerID.ToString()].Where(x => x.Queue == RiotApi.Net.RestClient.Helpers.Enums.GameQueueType.RANKED_SOLO_5x5).First();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public static RiotApi.Net.RestClient.Dto.League.LeagueDto GetSummoner5v5TeamRating(long summonerID)
+        {
+            try
+            {
+                return MyRiotClient.Instance.riotClient.League.GetSummonerLeagueEntriesByIds(RiotApiConfig.Regions.EUW, summonerID)[summonerID.ToString()].Where(x => x.Queue == RiotApi.Net.RestClient.Helpers.Enums.GameQueueType.RANKED_TEAM_5x5).First();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public static RiotApi.Net.RestClient.Dto.League.LeagueDto GetSummoner3v3TeamRating(long summonerID)
+        {
+            try
+            {
+                return MyRiotClient.Instance.riotClient.League.GetSummonerLeagueEntriesByIds(RiotApiConfig.Regions.EUW, summonerID)[summonerID.ToString()].Where(x => x.Queue == RiotApi.Net.RestClient.Helpers.Enums.GameQueueType.RANKED_TEAM_3x3).First();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
