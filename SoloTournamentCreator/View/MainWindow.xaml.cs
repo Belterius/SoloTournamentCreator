@@ -12,8 +12,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using SoloTournamentCreator.RiotToEntity;
+using SoloTournamentCreator.Model;
 
-namespace SoloTournamentCreator
+namespace SoloTournamentCreator.View
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -23,6 +25,15 @@ namespace SoloTournamentCreator
         public MainWindow()
         {
             InitializeComponent();
+            try
+            {
+                Student std = new Student("mail", "fname", "lname", "Belterius", 1998);
+            }
+            catch (Exception)
+            {
+
+                MessageBox.Show("WrongSumName");
+            }
         }
     }
 }
