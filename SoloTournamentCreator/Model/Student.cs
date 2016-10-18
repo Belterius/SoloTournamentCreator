@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using RiotApi.Net.RestClient.Dto.League;
 using SoloTournamentCreator.Helper;
 using System.ComponentModel.DataAnnotations;
+using RiotApi.Net.RestClient.Dto.Summoner;
 
 namespace SoloTournamentCreator.Model
 {
@@ -18,8 +19,9 @@ namespace SoloTournamentCreator.Model
         private string _FirstName;
         private string _LastName;
         private int _GraduationYear;
-        private RiotApi.Net.RestClient.Dto.Summoner.SummonerDto _SummonerData;
+        private SummonerDto _SummonerData;
         private LeagueDto _SummonerSoloQueueData;
+        private ICollection<Tournament> _ParticipatingTournament;
 
         public string Mail
         {
@@ -81,7 +83,7 @@ namespace SoloTournamentCreator.Model
             }
         }
 
-        public RiotApi.Net.RestClient.Dto.Summoner.SummonerDto SummonerData
+        public SummonerDto SummonerData
         {
             get
             {
@@ -94,7 +96,7 @@ namespace SoloTournamentCreator.Model
             }
         }
 
-        public LeagueDto SummonerLeagueData
+        public LeagueDto SummonerSoloQueueData
         {
             get
             {
@@ -110,14 +112,31 @@ namespace SoloTournamentCreator.Model
         {
             get
             {
-                if(SummonerLeagueData == null)
+                if(SummonerSoloQueueData == null)
                 {
                     return 8;
                 }
-                return Converters.RankingToPoint(SummonerLeagueData.Tier, SummonerLeagueData.Entries.First().Division);
+                return GlobalConverters.RankingToPoint(SummonerSoloQueueData.Tier, SummonerSoloQueueData.Entries.First().Division);
             }
         }
 
+        public ICollection<Tournament> ParticipatingTournament
+        {
+            get
+            {
+                return _ParticipatingTournament;
+            }
+
+            set
+            {
+                _ParticipatingTournament = value;
+            }
+        }
+
+        private Student()
+        {
+
+        }
         public Student(string mail, string firstName, string lastName, string pseudo, int gradYear)
         {
             Mail = mail;
@@ -134,11 +153,11 @@ namespace SoloTournamentCreator.Model
             }
             try
             {
-                SummonerLeagueData = ApiRequest.GetSummonerSoloQueueRating(SummonerData.Id);
+                SummonerSoloQueueData = ApiRequest.GetSummonerSoloQueueRating(SummonerData.Id);
             }
             catch (Exception)
             {
-                SummonerLeagueData = null; //Unranked
+                SummonerSoloQueueData = null; //Unranked
             }
         }
 
@@ -147,7 +166,7 @@ namespace SoloTournamentCreator.Model
             try
             {
                 SummonerData = ApiRequest.GetSummonerData(this.SummonerData.Id);
-                SummonerLeagueData = ApiRequest.GetSummonerSoloQueueRating(SummonerData.Id);
+                SummonerSoloQueueData = ApiRequest.GetSummonerSoloQueueRating(SummonerData.Id);
                 return true;
             }
             catch (Exception)

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using SoloTournamentCreator.Model;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,8 +9,53 @@ using System.Windows.Data;
 
 namespace SoloTournamentCreator.Helper
 {
-    public class Converters
+    public class MultipleValueConverter : IMultiValueConverter
     {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            return values.Clone();
+        }
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
+    public class TournamentInformation : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            Tournament myTournament = (Tournament) value;
+            return myTournament.Name + " (" + myTournament.nbParticipant + "/" + myTournament.nbParticipantMax +")";
+        }
+        
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+        
+    }
+    public class PlayerToTournamentRegistered : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if(!(values[0] is Student) || !(values[1] is Tournament))
+            {
+                return false;
+            }
+            Tournament myTournament = (Tournament)values[1];
+            Student myPlayer = (Student)values[0];
+            if (myTournament.Participants.Contains(myPlayer))
+                return true;
+            return false;
+        }
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
+    public static class GlobalConverters
+    {
+
         public static int RankingToPoint(RiotApi.Net.RestClient.Helpers.Enums.Tier tier, string division)
         {
             int strenght = 0;
@@ -59,20 +106,6 @@ namespace SoloTournamentCreator.Helper
             }
             return strenght;
 
-        }
-
-        public class SummonerLeagueToValue : IValueConverter
-        {
-            public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-            {
-                if (value == null) return null;
-                return new List<object>() { value };
-            }
-
-            public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-            {
-                throw new NotImplementedException();
-            }
         }
     }
 }

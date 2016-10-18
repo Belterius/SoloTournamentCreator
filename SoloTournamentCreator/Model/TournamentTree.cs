@@ -53,7 +53,10 @@ namespace SoloTournamentCreator.Model
                 _RightEndPoint = value;
             }
         }
+        private TournamentTree()
+        {
 
+        }
         public TournamentTree(Tournament tournament)
         {
             MyTournamentTree = new Match();

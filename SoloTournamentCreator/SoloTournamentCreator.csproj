@@ -43,6 +43,10 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="MoreLinq, Version=2.0.19309.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
       <HintPath>..\packages\morelinq.2.0.0-beta05\lib\net35\MoreLinq.dll</HintPath>
       <Private>True</Private>
@@ -56,6 +60,11 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -74,7 +83,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="View\CreatePlayerMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\CreateTournamentMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\DialogBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\MainMenu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -91,6 +112,30 @@
     <Compile Include="Helper\DialogCloser.cs" />
     <Compile Include="Helper\IClosableViewModel.cs" />
     <Compile Include="Helper\RelayCommand.cs" />
+    <Compile Include="Migrations\201610170959416_Self-Reference_Match.cs" />
+    <Compile Include="Migrations\201610170959416_Self-Reference_Match.Designer.cs">
+      <DependentUpon>201610170959416_Self-Reference_Match.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610171146122_updateSoloQueue.cs" />
+    <Compile Include="Migrations\201610171146122_updateSoloQueue.Designer.cs">
+      <DependentUpon>201610171146122_updateSoloQueue.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610180835196_TournamentStage.cs" />
+    <Compile Include="Migrations\201610180835196_TournamentStage.Designer.cs">
+      <DependentUpon>201610180835196_TournamentStage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610181003439_TournamentName.cs" />
+    <Compile Include="Migrations\201610181003439_TournamentName.Designer.cs">
+      <DependentUpon>201610181003439_TournamentName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610181055529_tournamentupdate.cs" />
+    <Compile Include="Migrations\201610181055529_tournamentupdate.Designer.cs">
+      <DependentUpon>201610181055529_tournamentupdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610181410513_tournamentupdate1.cs" />
+    <Compile Include="Migrations\201610181410513_tournamentupdate1.Designer.cs">
+      <DependentUpon>201610181410513_tournamentupdate1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Match.cs" />
     <Compile Include="Model\Student.cs" />
@@ -101,9 +146,21 @@
     <Compile Include="RiotToEntity\ApiRequest.cs" />
     <Compile Include="RiotToEntity\MyRiotClient.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />
+    <Compile Include="ViewModel\CreatePlayerViewModel.cs" />
+    <Compile Include="ViewModel\CreateTournamentViewModel.cs" />
+    <Compile Include="ViewModel\MainMenuViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
+    <Compile Include="View\CreatePlayerMenu.xaml.cs">
+      <DependentUpon>CreatePlayerMenu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\CreateTournamentMenu.xaml.cs">
+      <DependentUpon>CreateTournamentMenu.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\DialogBox.xaml.cs">
       <DependentUpon>DialogBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\MainMenu.xaml.cs">
+      <DependentUpon>MainMenu.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -124,6 +181,24 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Migrations\201610170959416_Self-Reference_Match.resx">
+      <DependentUpon>201610170959416_Self-Reference_Match.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610171146122_updateSoloQueue.resx">
+      <DependentUpon>201610171146122_updateSoloQueue.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610180835196_TournamentStage.resx">
+      <DependentUpon>201610180835196_TournamentStage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610181003439_TournamentName.resx">
+      <DependentUpon>201610181003439_TournamentName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610181055529_tournamentupdate.resx">
+      <DependentUpon>201610181055529_tournamentupdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610181410513_tournamentupdate1.resx">
+      <DependentUpon>201610181410513_tournamentupdate1.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -138,7 +213,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

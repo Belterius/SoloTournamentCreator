@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:Core="clr-namespace:SoloTournamentCreator;assembly=" 
         xmlns:helper="clr-namespace:SoloTournamentCreator.Helper"
         helper:DialogCloser.DialogResult="{Binding CloseWindowFlag}"
@@ -12,11 +12,33 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525"
         DataContext="{DynamicResource MainWindowViewModel}">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction Command="{Binding ClosingCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Window.Resources>
         <vm:MainWindowViewModel x:Key="MainWindowViewModel"/>
+        <helper:PlayerToTournamentRegistered x:Key="PlayerToTournamentRegistered" />
     </Window.Resources>
     <Grid>
         <Button x:Name="button" Content="Button" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Command="{Binding CreatePlayerCommand}"/>
+        <ListBox ItemsSource="{Binding MyPlayers}" SelectedItem="{Binding SelectedPlayer}" Margin="69,51,347.4,161.8">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <ListBoxItem>
+                        <CheckBox Content="{Binding Path=Pseudo}" >
+                            <CheckBox.IsChecked>
+                                <MultiBinding Converter="{StaticResource PlayerToTournamentRegistered}" Mode="OneWay">
+                                    <Binding />
+                                    <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" Path="DataContext.MyTournament"/>
+                                </MultiBinding>
+                            </CheckBox.IsChecked>
+                        </CheckBox>
+                    </ListBoxItem>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
 
     </Grid>
 </Window>

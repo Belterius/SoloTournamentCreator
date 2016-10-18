@@ -10,24 +10,31 @@ namespace SoloTournamentCreator.Model
 {
     public class Tournament
     {
+        public enum TournamentStage
+        {
+            Open,
+            Started,
+            Completed
+        }
         [Key]
         public int TournamentId { get; set; }
         private readonly int nbPlayerPerTeam = 5;
-        private readonly int nbTeam = 8;
-        bool _isStarted;
+        private int _NbTeam;
+        TournamentStage _Status;
         HashSet<Student> _Participants;
         HashSet<Team> _Teams;
+        string _Name;
 
-        public bool IsStarted
+        public TournamentStage Status
         {
             get
             {
-                return _isStarted;
+                return _Status;
             }
 
             set
             {
-                _isStarted = value;
+                _Status = value;
             }
         }
         public int nbParticipant
@@ -35,6 +42,13 @@ namespace SoloTournamentCreator.Model
             get
             {
                 return _Participants.Count;
+            }
+        }
+        public int nbParticipantMax
+        {
+            get
+            {
+                return NbTeam*nbPlayerPerTeam;
             }
         }
 
@@ -64,10 +78,44 @@ namespace SoloTournamentCreator.Model
             }
         }
 
-        public Tournament()
+        public string Name
+        {
+            get
+            {
+                return _Name;
+            }
+
+            set
+            {
+                _Name = value;
+            }
+        }
+
+        public int NbTeam
+        {
+            get
+            {
+                return _NbTeam;
+            }
+
+            set
+            {
+                _NbTeam = value;
+            }
+        }
+
+        private Tournament()
         {
             Participants = new HashSet<Student>();
             Teams = new HashSet<Team>();
+        }
+        public Tournament(string name="NoName", int nbTeam = 8)
+        {
+            Participants = new HashSet<Student>();
+            Teams = new HashSet<Team>();
+            Status = TournamentStage.Open;
+            Name = name;
+            NbTeam = nbTeam;
         }
 
         public bool Register(Student participant)
@@ -82,6 +130,7 @@ namespace SoloTournamentCreator.Model
 
         public void Start()
         {
+            Status = TournamentStage.Started;
             throw new NotImplementedException();
         }
 
@@ -96,7 +145,7 @@ namespace SoloTournamentCreator.Model
         private void BalanceTeam()
         {
             HashSet<Team> availableTeam = new HashSet<Team>(Teams);
-            int nbIteration = Math.Min((int)Participants.Count/ nbPlayerPerTeam, nbTeam) * nbPlayerPerTeam;
+            int nbIteration = Math.Min((int)Participants.Count/ nbPlayerPerTeam, NbTeam) * nbPlayerPerTeam;
             for (; nbIteration > 0; nbIteration--){
                 Team weakestTeam = availableTeam.MinBy(x => x.TeamPower);
                 Student strongestParticipant = Participants.MaxBy(x => x.EstimatedStrenght);

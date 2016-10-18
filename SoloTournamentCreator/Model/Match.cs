@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,9 @@ namespace SoloTournamentCreator.Model
         [Key]
         public int MatchId { get; set; }
         Team _Winner;
+        public int? LeftContendantId { get; set; }
         Match _LeftContendant;
+        public int? RightContendantId { get; set; }
         Match _RightContendant;
 
         public Team Winner
@@ -27,7 +30,6 @@ namespace SoloTournamentCreator.Model
                 _Winner = value;
             }
         }
-
         public Match LeftContendant
         {
             get
@@ -40,7 +42,6 @@ namespace SoloTournamentCreator.Model
                 _LeftContendant = value;
             }
         }
-
         public Match RightContendant
         {
             get
