@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Data.Entity;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -71,18 +72,19 @@ namespace SoloTournamentCreator.ViewModel
         public RelayCommand CreatePlayerCommand { get; set; }
         public RelayCommand PlayerCheckedCommand { get; set; }
         public RelayCommand PlayerUncheckedCommand { get; set; }
+        public RelayCommand StartTournamentCommand { get; set; }
 
         public MainMenuViewModel()
         {
             this.PropertyChanged += CustomPropertyChanged;
             MyDatabaseContext = new SavingContext();
             //ClearDatabase();
-            PopulateDatabase();
+            //PopulateDatabase();
             try
             {
                 //cf http://stackoverflow.com/questions/3356541/entity-framework-linq-query-include-multiple-children-entities
 
-                MyDatabaseContext.MyStudents.Include(x => x.SummonerData).Load();
+                MyDatabaseContext.MyStudents.Include(x => x.SummonerData).Include(x => x.SummonerSoloQueueData.Entries).Load();
                 MyDatabaseContext.MyMatchs.Load();
                 MyDatabaseContext.MyTeams.Load();
                 MyDatabaseContext.MyTournamentTrees.Load();
@@ -101,6 +103,7 @@ namespace SoloTournamentCreator.ViewModel
             CreatePlayerCommand = new RelayCommand(CreatePlayer);
             PlayerCheckedCommand = new RelayCommand(PlayerChecked);
             PlayerUncheckedCommand = new RelayCommand(PlayerUnchecked);
+            StartTournamentCommand = new RelayCommand(StartTournament);
         }
         private void ClearDatabase()
         {
@@ -118,13 +121,42 @@ namespace SoloTournamentCreator.ViewModel
                 int i = 200;
                 foreach (RiotApi.Net.RestClient.Dto.League.LeagueDto.LeagueEntryDto challenjour in pgm)
                 {
-                    Student std = new Student(challenjour.PlayerOrTeamName + "@", challenjour.PlayerOrTeamName, challenjour.PlayerOrTeamName, challenjour.PlayerOrTeamName, 2016);
-                    MyDatabaseContext.MyStudents.Add(std);
+                    try
+                    {
+                        Student std = new Student(challenjour.PlayerOrTeamName + "@", challenjour.PlayerOrTeamName, challenjour.PlayerOrTeamName, challenjour.PlayerOrTeamName, 2016);
+                        MyDatabaseContext.MyStudents.Add(std);
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
                     i--;
                     Console.WriteLine(i + " : " + challenjour.PlayerOrTeamName);
+                    if(i % 5 == 0)
+                    {
+                        Thread.Sleep(10000);
+                    }
                 }
                 MyDatabaseContext.SaveChanges();
             }
+        }
+        private void StartTournament(object obj)
+        {
+            MessageBoxResult result = MessageBox.Show("Do you wanna do something?", "Warning",MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
+            if (result == MessageBoxResult.Yes)
+            {
+                //code for Yes
+                SelectedTournament.Start();
+            }
+            else if (result == MessageBoxResult.No)
+            {
+                //code for No
+            }
+            else if (result == MessageBoxResult.Cancel)
+            {
+                //code for Cancel
+            }
+
         }
         private void CustomPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
