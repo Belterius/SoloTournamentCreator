@@ -136,6 +136,10 @@
     <Compile Include="Migrations\201610181410513_tournamentupdate1.Designer.cs">
       <DependentUpon>201610181410513_tournamentupdate1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610181456019_tournamentupdate2.cs" />
+    <Compile Include="Migrations\201610181456019_tournamentupdate2.Designer.cs">
+      <DependentUpon>201610181456019_tournamentupdate2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Match.cs" />
     <Compile Include="Model\Student.cs" />
@@ -198,6 +202,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610181410513_tournamentupdate1.resx">
       <DependentUpon>201610181410513_tournamentupdate1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610181456019_tournamentupdate2.resx">
+      <DependentUpon>201610181456019_tournamentupdate2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

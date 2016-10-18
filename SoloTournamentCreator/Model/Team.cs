@@ -50,7 +50,7 @@ namespace SoloTournamentCreator.Model
         }
         private Team()
         {
-
+            TeamMember = new HashSet<Student>();
         }
         public Team(int nbPlayerMax = 5, string teamName = "NoName")
         {

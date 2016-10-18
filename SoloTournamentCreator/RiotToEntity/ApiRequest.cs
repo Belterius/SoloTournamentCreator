@@ -24,7 +24,17 @@ namespace SoloTournamentCreator.RiotToEntity
                 return false;
             }
         }
-
+        public static IEnumerable<RiotApi.Net.RestClient.Dto.League.LeagueDto.LeagueEntryDto> GetSampleChallenger()
+        {
+            try
+            {
+                return MyRiotClient.Instance.riotClient.League.GetChallengerTierLeagues(RiotApiConfig.Regions.EUW, RiotApi.Net.RestClient.Helpers.Enums.GameQueueType.RANKED_SOLO_5x5).Entries;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
         public static RiotApi.Net.RestClient.Dto.Summoner.SummonerDto GetSummonerData(String pseudo)
         {
             try

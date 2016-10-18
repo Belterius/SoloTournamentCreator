@@ -23,6 +23,7 @@ namespace SoloTournamentCreator.Model
         TournamentStage _Status;
         HashSet<Student> _Participants;
         HashSet<Team> _Teams;
+        TournamentTree _MyTournamentTree;
         string _Name;
 
         public TournamentStage Status
@@ -104,6 +105,19 @@ namespace SoloTournamentCreator.Model
             }
         }
 
+        public TournamentTree MyTournamentTree
+        {
+            get
+            {
+                return _MyTournamentTree;
+            }
+
+            set
+            {
+                _MyTournamentTree = value;
+            }
+        }
+
         private Tournament()
         {
             Participants = new HashSet<Student>();
@@ -131,7 +145,9 @@ namespace SoloTournamentCreator.Model
         public void Start()
         {
             Status = TournamentStage.Started;
-            throw new NotImplementedException();
+            CreateTeam();
+            BalanceTeam();
+            MyTournamentTree = new TournamentTree(Teams);
         }
 
         private void CreateTeam()

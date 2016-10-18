@@ -57,13 +57,13 @@ namespace SoloTournamentCreator.Model
         {
 
         }
-        public TournamentTree(Tournament tournament)
+        public TournamentTree(HashSet<Team> teams)
         {
             MyTournamentTree = new Match();
             LeftEndPoint = new List<Match>();
             RightEndPoint = new List<Match>();
-            GenerateTournamentTree(MyTournamentTree, Math.Ceiling(Math.Log(tournament.Teams.Count(), 2)));
-            SetTeamStartingPosition(tournament);
+            GenerateTournamentTree(MyTournamentTree, Math.Ceiling(Math.Log(teams.Count(), 2)));
+            SetTeamStartingPosition(teams);
             printTree();
         }
 
@@ -83,10 +83,10 @@ namespace SoloTournamentCreator.Model
                 RightEndPoint.Add(node.RightContendant);
             }
         }
-        private void SetTeamStartingPosition(Tournament tournament)
+        private void SetTeamStartingPosition(HashSet<Team> teams)
         {
             Random randomizer = new Random();
-            HashSet<Team> teamList = new HashSet<Team>(tournament.Teams);
+            HashSet<Team> teamList = new HashSet<Team>(teams);
             var randomlyOrderedRightEndpoint = RightEndPoint.OrderBy(i => randomizer.Next());
             var randomlyOrderedLeftEndpoint = LeftEndPoint.OrderBy(i => randomizer.Next());
             foreach (Match match in randomlyOrderedLeftEndpoint)

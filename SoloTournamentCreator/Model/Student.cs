@@ -145,7 +145,7 @@ namespace SoloTournamentCreator.Model
             GraduationYear = gradYear;
             try
             {
-                SummonerData = ApiRequest.GetSummonerData(pseudo);
+                SummonerData = ApiRequest.GetSummonerData(pseudo.Replace(" ", string.Empty));
             }
             catch (Exception)
             {

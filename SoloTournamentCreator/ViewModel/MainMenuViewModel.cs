@@ -76,6 +76,8 @@ namespace SoloTournamentCreator.ViewModel
         {
             this.PropertyChanged += CustomPropertyChanged;
             MyDatabaseContext = new SavingContext();
+            //ClearDatabase();
+            PopulateDatabase();
             try
             {
                 //cf http://stackoverflow.com/questions/3356541/entity-framework-linq-query-include-multiple-children-entities
@@ -100,11 +102,27 @@ namespace SoloTournamentCreator.ViewModel
             PlayerCheckedCommand = new RelayCommand(PlayerChecked);
             PlayerUncheckedCommand = new RelayCommand(PlayerUnchecked);
         }
-        private void CleanDatabase()
+        private void ClearDatabase()
         {
             lock (MyDatabaseContext)
             {
                 MyDatabaseContext.Database.Delete();
+                MyDatabaseContext.SaveChanges();
+            }
+        }
+        private void PopulateDatabase()
+        {
+            IEnumerable<RiotApi.Net.RestClient.Dto.League.LeagueDto.LeagueEntryDto> pgm = RiotToEntity.ApiRequest.GetSampleChallenger();
+            lock (MyDatabaseContext)
+            {
+                int i = 200;
+                foreach (RiotApi.Net.RestClient.Dto.League.LeagueDto.LeagueEntryDto challenjour in pgm)
+                {
+                    Student std = new Student(challenjour.PlayerOrTeamName + "@", challenjour.PlayerOrTeamName, challenjour.PlayerOrTeamName, challenjour.PlayerOrTeamName, 2016);
+                    MyDatabaseContext.MyStudents.Add(std);
+                    i--;
+                    Console.WriteLine(i + " : " + challenjour.PlayerOrTeamName);
+                }
                 MyDatabaseContext.SaveChanges();
             }
         }
