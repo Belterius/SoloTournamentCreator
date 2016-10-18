@@ -42,8 +42,11 @@ namespace SoloTournamentCreator.ViewModel
         private void CreateTournament(object obj)
         {
             Tournament newTournament = new Tournament(TournamentName, Convert.ToInt32(((ComboBoxItem)obj).Content));
-            MyDatabaseContext.MyTournaments.Add(newTournament);
-            MyDatabaseContext.SaveChanges();
+            lock (MyDatabaseContext)
+            {
+                MyDatabaseContext.MyTournaments.Add(newTournament);
+                MyDatabaseContext.SaveChanges();
+            }
             this.CloseWindow();
 
         }

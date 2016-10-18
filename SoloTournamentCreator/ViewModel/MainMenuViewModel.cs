@@ -78,11 +78,13 @@ namespace SoloTournamentCreator.ViewModel
             MyDatabaseContext = new SavingContext();
             try
             {
+                //cf http://stackoverflow.com/questions/3356541/entity-framework-linq-query-include-multiple-children-entities
+
                 MyDatabaseContext.MyStudents.Include(x => x.SummonerData).Load();
                 MyDatabaseContext.MyMatchs.Load();
                 MyDatabaseContext.MyTeams.Load();
                 MyDatabaseContext.MyTournamentTrees.Load();
-                MyDatabaseContext.MyTournaments.Load();
+                MyDatabaseContext.MyTournaments.Include(x => x.Participants).Include(x => x.Teams).Load();
             }
             catch (Exception ex)
             {
@@ -98,7 +100,14 @@ namespace SoloTournamentCreator.ViewModel
             PlayerCheckedCommand = new RelayCommand(PlayerChecked);
             PlayerUncheckedCommand = new RelayCommand(PlayerUnchecked);
         }
-
+        private void CleanDatabase()
+        {
+            lock (MyDatabaseContext)
+            {
+                MyDatabaseContext.Database.Delete();
+                MyDatabaseContext.SaveChanges();
+            }
+        }
         private void CustomPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
@@ -123,8 +132,12 @@ namespace SoloTournamentCreator.ViewModel
             {
                 return;
             }
-            MyDatabaseContext.MyTournaments.Where(x => x.TournamentId == SelectedTournament.TournamentId).Single().Participants.Add(selectedPlayer);
-            MyDatabaseContext.SaveChanges();
+            //MyDatabaseContext.MyTournaments.Where(x => x.TournamentId == SelectedTournament.TournamentId).Single().Participants.Add(selectedPlayer);
+            lock (MyDatabaseContext)
+            {
+                MyDatabaseContext.MyTournaments.Where(x => x.TournamentId == SelectedTournament.TournamentId).Single().Register(selectedPlayer);
+                MyDatabaseContext.SaveChanges();
+            }
             RaisePropertyChanged("MyTournaments");
 
         }
@@ -139,19 +152,23 @@ namespace SoloTournamentCreator.ViewModel
             {
                 return;
             }
-            MyDatabaseContext.MyTournaments.Where(x => x.TournamentId == SelectedTournament.TournamentId).Single().Participants.Remove(selectedPlayer);
-            MyDatabaseContext.SaveChanges();
+            lock (MyDatabaseContext)
+            {
+                MyDatabaseContext.MyTournaments.Where(x => x.TournamentId == SelectedTournament.TournamentId).Single().Deregister(selectedPlayer);
+                MyDatabaseContext.SaveChanges();
+            }
             RaisePropertyChanged("MyTournaments");
         }
         private void CreateTournament(object obj)
         {
             CreateTournamentMenu CTM = new CreateTournamentMenu(){DataContext = new CreateTournamentViewModel(MyDatabaseContext)};
-            CTM.Show();
+            CTM.ShowDialog();
+            RaisePropertyChanged("MyOpenTournaments");
         }
         private void CreatePlayer(object obj)
         {
             CreatePlayerMenu CPM = new CreatePlayerMenu() { DataContext = new CreatePlayerViewModel(MyDatabaseContext) };
-            CPM.Show();
+            CPM.ShowDialog();
         }
     }
 }
