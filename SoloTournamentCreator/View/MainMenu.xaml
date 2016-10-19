@@ -18,25 +18,40 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Window.Resources>
-        <vm:MainMenuViewModel x:Key="MainMenuViewModel"/>
+        <vm:MainMenuViewModel x:Key="MainMenuViewModel"/> 
         <helper:TournamentInformation x:Key="TournamentInformation" />
+        <helper:TournamentTeamInformation x:Key="TournamentTeamInformation" />
         <helper:PlayerToTournamentRegistered x:Key="PlayerToTournamentRegistered" />
+        <helper:PlayerDisplayLevel x:Key="PlayerDisplayLevel" />
+        <helper:PlayerSwapSelectedDisplay x:Key="PlayerSwapSelectedDisplay" />
+        <helper:TeamSwapSelectedDisplay x:Key="TeamSwapSelectedDisplay" />
+        <helper:InternalListBoxItemClick x:Key="InternalListBoxItemClick" />
     </Window.Resources>
     <Grid>
         <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="280" VerticalAlignment="Top" Width="498" Margin="10,10,0,0">
             <TabItem Header="Open Tournament">
                 <Grid Background="#FFE5E5E5">
-                    <ListBox ItemsSource="{Binding MyOpenTournaments}" Margin="0,0,304,-0.2" SelectedItem="{Binding SelectedTournament}">
-                        
+                    <ListBox ItemsSource="{Binding MyOpenTournaments}" Margin="0,0,304,-0.2" SelectedItem="{Binding SelectedOpenTournament}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <ListBoxItem>
                                     <TextBlock  Text="{Binding Converter={StaticResource TournamentInformation}, Mode=OneWay}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseLeftButtonDown">
+                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext.InternalListBoxItemClickCommand}">
+                                                    <i:InvokeCommandAction.CommandParameter>
+                                                        <MultiBinding Converter="{StaticResource InternalListBoxItemClick}" Mode="OneWay">
+                                                            <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ListBox}"/>
+                                                            <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}"/>
+                                                        </MultiBinding>
+                                                    </i:InvokeCommandAction.CommandParameter>
+                                                </i:InvokeCommandAction>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
                                     </TextBlock>
                                 </ListBoxItem>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
-
                     </ListBox>
                     <ListBox ItemsSource="{Binding MyPlayers}" SelectedItem="{Binding SelectedPlayer}" Margin="193,0,120,0">
                         <ListBox.ItemTemplate>
@@ -54,7 +69,7 @@
                                         <CheckBox.IsChecked>
                                             <MultiBinding Converter="{StaticResource PlayerToTournamentRegistered}" Mode="OneWay">
                                                 <Binding />
-                                                <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" Path="DataContext.SelectedTournament"/>
+                                                <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" Path="DataContext.SelectedOpenTournament"/>
                                             </MultiBinding>
                                         </CheckBox.IsChecked>
                                     </CheckBox>
@@ -62,14 +77,92 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                    <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="407,10,0,0" VerticalAlignment="Top" Width="75" Command="{Binding StartTournamentCommand}"/>
+                    <Button x:Name="buttonStartTournament" Content="Start Tournament" HorizontalAlignment="Left" Margin="389,10,0,0" VerticalAlignment="Top" Command="{Binding StartTournamentCommand}"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Started Tournament">
                 <Grid Background="#FFE5E5E5">
-                    <ListBox ItemsSource="{Binding MyStartedTournaments}" Margin="0,0,304,-0.2">
-
+                    <ListBox ItemsSource="{Binding MyStartedTournaments}" SelectedItem="{Binding SelectedStartedTournament}" Margin="0,0,327,0" >
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <ListBoxItem>
+                                    <TextBlock  Text="{Binding Converter={StaticResource TournamentTeamInformation}, Mode=OneWay}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseLeftButtonDown">
+                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext.InternalListBoxItemClickCommand}">
+                                                    <i:InvokeCommandAction.CommandParameter>
+                                                        <MultiBinding Converter="{StaticResource InternalListBoxItemClick}" Mode="OneWay">
+                                                            <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ListBox}"/>
+                                                            <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}"/>
+                                                        </MultiBinding>
+                                                    </i:InvokeCommandAction.CommandParameter>
+                                                </i:InvokeCommandAction>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </TextBlock>
+                                </ListBoxItem>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
                     </ListBox>
+                    <ListBox ItemsSource="{Binding MyTeams}" SelectedItem="{Binding SelectedStartedTournamentTeam}" Margin="170,0,128,160">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <ListBoxItem>
+                                    <ListBoxItem.Background>
+                                        <MultiBinding Converter="{StaticResource TeamSwapSelectedDisplay}">
+                                            <Binding Path="DataContext.SavedSwapTeam" RelativeSource="{RelativeSource Mode=FindAncestor,
+                                                     AncestorType=Window}"/>
+                                            <Binding />
+                                        </MultiBinding>
+                                    </ListBoxItem.Background>
+                                    <TextBlock Text="{Binding TeamName}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseLeftButtonDown">
+                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext.InternalListBoxItemClickCommand}">
+                                                    <i:InvokeCommandAction.CommandParameter>
+                                                        <MultiBinding Converter="{StaticResource InternalListBoxItemClick}" Mode="OneWay">
+                                                            <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ListBox}"/>
+                                                            <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}"/>
+                                                        </MultiBinding>
+                                                    </i:InvokeCommandAction.CommandParameter>
+                                                </i:InvokeCommandAction>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </TextBlock>
+                                </ListBoxItem>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <ListBox ItemsSource="{Binding SelectedTeamPlayers}" SelectedItem="{Binding SelectedTeamSelectedPlayer}" Margin="170,90,128,0">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <ListBoxItem>
+                                    <ListBoxItem.Background>
+                                        <MultiBinding Converter="{StaticResource PlayerSwapSelectedDisplay}" UpdateSourceTrigger="PropertyChanged">
+                                            <Binding Path="DataContext.SavedSwapPlayer" RelativeSource="{RelativeSource Mode=FindAncestor,
+                                                     AncestorType=Window}"/>
+                                            <Binding />
+                                        </MultiBinding>
+                                    </ListBoxItem.Background>
+                                    <TextBlock Text="{Binding Converter={StaticResource PlayerDisplayLevel}, Mode=OneWay}" >
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseLeftButtonDown">
+                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext.InternalListBoxItemClickCommand}">
+                                                    <i:InvokeCommandAction.CommandParameter>
+                                                        <MultiBinding Converter="{StaticResource InternalListBoxItemClick}" Mode="OneWay">
+                                                            <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ListBox}"/>
+                                                            <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}"/>
+                                                        </MultiBinding>
+                                                    </i:InvokeCommandAction.CommandParameter>
+                                                </i:InvokeCommandAction>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </TextBlock>
+                                </ListBoxItem>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <Button x:Name="buttonSwap" Content="Swap Players" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="381,10,0,0" Command="{Binding SwapPlayerCommand}" Background="{Binding IsSwapInProgress}"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Completed Tournament">

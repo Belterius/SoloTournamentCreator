@@ -113,7 +113,7 @@ namespace SoloTournamentCreator.ViewModel
                     MessageBox.Show("Player successfully created !");
                     CleanFields();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     MessageBox.Show("Error retrieving Summoner informations, please check Pseudo");
                 }

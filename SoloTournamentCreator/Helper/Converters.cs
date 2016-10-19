@@ -34,6 +34,83 @@ namespace SoloTournamentCreator.Helper
         }
         
     }
+    public class TournamentTeamInformation : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            Tournament myTournament = (Tournament)value;
+            return myTournament.Name + " (" + myTournament.Teams.Count + "/" + myTournament.NbTeam + ")";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    public class PlayerDisplayLevel : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            Student mySummoner = (Student)value;
+            return mySummoner.Pseudo + " (" + mySummoner.SummonerSoloQueueData.Tier + " " + mySummoner.DetailSoloQueueData.Division +" " +mySummoner.DetailSoloQueueData.LeaguePoints + ")";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class PlayerSwapSelectedDisplay : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (!(values[0] is Student) || !(values[1] is Student))
+            {
+                return System.Windows.Media.Brushes.Transparent;
+            }
+            Student swapingPlayer = (Student)values[0];
+            Student myPlayer = (Student)values[1];
+            if (swapingPlayer == myPlayer)
+                return System.Windows.Media.Brushes.DarkSalmon;
+            return System.Windows.Media.Brushes.Transparent;
+        }
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
+    public class TeamSwapSelectedDisplay : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (!(values[0] is Team) || !(values[1] is Team))
+            {
+                return System.Windows.Media.Brushes.Transparent;
+            }
+            Team swapingTeam = (Team)values[0];
+            Team myTeam = (Team)values[1];
+            if (swapingTeam == myTeam)
+                return System.Windows.Media.Brushes.DarkSalmon;
+            return System.Windows.Media.Brushes.Transparent;
+        }
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
+    public class InternalListBoxItemClick : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            return values.Clone();
+        }
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
+    
     public class PlayerToTournamentRegistered : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
@@ -56,7 +133,7 @@ namespace SoloTournamentCreator.Helper
     public static class GlobalConverters
     {
 
-        public static int RankingToPoint(RiotApi.Net.RestClient.Helpers.Enums.Tier tier, string division)
+        public static int RankingToPoint(RiotApi.Net.RestClient.Helpers.Enums.Tier tier, string division, int leaguePoints)
         {
             int strenght = 0;
             switch (tier)
@@ -64,22 +141,22 @@ namespace SoloTournamentCreator.Helper
                 case RiotApi.Net.RestClient.Helpers.Enums.Tier.BRONZE:
                     break;
                 case RiotApi.Net.RestClient.Helpers.Enums.Tier.SILVER:
-                    strenght += 5;
+                    strenght += 50;
                     break;
                 case RiotApi.Net.RestClient.Helpers.Enums.Tier.GOLD:
-                    strenght += 10;
+                    strenght += 100;
                     break;
                 case RiotApi.Net.RestClient.Helpers.Enums.Tier.PLATINUM:
-                    strenght += 15;
+                    strenght += 150;
                     break;
                 case RiotApi.Net.RestClient.Helpers.Enums.Tier.DIAMOND:
-                    strenght += 20;
+                    strenght += 200;
                     break;
                 case RiotApi.Net.RestClient.Helpers.Enums.Tier.MASTER:
-                    strenght += 25;
+                    strenght += 250;
                     break;
                 case RiotApi.Net.RestClient.Helpers.Enums.Tier.CHALLENGER:
-                    strenght += 30;
+                    strenght += 300;
                     break;
                 default:
                     throw new NotSupportedException("This Tier is not supported, Rito added a new one :(");
@@ -89,21 +166,22 @@ namespace SoloTournamentCreator.Helper
                 case "V":
                     break;
                 case "IV":
-                    strenght += 1;
+                    strenght += 10;
                     break;
                 case "III":
-                    strenght += 2;
+                    strenght += 20;
                     break;
                 case "II":
-                    strenght += 3;
+                    strenght += 30;
                     break;
                 case "I":
-                    strenght += 4;
+                    strenght += 40;
                     break;
                 default:
                     throw new NotSupportedException("This Division is not supported, Rito added a new one :(");
 
             }
+            strenght += Convert.ToInt32(leaguePoints/10);
             return strenght;
 
         }

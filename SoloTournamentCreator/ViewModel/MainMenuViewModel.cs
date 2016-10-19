@@ -11,13 +11,19 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace SoloTournamentCreator.ViewModel
 {
     public class MainMenuViewModel : BaseViewModel
     {
         SavingContext MyDatabaseContext;
-        Tournament _SelectedTournament;
+        Tournament _SelectedOpenTournament;
+        Tournament _SelectedStartedTournament;
+        Team _SelectedStartedTournamentTeam;
+        Student _SelectedTeamSelectedPlayer;
+        Student _SavedSwapPlayer;
+        Team _SavedSwapTeam;
         public ObservableCollection<Tournament> MyTournaments
         {
             get
@@ -54,25 +60,128 @@ namespace SoloTournamentCreator.ViewModel
             }
         }
 
-        public Tournament SelectedTournament
+        public Tournament SelectedOpenTournament
         {
             get
             {
-                return _SelectedTournament;
+                return _SelectedOpenTournament;
             }
 
             set
             {
-                _SelectedTournament = value;
-                RaisePropertyChanged("SelectedTournament");
+                _SelectedOpenTournament = value;
+                RaisePropertyChanged("SelectedOpenTournament");
             }
         }
-        
+        public List<Team> MyTeams
+        {
+            get
+            {
+                if (SelectedStartedTournament != null)
+                    return SelectedStartedTournament.Teams.ToList();
+                return null;
+            }
+        }
+        public Tournament SelectedStartedTournament
+        {
+            get
+            {
+                return _SelectedStartedTournament;
+            }
+
+            set
+            {
+                _SelectedStartedTournament = value;
+                RaisePropertyChanged("SelectedStartedTournament");
+                RaisePropertyChanged("MyTeams");
+            }
+        }
+        public Team SelectedStartedTournamentTeam
+        {
+            get
+            {
+                return _SelectedStartedTournamentTeam;
+            }
+
+            set
+            {
+                _SelectedStartedTournamentTeam = value;
+                RaisePropertyChanged("SelectedStartedTournamentTeam");
+                RaisePropertyChanged("SelectedTeamPlayers");
+            }
+        }
+        public List<Student> SelectedTeamPlayers
+        {
+            get
+            {
+                if (SelectedStartedTournamentTeam != null)
+                    return SelectedStartedTournamentTeam.TeamMember.ToList();
+                return null;
+            }
+        }
+        public Student SelectedTeamSelectedPlayer
+        {
+            get
+            {
+                return _SelectedTeamSelectedPlayer;
+            }
+
+            set
+            {
+                _SelectedTeamSelectedPlayer = value;
+            }
+        }
+
+        public System.Windows.Media.SolidColorBrush IsSwapInProgress
+        {
+            get
+            {
+                if(SavedSwapPlayer != null)
+                {
+                    return System.Windows.Media.Brushes.DarkSalmon;
+                }else
+                {
+                    return System.Windows.Media.Brushes.Transparent;
+                }
+            }
+        }
+
+        public Student SavedSwapPlayer
+        {
+            get
+            {
+                return _SavedSwapPlayer;
+            }
+
+            set
+            {
+                _SavedSwapPlayer = value;
+                if (_SavedSwapPlayer != null)
+                    SavedSwapTeam = SelectedStartedTournamentTeam;
+                else
+                    SavedSwapTeam = null;
+                RaisePropertyChanged("IsSwapInProgress");
+            }
+        }
+        public Team SavedSwapTeam
+        {
+            get
+            {
+                return _SavedSwapTeam;
+            }
+
+            set
+            {
+                _SavedSwapTeam = value;
+            }
+        }
         public RelayCommand CreateTournamentCommand { get; set; }
         public RelayCommand CreatePlayerCommand { get; set; }
         public RelayCommand PlayerCheckedCommand { get; set; }
         public RelayCommand PlayerUncheckedCommand { get; set; }
         public RelayCommand StartTournamentCommand { get; set; }
+        public RelayCommand SwapPlayerCommand { get; set; }
+        public RelayCommand InternalListBoxItemClickCommand { get; set; }
 
         public MainMenuViewModel()
         {
@@ -84,7 +193,7 @@ namespace SoloTournamentCreator.ViewModel
             {
                 //cf http://stackoverflow.com/questions/3356541/entity-framework-linq-query-include-multiple-children-entities
 
-                MyDatabaseContext.MyStudents.Include(x => x.SummonerData).Include(x => x.SummonerSoloQueueData.Entries).Load();
+                MyDatabaseContext.MyStudents.Include(x => x.SummonerData).Include(x => x.DetailSoloQueueData.MiniSeries).Load();
                 MyDatabaseContext.MyMatchs.Load();
                 MyDatabaseContext.MyTeams.Load();
                 MyDatabaseContext.MyTournamentTrees.Load();
@@ -97,13 +206,20 @@ namespace SoloTournamentCreator.ViewModel
             }
             if(MyDatabaseContext.MyTournaments.Where(x => x.Status == Tournament.TournamentStage.Open).Count() != 0)
             {
-                SelectedTournament = MyOpenTournaments.First();
+                SelectedOpenTournament = MyOpenTournaments.First();
             }
             CreateTournamentCommand = new RelayCommand(CreateTournament);
             CreatePlayerCommand = new RelayCommand(CreatePlayer);
             PlayerCheckedCommand = new RelayCommand(PlayerChecked);
             PlayerUncheckedCommand = new RelayCommand(PlayerUnchecked);
             StartTournamentCommand = new RelayCommand(StartTournament);
+            SwapPlayerCommand = new RelayCommand(SwapPlayer);
+            InternalListBoxItemClickCommand = new RelayCommand(InternalListBoxItemClick);
+        }
+        private void InternalListBoxItemClick(object obj)
+        {
+            ((ListBox)((object[])obj)[0]).SelectedItem = ((ListBoxItem)((object[])obj)[1]).DataContext;
+            ((ListBoxItem)((object[])obj)[1]).Focus();
         }
         private void ClearDatabase()
         {
@@ -116,6 +232,7 @@ namespace SoloTournamentCreator.ViewModel
         private void PopulateDatabase()
         {
             IEnumerable<RiotApi.Net.RestClient.Dto.League.LeagueDto.LeagueEntryDto> pgm = RiotToEntity.ApiRequest.GetSampleChallenger();
+            Thread.Sleep(10000);
             lock (MyDatabaseContext)
             {
                 int i = 200;
@@ -142,21 +259,40 @@ namespace SoloTournamentCreator.ViewModel
         }
         private void StartTournament(object obj)
         {
-            MessageBoxResult result = MessageBox.Show("Do you wanna do something?", "Warning",MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
-            if (result == MessageBoxResult.Yes)
+            if (SelectedOpenTournament == null)
             {
-                //code for Yes
-                SelectedTournament.Start();
+                MessageBox.Show("Please Select a Tournament");
+                return;
             }
-            else if (result == MessageBoxResult.No)
+            if (MessageBox.Show("Are you sure you want to start the Tournament?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
-                //code for No
-            }
-            else if (result == MessageBoxResult.Cancel)
-            {
-                //code for Cancel
+                SelectedOpenTournament.Start();
+                //MyDatabaseContext.SaveChanges();
+                RaisePropertyChanged("MyTournaments");
             }
 
+        }
+
+        private void SwapPlayer(object obj)
+        {
+            if (SelectedTeamSelectedPlayer == null)
+                return;
+            if(SavedSwapPlayer == null)
+            {
+                SavedSwapPlayer = SelectedTeamSelectedPlayer;
+                RaisePropertyChanged("MyTeams");
+                RaisePropertyChanged("SelectedTeamPlayers");
+                return;
+            }
+            //var teamOne = MyDatabaseContext.MyTournaments.Local.Where(x => x.TournamentId == SelectedStartedTournament.TournamentId).Select(x => x.Teams.Where(y => y.TeamMember.Contains(MyDatabaseContext.MyStudents.Where(std => std.StudentId == SavedSwapPlayer.StudentId).FirstOrDefault()))).Single();
+            //var teamTwo = MyDatabaseContext.MyTournaments.Local.Where(x => x.TournamentId == SelectedStartedTournament.TournamentId).Select(x => x.Teams.Where(y => y.TeamMember.Contains(MyDatabaseContext.MyStudents.Where(std => std.StudentId == SelectedTeamSelectedPlayer.StudentId).FirstOrDefault()))).Single();
+            SelectedStartedTournamentTeam.RemoveMember(SelectedTeamSelectedPlayer);
+            SavedSwapTeam.RemoveMember(SavedSwapPlayer);
+            SelectedStartedTournamentTeam.AddMember(SavedSwapPlayer);
+            SavedSwapTeam.AddMember(SelectedTeamSelectedPlayer);
+            SavedSwapPlayer = null;
+            RaisePropertyChanged("MyTeams");
+            RaisePropertyChanged("SelectedTeamPlayers");
         }
         private void CustomPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -167,6 +303,9 @@ namespace SoloTournamentCreator.ViewModel
                     RaisePropertyChanged("MyCompletedTournaments");
                     RaisePropertyChanged("MyStartedTournaments");
                     break;
+                case "SelectedStartedTournament":
+                    SavedSwapPlayer = null;
+                    break;
                 default:
                     break;
             }
@@ -174,18 +313,17 @@ namespace SoloTournamentCreator.ViewModel
         private void PlayerChecked(object obj)
         {
             Student selectedPlayer = (Student)obj;
-            if(SelectedTournament == null)
+            if(SelectedOpenTournament == null)
             {
                 return;
             }
-            if (SelectedTournament.Participants.Contains(selectedPlayer))
+            if (SelectedOpenTournament.Participants.Contains(selectedPlayer))
             {
                 return;
             }
-            //MyDatabaseContext.MyTournaments.Where(x => x.TournamentId == SelectedTournament.TournamentId).Single().Participants.Add(selectedPlayer);
             lock (MyDatabaseContext)
             {
-                MyDatabaseContext.MyTournaments.Where(x => x.TournamentId == SelectedTournament.TournamentId).Single().Register(selectedPlayer);
+                MyDatabaseContext.MyTournaments.Where(x => x.TournamentId == SelectedOpenTournament.TournamentId).Single().Register(selectedPlayer);
                 MyDatabaseContext.SaveChanges();
             }
             RaisePropertyChanged("MyTournaments");
@@ -194,17 +332,17 @@ namespace SoloTournamentCreator.ViewModel
         private void PlayerUnchecked(object obj)
         {
             Student selectedPlayer = (Student)obj;
-            if (SelectedTournament == null)
+            if (SelectedOpenTournament == null)
             {
                 return;
             }
-            if (!SelectedTournament.Participants.Contains(selectedPlayer))
+            if (!SelectedOpenTournament.Participants.Contains(selectedPlayer))
             {
                 return;
             }
             lock (MyDatabaseContext)
             {
-                MyDatabaseContext.MyTournaments.Where(x => x.TournamentId == SelectedTournament.TournamentId).Single().Deregister(selectedPlayer);
+                MyDatabaseContext.MyTournaments.Where(x => x.TournamentId == SelectedOpenTournament.TournamentId).Single().Deregister(selectedPlayer);
                 MyDatabaseContext.SaveChanges();
             }
             RaisePropertyChanged("MyTournaments");

@@ -144,12 +144,16 @@ namespace SoloTournamentCreator.Model
 
         public void Start()
         {
-            Status = TournamentStage.Started;
+            Clean();
             CreateTeam();
             BalanceTeam();
             MyTournamentTree = new TournamentTree(Teams);
+            Status = TournamentStage.Started;
         }
-
+        private void Clean()
+        {
+            Teams = new HashSet<Team>();
+        }
         private void CreateTeam()
         {
             for (int i = 0; i < (int)Participants.Count / nbPlayerPerTeam; i++)
