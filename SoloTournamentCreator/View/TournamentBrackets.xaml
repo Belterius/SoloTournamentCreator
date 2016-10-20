@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="SoloTournamentCreator.View.TournamentBrackets"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:local="clr-namespace:SoloTournamentCreator.View"
+             xmlns:helper="clr-namespace:SoloTournamentCreator.Helper"
+             xmlns:model="clr-namespace:SoloTournamentCreator.Model"
+             xmlns:vm="clr-namespace:SoloTournamentCreator.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+             x:Name="MyUserControl">
+    <UserControl.Resources>
+        <DataTemplate x:Key="MatchTemplate" DataType="{x:Type model:Match}">
+            <Grid>
+                <Rectangle RadiusX="5" RadiusY="5">
+                    <Rectangle.InputBindings>
+                        <!--<MouseBinding Gesture="LeftClick"  Command="{Binding DataContext.ClosingCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}" />-->
+                        <MouseBinding Gesture="LeftClick"  Command="{Binding SelectWinner, ElementName=MyUserControl}" />
+                    </Rectangle.InputBindings>
+                    <Rectangle.Style>
+                        <Style>
+                            <Setter Property="Rectangle.Fill" Value="#ffdddddd"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=Winner}" Value="{x:Null}">
+                                    <Setter Property="Rectangle.Fill" Value="#ffeeeeee"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path=WinNext}" Value="True">
+                                    <Setter Property="Rectangle.Fill" Value="#ff00FF26"/>
+                                    <Setter Property="Rectangle.Stroke" Value="#ff000000"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Rectangle.Style>
+                </Rectangle>
+                <!--<TextBlock Text="{Binding Display}" Margin="5 0 0 0"/>-->
+                <Button Content="{Binding Display}" Margin="5 0 0 0" Command="{Binding SelectWinner, ElementName=MyUserControl}" />
+            </Grid>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <ScrollViewer>
+        <Canvas x:Name="Brackets" ScrollViewer.HorizontalScrollBarVisibility="Auto" Height="1000">
+        </Canvas>
+    </ScrollViewer>
+</UserControl>

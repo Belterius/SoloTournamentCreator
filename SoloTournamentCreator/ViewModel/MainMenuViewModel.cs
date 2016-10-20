@@ -209,7 +209,8 @@ namespace SoloTournamentCreator.ViewModel
         public RelayCommand SwapPlayerCommand { get; set; }
         public RelayCommand InternalListBoxItemClickCommand { get; set; }
         public RelayCommand RenameTeamCommand { get; set; }
-        
+        public RelayCommand SeeBracketCommand { get; set; }
+
 
         public MainMenuViewModel()
         {
@@ -244,6 +245,7 @@ namespace SoloTournamentCreator.ViewModel
             SwapPlayerCommand = new RelayCommand(SwapPlayer);
             RenameTeamCommand = new RelayCommand(RenameTeam);
             InternalListBoxItemClickCommand = new RelayCommand(InternalListBoxItemClick);
+            SeeBracketCommand = new RelayCommand(SeeBracket);
         }
         private void InternalListBoxItemClick(object obj)
         {
@@ -432,6 +434,14 @@ namespace SoloTournamentCreator.ViewModel
                     MyDatabaseContext.SaveChanges();
                     RaisePropertyChanged("MyTeams");
                 }
+            }
+        }
+        private void SeeBracket(object obj)
+        {
+            if(SelectedStartedTournament != null)
+            {
+                TournamentBracket tb = new TournamentBracket() { DataContext = new TournamentBracketViewModel(MyDatabaseContext, SelectedStartedTournament) };
+                tb.ShowDialog();
             }
         }
     }

@@ -195,6 +195,7 @@
                     </ListBox>
                     <Label x:Name="labelReplacement" Content="Additionnal Players :" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="170,131,0,0"/>
                     <Button x:Name="buttonRenameTeam" Content="Rename Team" HorizontalAlignment="Left" Margin="407,51,0,0" VerticalAlignment="Top" Command="{Binding RenameTeamCommand}"/>
+                    <Button x:Name="buttonSeeBracket" Content="See Bracket" HorizontalAlignment="Left" Margin="410,247,0,0" VerticalAlignment="Top" Width="75" Command="{Binding SeeBracketCommand}"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Completed Tournament">

@@ -30,6 +30,16 @@ namespace SoloTournamentCreator.Model
                 _Winner = value;
             }
         }
+        public string Display
+        {
+            get
+            {
+                if (Winner != null)
+                    return Winner.TeamName;
+                return "???";
+            }
+        }
+        public bool WinNext { get; set; }
         [ForeignKey("LeftContendantId")]
         public Match LeftContendant
         {
