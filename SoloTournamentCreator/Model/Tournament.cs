@@ -147,14 +147,13 @@ namespace SoloTournamentCreator.Model
             Clean();
             CreateTeam();
             BalanceTeam();
-            MyTournamentTree = new TournamentTree(Teams);
-            Status = TournamentStage.Started;
+            CreateTournamentTree();
         }
-        private void Clean()
+        public void Clean()
         {
             Teams = new HashSet<Team>();
         }
-        private void CreateTeam()
+        public void CreateTeam()
         {
             for (int i = 0; i < (int)Participants.Count / nbPlayerPerTeam; i++)
             {
@@ -162,7 +161,7 @@ namespace SoloTournamentCreator.Model
             }
 
         }
-        private void BalanceTeam()
+        public void BalanceTeam()
         {
             HashSet<Team> availableTeam = new HashSet<Team>(Teams);
             int nbIteration = Math.Min((int)Participants.Count/ nbPlayerPerTeam, NbTeam) * nbPlayerPerTeam;
@@ -176,6 +175,11 @@ namespace SoloTournamentCreator.Model
                     availableTeam.Remove(weakestTeam);
                 }
             }
+        }
+        public void CreateTournamentTree()
+        {
+            MyTournamentTree = new TournamentTree(Teams);
+            Status = TournamentStage.Started;
         }
     }
 }

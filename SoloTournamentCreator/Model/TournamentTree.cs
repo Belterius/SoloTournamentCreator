@@ -28,7 +28,7 @@ namespace SoloTournamentCreator.Model
             }
         }
 
-        public List<Match> LeftEndPoint
+        private List<Match> LeftEndPoint
         {
             get
             {
@@ -41,7 +41,7 @@ namespace SoloTournamentCreator.Model
             }
         }
 
-        public List<Match> RightEndPoint
+        private List<Match> RightEndPoint
         {
             get
             {

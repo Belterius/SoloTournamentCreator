@@ -87,20 +87,25 @@ namespace SoloTournamentCreator.ViewModel
                 RaisePropertyChanged("GraduationYear");
             }
         }
-
+        
         public RelayCommand CreatePlayerCommand { get; set; }
+        public RelayCommand ClosingCommand { get; set; }
 
         public CreatePlayerViewModel()
         {
             MyDatabaseContext = new SavingContext();
-            CreatePlayerCommand = new RelayCommand(CreatePlayer);
+            InitCommands();
         }
         public CreatePlayerViewModel(SavingContext savingContext)
         {
             MyDatabaseContext = savingContext;
-            CreatePlayerCommand = new RelayCommand(CreatePlayer);
+            InitCommands();
         }
-
+        private void InitCommands()
+        {
+            CreatePlayerCommand = new RelayCommand(CreatePlayer);
+            ClosingCommand = new RelayCommand(Closing);
+        }
         private void CreatePlayer(object obj)
         {
             if (CheckParameters())
@@ -151,6 +156,10 @@ namespace SoloTournamentCreator.ViewModel
             GraduationYear = "";
             FirstName = "";
             LastName = "";
+        }
+        private void Closing(object obj)
+        {
+
         }
     }
 }

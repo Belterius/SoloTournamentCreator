@@ -14,6 +14,7 @@ namespace SoloTournamentCreator.ViewModel
         SavingContext MyDatabaseContext;
         string _TournamentName;
         public RelayCommand CreateTournamentCommand { get; set; }
+        public RelayCommand ClosingCommand { get; set; }
 
         public string TournamentName
         {
@@ -32,12 +33,18 @@ namespace SoloTournamentCreator.ViewModel
         public CreateTournamentViewModel()
         {
             MyDatabaseContext = new SavingContext();
-            CreateTournamentCommand = new RelayCommand(CreateTournament);
+            InitCommands();
         }
         public CreateTournamentViewModel(SavingContext savingContext)
         {
             MyDatabaseContext = savingContext;
+            InitCommands();
+        }
+        private void InitCommands()
+        {
             CreateTournamentCommand = new RelayCommand(CreateTournament);
+            ClosingCommand = new RelayCommand(Closing);
+
         }
         private void CreateTournament(object obj)
         {
@@ -48,6 +55,10 @@ namespace SoloTournamentCreator.ViewModel
                 MyDatabaseContext.SaveChanges();
             }
             this.CloseWindow();
+
+        }
+        private void Closing(object obj)
+        {
 
         }
     }

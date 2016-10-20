@@ -30,6 +30,7 @@ namespace SoloTournamentCreator.Model
                 _Winner = value;
             }
         }
+        [ForeignKey("LeftContendantId")]
         public Match LeftContendant
         {
             get
@@ -42,6 +43,7 @@ namespace SoloTournamentCreator.Model
                 _LeftContendant = value;
             }
         }
+        [ForeignKey("RightContendantId")]
         public Match RightContendant
         {
             get

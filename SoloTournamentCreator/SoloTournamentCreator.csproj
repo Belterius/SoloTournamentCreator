@@ -148,6 +148,18 @@
     <Compile Include="Migrations\201610190829187_CustomMiniSeries.Designer.cs">
       <DependentUpon>201610190829187_CustomMiniSeries.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610200754156_SelfReferencingMatch.cs" />
+    <Compile Include="Migrations\201610200754156_SelfReferencingMatch.Designer.cs">
+      <DependentUpon>201610200754156_SelfReferencingMatch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610200837290_SelfReferencingMatch1.cs" />
+    <Compile Include="Migrations\201610200837290_SelfReferencingMatch1.Designer.cs">
+      <DependentUpon>201610200837290_SelfReferencingMatch1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610200850569_PublicTeamSize.cs" />
+    <Compile Include="Migrations\201610200850569_PublicTeamSize.Designer.cs">
+      <DependentUpon>201610200850569_PublicTeamSize.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\CustomLeagueEntry.cs" />
     <Compile Include="Model\Match.cs" />
@@ -220,6 +232,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610190829187_CustomMiniSeries.resx">
       <DependentUpon>201610190829187_CustomMiniSeries.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610200754156_SelfReferencingMatch.resx">
+      <DependentUpon>201610200754156_SelfReferencingMatch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610200837290_SelfReferencingMatch1.resx">
+      <DependentUpon>201610200837290_SelfReferencingMatch1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610200850569_PublicTeamSize.resx">
+      <DependentUpon>201610200850569_PublicTeamSize.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
