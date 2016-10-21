@@ -24,26 +24,65 @@ namespace SoloTournamentCreator.View
     {
         public Tournament SelectedTournament
         {
-            get { return (Tournament)GetValue(SelectedTournamentProperty); }
-            set { SetValue(SelectedTournamentProperty, value); }
+            get {
+                return (Tournament)GetValue(SelectedTournamentProperty);
+            }
+            set {
+                SetValue(SelectedTournamentProperty, value);
+            }
+        }
+        public int VerticalSize
+        {
+            get
+            {
+                if(SelectedTournament != null)
+                    return 30 * SelectedTournament.NbTeam;
+                return 30 * 16;
+            }
+        }
+        public int HorizontalSize
+        {
+            get
+            {
+                if (SelectedTournament != null)
+                    return Convert.ToInt32((Math.Log(SelectedTournament.NbTeam, 2) + 1) * bracketwidth + 50);
+                return Convert.ToInt32((Math.Log(16, 2) + 1) * bracketwidth + 50);
+            }
         }
         public RelayCommand SelectWinner
         {
-            get { return (RelayCommand)GetValue(SelectWinnerProperty); }
-            set { SetValue(SelectWinnerProperty, value); }
+            get {
+                return (RelayCommand)GetValue(SelectWinnerProperty);
+            }
+            set {
+                SetValue(SelectWinnerProperty, value);
+            }
         }
         public static readonly DependencyProperty SelectedTournamentProperty =
-            DependencyProperty.Register("SelectedTournament", typeof(Tournament), typeof(TournamentBrackets), new UIPropertyMetadata(null));
+            DependencyProperty.Register(
+                "SelectedTournament",
+                typeof(Tournament),
+                typeof(TournamentBrackets),
+                new UIPropertyMetadata(null, new PropertyChangedCallback(OnSelectedTournamentUpdated))
+                );
+
+        private static void OnSelectedTournamentUpdated(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if(e.NewValue != null) //cf TournamentBracketViewModel.ConfirmMatchResult
+                ((TournamentBrackets)d).UpdateBrackets();
+        }
 
         public static readonly DependencyProperty SelectWinnerProperty =
-           DependencyProperty.Register("SelectWinner", typeof(RelayCommand), typeof(TournamentBrackets), new UIPropertyMetadata(null));
+           DependencyProperty.Register(
+               "SelectWinner",
+               typeof(RelayCommand),
+               typeof(TournamentBrackets),
+               new UIPropertyMetadata(null)
+               );
 
         public TournamentBrackets()
         {
             InitializeComponent();
-            DependencyPropertyDescriptor prop = DependencyPropertyDescriptor.FromProperty(SelectedTournamentProperty, typeof(TournamentBrackets));
-            prop.AddValueChanged(this, delegate { UpdateBrackets(); });
-            testCommand = new RelayCommand(test);
         }
 
         private void UpdateBrackets()
@@ -83,8 +122,6 @@ namespace SoloTournamentCreator.View
                 double loc = (above.Slotloc + below.Slotloc + above.Height + 10) / 2;
 
                 AddBracketSlot(slot, right, top + loc - 10, brush, border);
-                //AddBracketSlot(slot, right, top + above.Height - 10);
-
                 Brackets.Children.Add(new Line
                 {
                     X1 = right - bracketwidth,
@@ -104,35 +141,6 @@ namespace SoloTournamentCreator.View
         }
         private double AddBracketSlot(Match slot, double right, double top, Brush color, Brush border)
         {
-            //Console.WriteLine("{0} {1} {2}", slot.Robot != null ? slot.Robot.Name : slot.Desc, right, top);
-            /*
-            Rectangle rect = new Rectangle
-            {
-                Width = bracketwidth,
-                Height = 20,
-                Fill = color,
-                Stroke = border,
-                StrokeThickness = 2,
-                RadiusX = 4,
-                RadiusY = 4
-            };
-            rect.SetValue(Canvas.LeftProperty, right - rect.Width);
-            rect.SetValue(Canvas.TopProperty, top);
-
-            TextBlock text = new TextBlock
-            {
-                Width = bracketwidth,
-                Height = 20,
-                Margin = new Thickness(5, 0, 0, 0),
-                Text = slot.Robot != null ? slot.Robot.Name : slot.Desc,
-            };
-            text.SetValue(Canvas.LeftProperty, right - rect.Width);
-            text.SetValue(Canvas.TopProperty, top);
-
-            Brackets.Children.Add(rect);
-            Brackets.Children.Add(text);
-            */
-
             ContentPresenter presenter = new ContentPresenter
             {
                 Content = slot,
@@ -145,11 +153,6 @@ namespace SoloTournamentCreator.View
             Brackets.Children.Add(presenter);
 
             return presenter.Height;
-        }
-        public RelayCommand testCommand { get; set; }
-        public void test(object obj)
-        {
-            
         }
 
     }

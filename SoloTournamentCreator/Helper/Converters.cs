@@ -20,6 +20,21 @@ namespace SoloTournamentCreator.Helper
             throw new NotSupportedException();
         }
     }
+    public class ValueNotNull : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value != null)
+                return true;
+            return false;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+
+    }
     public class TournamentInformation : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -60,7 +75,59 @@ namespace SoloTournamentCreator.Helper
             throw new NotImplementedException();
         }
     }
-
+    public class IsTournamentWinner : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (!(values[0] is Match) || !(values[1] is Tournament))
+            {
+                return false;
+            }
+            Match myMatch = (Match)values[0];
+            Tournament myTournament = (Tournament)values[1];
+            if (myTournament.TournamentWinner == null)
+                return false;
+            if (myTournament.TournamentWinner != myMatch.Winner)
+                return false;
+            return true;
+        }
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
+    public class WinnerSelectionAvailable : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (!(values[0] is Match))
+            {
+                return false;
+            }
+            if(!(values[1] is Tournament))
+            {
+                return false;
+            }
+            if(((Tournament)values[1]).Status != Tournament.TournamentStage.Started)
+            {
+                return false;
+            }
+            Match myMatch = (Match)values[0];
+            if (myMatch.RightContendant == null || myMatch.LeftContendant == null)
+            {
+                return false;
+            }
+            if (myMatch.LeftContendant.Winner == null || myMatch.RightContendant.Winner == null)
+            {
+                return false;
+            }
+            return true;
+        }
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
     public class PlayerSwapSelectedDisplay : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)

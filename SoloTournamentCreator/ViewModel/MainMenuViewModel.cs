@@ -142,6 +142,7 @@ namespace SoloTournamentCreator.ViewModel
             set
             {
                 _SelectedTeamSelectedPlayer = value;
+                RaisePropertyChanged("SelectedTeamSelectedPlayer");
             }
         }
         public Student SelectedStartedTournamentAdditionnalPlayer
@@ -153,7 +154,7 @@ namespace SoloTournamentCreator.ViewModel
 
             set
             {
-                _SelectedTeamSelectedPlayer = value;
+                SelectedTeamSelectedPlayer = value;
                 SelectedStartedTournamentTeam = null; //If I select an additionnal player I must unselect any Team, because he belong to none.
             }
         }
@@ -210,6 +211,8 @@ namespace SoloTournamentCreator.ViewModel
         public RelayCommand InternalListBoxItemClickCommand { get; set; }
         public RelayCommand RenameTeamCommand { get; set; }
         public RelayCommand SeeBracketCommand { get; set; }
+        public RelayCommand ArchiveTournamentCommand { get; set; }
+        public RelayCommand ClosingCommand { get; set; }
 
 
         public MainMenuViewModel()
@@ -237,6 +240,7 @@ namespace SoloTournamentCreator.ViewModel
             {
                 SelectedOpenTournament = MyOpenTournaments.First();
             }
+            ClosingCommand = new RelayCommand(Closing);
             CreateTournamentCommand = new RelayCommand(CreateTournament);
             CreatePlayerCommand = new RelayCommand(CreatePlayer);
             PlayerCheckedCommand = new RelayCommand(PlayerChecked);
@@ -246,11 +250,16 @@ namespace SoloTournamentCreator.ViewModel
             RenameTeamCommand = new RelayCommand(RenameTeam);
             InternalListBoxItemClickCommand = new RelayCommand(InternalListBoxItemClick);
             SeeBracketCommand = new RelayCommand(SeeBracket);
+            ArchiveTournamentCommand = new RelayCommand(ArchiveTournament);
         }
         private void InternalListBoxItemClick(object obj)
         {
             ((ListBox)((object[])obj)[0]).SelectedItem = ((ListBoxItem)((object[])obj)[1]).DataContext;
             ((ListBoxItem)((object[])obj)[1]).Focus();
+        }
+        private void Closing(object obj)
+        {
+            MyDatabaseContext.Dispose();
         }
         private void ClearDatabase()
         {
@@ -307,6 +316,28 @@ namespace SoloTournamentCreator.ViewModel
                 SelectedOpenTournament.CreateTournamentTree();
                 MyDatabaseContext.SaveChanges();
 
+                RaisePropertyChanged("MyTournaments");
+            }
+
+        }
+        private void ArchiveTournament(object obj)
+        {
+            if (SelectedStartedTournament == null)
+            {
+                MessageBox.Show("Please Select a Tournament");
+                return;
+            }
+            if (MessageBox.Show("Are you sure you want to archive the Tournament ?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            {
+                if(SelectedStartedTournament.TournamentWinner == null)
+                {
+                    if (MessageBox.Show("This tournament doesn't have a Winner yet, are you really sure you want to Archive it ?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
+                    {
+                        return;
+                    }
+                }
+                SelectedStartedTournament.Archive();
+                //MyDatabaseContext.SaveChanges();
                 RaisePropertyChanged("MyTournaments");
             }
 

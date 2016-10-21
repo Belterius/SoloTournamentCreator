@@ -64,6 +64,7 @@ namespace SoloTournamentCreator.Model
             RightEndPoint = new List<Match>();
             GenerateTournamentTree(MyTournamentTree, Math.Ceiling(Math.Log(teams.Count(), 2)));
             SetTeamStartingPosition(teams);
+            SetFreeWin();
             printTree();
         }
 
@@ -141,6 +142,10 @@ namespace SoloTournamentCreator.Model
                 }
             }
             Console.WriteLine(output);
+        }
+        private void SetFreeWin()
+        {
+            MyTournamentTree.SetAutoWinner();
         }
     }
 }

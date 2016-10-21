@@ -17,7 +17,8 @@ namespace SoloTournamentCreator.Model
         Match _LeftContendant;
         public int? RightContendantId { get; set; }
         Match _RightContendant;
-
+        private int _WinnerScore;
+        private int _LoserScore;
         public Team Winner
         {
             get
@@ -36,10 +37,12 @@ namespace SoloTournamentCreator.Model
             {
                 if (Winner != null)
                     return Winner.TeamName;
-                return "???";
+                if(RightContendant != null || LeftContendant != null)
+                    return "???";
+                return "Bye";
             }
         }
-        public bool WinNext { get; set; }
+        public bool? WinNext { get; set; }
         [ForeignKey("LeftContendantId")]
         public Match LeftContendant
         {
@@ -67,11 +70,41 @@ namespace SoloTournamentCreator.Model
             }
         }
 
+        public int WinnerScore
+        {
+            get
+            {
+                return _WinnerScore;
+            }
+
+            set
+            {
+                _WinnerScore = value;
+            }
+        }
+
+        public int LoserScore
+        {
+            get
+            {
+                return _LoserScore;
+            }
+
+            set
+            {
+                _LoserScore = value;
+            }
+        }
+
         public Match()
         {
+            WinnerScore = 0;
+            LoserScore = 0;
         }
         public Match(Team winner)
         {
+            WinnerScore = 0;
+            LoserScore = 0;
             Winner = winner;
         }
 
@@ -82,6 +115,25 @@ namespace SoloTournamentCreator.Model
         public void DeclareWinner(Team winner)
         {
             Winner = winner;
+        }
+        public void SetAutoWinner()
+        {
+            if (RightContendant == null && LeftContendant == null)
+                return;
+            if(RightContendant.Winner != null && RightContendant.RightContendant == null && RightContendant.LeftContendant == null && LeftContendant.Winner == null)
+            {
+                Winner = RightContendant.Winner;
+                RightContendant.WinNext = true;
+                return;
+            }
+            if (LeftContendant.Winner != null && LeftContendant.RightContendant == null && LeftContendant.LeftContendant == null && RightContendant.Winner == null)
+            {
+                Winner = LeftContendant.Winner;
+                LeftContendant.WinNext = true;
+                return;
+            }
+            RightContendant.SetAutoWinner();
+            LeftContendant.SetAutoWinner();
         }
     }
 }

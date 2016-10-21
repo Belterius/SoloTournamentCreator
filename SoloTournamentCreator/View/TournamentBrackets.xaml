@@ -12,36 +12,82 @@
              d:DesignHeight="300" d:DesignWidth="300"
              x:Name="MyUserControl">
     <UserControl.Resources>
+        <helper:WinnerSelectionAvailable x:Key="WinnerSelectionAvailable" />
+        <helper:IsTournamentWinner x:Key="IsTournamentWinner" />
+        <Style TargetType="Button" x:Key="TransparentButton">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid Background="{TemplateBinding Background}">
+                            <ContentPresenter x:Name="MyContentPresenter" 
+                                          Content="{TemplateBinding Content}"
+                                          HorizontalAlignment="Center" 
+                                          VerticalAlignment="Center" />
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="LightBlue"/>
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <DataTemplate x:Key="MatchTemplate" DataType="{x:Type model:Match}">
             <Grid>
                 <Rectangle RadiusX="5" RadiusY="5">
                     <Rectangle.InputBindings>
-                        <!--<MouseBinding Gesture="LeftClick"  Command="{Binding DataContext.ClosingCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}" />-->
                         <MouseBinding Gesture="LeftClick"  Command="{Binding SelectWinner, ElementName=MyUserControl}" />
                     </Rectangle.InputBindings>
                     <Rectangle.Style>
-                        <Style>
-                            <Setter Property="Rectangle.Fill" Value="#ffdddddd"/>
+                        <Style TargetType="Rectangle">
+                            <Setter Property="Fill" Value="#ffdddddd"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Path=Winner}" Value="{x:Null}">
-                                    <Setter Property="Rectangle.Fill" Value="#ffeeeeee"/>
+                                    <Setter Property="Fill" Value="#ffeeeeee"/>
+                                    <Setter Property="Stroke" Value="#ff000000"/>
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Path=WinNext}" Value="True">
-                                    <Setter Property="Rectangle.Fill" Value="#ff00FF26"/>
-                                    <Setter Property="Rectangle.Stroke" Value="#ff000000"/>
+                                    <Setter Property="Fill" Value="#ff00FF26"/>
+                                    <Setter Property="Stroke" Value="#ff000000"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path=WinNext}" Value="False">
+                                    <Setter Property="Fill" Value="#B22222"/>
+                                    <Setter Property="Stroke" Value="#ff000000"/>
+                                </DataTrigger>
+                                <DataTrigger Value="True">
+                                    <DataTrigger.Binding>
+                                        <MultiBinding Converter="{StaticResource IsTournamentWinner}" Mode="OneWay">
+                                            <Binding />
+                                            <Binding ElementName="MyUserControl" Path="SelectedTournament"/>
+                                        </MultiBinding>
+                                    </DataTrigger.Binding> 
+                                    <Setter Property="Fill" Value="#ffd700"/>
+                                    <Setter Property="Stroke" Value="#ff000000"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
                     </Rectangle.Style>
                 </Rectangle>
-                <!--<TextBlock Text="{Binding Display}" Margin="5 0 0 0"/>-->
-                <Button Content="{Binding Display}" Margin="5 0 0 0" Command="{Binding SelectWinner, ElementName=MyUserControl}" />
+                <!--<Button Content="{Binding Display}" Margin="5 0 0 0" Background="Transparent" BorderBrush="Transparent" Style="{StaticResource TransparentButton}" Command="{Binding SelectWinner, ElementName=MyUserControl}" CommandParameter="{Binding}" IsEnabled="{Binding Converter={StaticResource WinnerSelectionAvailable}, Mode=OneWay}" />-->
+                <Button Content="{Binding Display}" Margin="5 0 0 0"  Style="{StaticResource TransparentButton}" Command="{Binding SelectWinner, ElementName=MyUserControl}" CommandParameter="{Binding}"  >
+                    <Button.IsEnabled>
+                        <MultiBinding Converter="{StaticResource WinnerSelectionAvailable}" Mode="OneWay">
+                            <Binding />
+                            <Binding ElementName="MyUserControl" Path="SelectedTournament"  />
+                        </MultiBinding>
+                    </Button.IsEnabled>
+                </Button>
             </Grid>
         </DataTemplate>
     </UserControl.Resources>
 
     <ScrollViewer>
-        <Canvas x:Name="Brackets" ScrollViewer.HorizontalScrollBarVisibility="Auto" Height="1000">
+        <!--<Canvas x:Name="Brackets" ScrollViewer.HorizontalScrollBarVisibility="Auto" Height="1000">-->
+        <Canvas x:Name="Brackets" Height="{Binding VerticalSize, ElementName=MyUserControl}" Width="{Binding HorizontalSize, ElementName=MyUserControl}">
         </Canvas>
     </ScrollViewer>
 </UserControl>

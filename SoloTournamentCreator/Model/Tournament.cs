@@ -118,6 +118,13 @@ namespace SoloTournamentCreator.Model
             }
         }
 
+        public Team TournamentWinner
+        {
+            get
+            {
+                return MyTournamentTree.MyTournamentTree.Winner;
+            }
+        }
         private Tournament()
         {
             Participants = new HashSet<Student>();
@@ -180,6 +187,13 @@ namespace SoloTournamentCreator.Model
         {
             MyTournamentTree = new TournamentTree(Teams);
             Status = TournamentStage.Started;
+        }
+        public void Archive()
+        {
+            if(Status == TournamentStage.Started)
+            {
+                Status = TournamentStage.Completed;
+            }
         }
     }
 }

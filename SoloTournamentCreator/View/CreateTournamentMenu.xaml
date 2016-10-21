@@ -28,7 +28,6 @@
             <ComboBoxItem Content="8"></ComboBoxItem>
             <ComboBoxItem Content="16"></ComboBoxItem>
             <ComboBoxItem Content="32"></ComboBoxItem>
-            <ComboBoxItem Content="2"></ComboBoxItem>
         </ComboBox>
         <Button x:Name="buttonCreateTournament" Content="Create Tournament" HorizontalAlignment="Left" Margin="83,72,0,0" VerticalAlignment="Top" Width="109" Command="{Binding CreateTournamentCommand}" CommandParameter="{Binding ElementName=comboBox, Path=SelectedValue}"/>
 

@@ -87,6 +87,14 @@
     <Compile Include="Migrations\201610201410427_Matchtweak.Designer.cs">
       <DependentUpon>201610201410427_Matchtweak.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610210917025_nullWinNext.cs" />
+    <Compile Include="Migrations\201610210917025_nullWinNext.Designer.cs">
+      <DependentUpon>201610210917025_nullWinNext.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610211346259_MatchScore.cs" />
+    <Compile Include="Migrations\201610211346259_MatchScore.Designer.cs">
+      <DependentUpon>201610211346259_MatchScore.cs</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\TournamentBracketViewModel.cs" />
     <Compile Include="View\TournamentBracket.xaml.cs">
       <DependentUpon>TournamentBracket.xaml</DependentUpon>
@@ -263,6 +271,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610201410427_Matchtweak.resx">
       <DependentUpon>201610201410427_Matchtweak.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610210917025_nullWinNext.resx">
+      <DependentUpon>201610210917025_nullWinNext.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610211346259_MatchScore.resx">
+      <DependentUpon>201610211346259_MatchScore.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
