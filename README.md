@@ -1,7 +1,7 @@
 # SoloTournamentCreator
 
 Application realised in C# to help creating League of Legends Tournament with solo player inscription.
-The application try to create the most balance team config possible depending on each summoner skill level (solo Queue rank),
+The application try to create the most balanced teams config possible depending on each summoner skill level (solo Queue rank),
 retrieved via their pseudo.
 
 It will then be possible to access a Tournament Tree, that will be updated depending on the result of each match.
