@@ -23,7 +23,7 @@ namespace SoloTournamentCreator.Model
         private LeagueDto _SummonerSoloQueueData;
         private CustomLeagueEntryDto _DetailSoloQueueData;
         private ICollection<Tournament> _ParticipatingTournament;
-
+        public virtual ICollection<Team> MyTeams { get; set; }
         public string Mail
         {
             get

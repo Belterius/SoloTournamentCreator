@@ -54,7 +54,7 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                    <ListBox ItemsSource="{Binding MyPlayers}" Margin="193,0,120,30">
+                    <ListBox ItemsSource="{Binding MyPlayers}" Margin="193,0,120,30" IsEnabled="{Binding Converter={StaticResource ValueNotNull}, Path=SelectedOpenTournament}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <ListBoxItem>
@@ -81,6 +81,8 @@
                     <Button x:Name="buttonStartTournament" Content="Start Tournament" Margin="410,10,10.4,0" VerticalAlignment="Top" Command="{Binding StartTournamentCommand}" IsEnabled="{Binding Converter={StaticResource ValueNotNull}, Path=SelectedOpenTournament}"/>
                     <Button x:Name="buttonCreateTournament" Content="Create Tournament" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,257,0,0" Command="{Binding CreateTournamentCommand}"/>
                     <Button x:Name="buttonAddPlayer" Content="Add Player" HorizontalAlignment="Left" Margin="113,257,0,0" VerticalAlignment="Top" Width="75" Command="{Binding CreatePlayerCommand}"/>
+                    <TextBox x:Name="textBox" Text="{Binding SummonerFilter, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="23" Margin="275,255,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" ToolTip="Summoner Name search"/>
+                    <Label x:Name="label" Content="Filter :" HorizontalAlignment="Left" Margin="232,252,0,0" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Started Tournament">
@@ -107,7 +109,7 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                    <ListBox ItemsSource="{Binding MyTeams}" SelectedItem="{Binding SelectedStartedTournamentTeam}" Margin="0,105,0,0" HorizontalAlignment="Left" Width="165">
+                    <ListBox ItemsSource="{Binding MyStartedTournamentTeams}" SelectedItem="{Binding SelectedStartedTournamentTeam}" Margin="0,105,0,0" HorizontalAlignment="Left" Width="165">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <ListBoxItem>
@@ -136,7 +138,7 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                    <ListBox ItemsSource="{Binding SelectedTeamPlayers}" SelectedItem="{Binding SelectedTeamSelectedPlayer}" Margin="170,0,0,145" HorizontalAlignment="Left" Width="224">
+                    <ListBox ItemsSource="{Binding SelectedStartedTournamentTeamPlayers}" SelectedItem="{Binding SelectedTeamSelectedPlayer}" Margin="170,0,0,137" HorizontalAlignment="Left" Width="224">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <ListBoxItem>
@@ -165,8 +167,8 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                    <Button x:Name="buttonSwap" Content="Swap Players" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="420,21,0,0" Command="{Binding SwapPlayerCommand}" Background="{Binding IsSwapInProgress}" IsEnabled="{Binding Converter={StaticResource ValueNotNull}, Path=SelectedTeamSelectedPlayer}"/>
-                    <ListBox ItemsSource="{Binding SelectedTeamAdditionnalPlayers}" SelectedItem="{Binding SelectedStartedTournamentAdditionnalPlayer}" Margin="170,150,0,0" HorizontalAlignment="Left" Width="224">
+                    <Button x:Name="buttonSwap" Content="Swap Players" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="417,21,0,0" Command="{Binding SwapPlayerCommand}" Background="{Binding IsSwapInProgress}" IsEnabled="{Binding Converter={StaticResource ValueNotNull}, Path=SelectedTeamSelectedPlayer}" Width="75"/>
+                    <ListBox ItemsSource="{Binding SelectedTeamAdditionnalPlayers}" SelectedItem="{Binding SelectedStartedTournamentAdditionnalPlayer}" Margin="170,157,0,0" HorizontalAlignment="Left" Width="224">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <ListBoxItem>
@@ -194,17 +196,83 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                    <Label x:Name="labelReplacement" Content="Additionnal Players :" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="170,131,0,0"/>
+                    <Label x:Name="labelReplacement" Content="Additionnal Players :" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="165,136,0,0"/>
                     <Button x:Name="buttonRenameTeam" Content="Rename Team" HorizontalAlignment="Left" Margin="417,59,0,0" VerticalAlignment="Top" Command="{Binding RenameTeamCommand}" IsEnabled="{Binding Converter={StaticResource ValueNotNull}, Path=SelectedStartedTournamentTeam}"/>
-                    <Button x:Name="buttonSeeBracket" Content="See Bracket" HorizontalAlignment="Left" Margin="420,171,0,0" VerticalAlignment="Top" Width="75" Command="{Binding SeeBracketCommand}" Height="45" IsEnabled="{Binding Converter={StaticResource ValueNotNull}, Path=SelectedStartedTournament}"/>
+                    <Button x:Name="buttonSeeBracket" Content="See Bracket" HorizontalAlignment="Left" Margin="420,171,0,0" VerticalAlignment="Top" Width="75" Command="{Binding SeeBracketCommand}" CommandParameter="{Binding SelectedStartedTournament}" Height="45" IsEnabled="{Binding Converter={StaticResource ValueNotNull}, Path=SelectedStartedTournament}"/>
                     <Button x:Name="buttonCloseTournament" Content="Archive Tournament" HorizontalAlignment="Left" Margin="399,246,0,0" VerticalAlignment="Top" Height="20" Command="{Binding ArchiveTournamentCommand}" IsEnabled="{Binding Converter={StaticResource ValueNotNull}, Path=SelectedStartedTournament}"/>
+                    <TextBox x:Name="textBox1" Text="{Binding StartedTournamentSummonerFilter, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Converter={StaticResource ValueNotNull}, Path=SelectedStartedTournamentTeam}" HorizontalAlignment="Left" Height="23" Margin="417,105,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="75"/>
+                    <Label x:Name="label1" Content="Find player :" HorizontalAlignment="Left" Margin="414,83,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.138,0.319"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Completed Tournament">
                 <Grid Background="#FFE5E5E5">
-                    <ListBox ItemsSource="{Binding MyCompletedTournaments}" Margin="0,0,304,-0.2">
-
+                    <ListBox ItemsSource="{Binding MyCompletedTournaments}" SelectedItem="{Binding SelectedCompletedTournament}" Margin="0,0,326.4,0">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <ListBoxItem>
+                                    <TextBlock  Text="{Binding Converter={StaticResource TournamentTeamInformation}, Mode=OneWay}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseLeftButtonDown">
+                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext.InternalListBoxItemClickCommand}">
+                                                    <i:InvokeCommandAction.CommandParameter>
+                                                        <MultiBinding Converter="{StaticResource InternalListBoxItemClick}" Mode="OneWay">
+                                                            <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ListBox}"/>
+                                                            <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}"/>
+                                                        </MultiBinding>
+                                                    </i:InvokeCommandAction.CommandParameter>
+                                                </i:InvokeCommandAction>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </TextBlock>
+                                </ListBoxItem>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
                     </ListBox>
+                    <ListBox ItemsSource="{Binding MyCompletedTournamentTeams}" SelectedItem="{Binding SelectedCompletedTournamentTeam}" Margin="193,0,0,155" HorizontalAlignment="Left" Width="224">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <ListBoxItem>
+                                    <TextBlock Text="{Binding TeamName}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseLeftButtonDown">
+                                                <i:InvokeCommandAction Command="{Binding DataContext.InternalListBoxItemClickCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}">
+                                                    <i:InvokeCommandAction.CommandParameter>
+                                                        <MultiBinding Converter="{StaticResource InternalListBoxItemClick}" Mode="OneWay">
+                                                            <Binding RelativeSource="{RelativeSource AncestorType={x:Type ListBox}, Mode=FindAncestor}"/>
+                                                            <Binding RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}, Mode=FindAncestor}"/>
+                                                        </MultiBinding>
+                                                    </i:InvokeCommandAction.CommandParameter>
+                                                </i:InvokeCommandAction>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </TextBlock>
+                                </ListBoxItem>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <ListBox ItemsSource="{Binding SelectedCompletedTournamentTeamPlayers}" Margin="193,121,0,0" HorizontalAlignment="Left" Width="224">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <ListBoxItem>
+                                    <TextBlock Text="{Binding Converter={StaticResource PlayerDisplayLevel}, Mode=OneWay}" >
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseLeftButtonDown">
+                                                <i:InvokeCommandAction Command="{Binding DataContext.InternalListBoxItemClickCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}">
+                                                    <i:InvokeCommandAction.CommandParameter>
+                                                        <MultiBinding Converter="{StaticResource InternalListBoxItemClick}" Mode="OneWay">
+                                                            <Binding RelativeSource="{RelativeSource AncestorType={x:Type ListBox}, Mode=FindAncestor}"/>
+                                                            <Binding RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}, Mode=FindAncestor}"/>
+                                                        </MultiBinding>
+                                                    </i:InvokeCommandAction.CommandParameter>
+                                                </i:InvokeCommandAction>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </TextBlock>
+                                </ListBoxItem>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <Button x:Name="buttonSeeBracketCompletedTournament" Content="See Bracket" HorizontalAlignment="Left" Margin="429,106,0,0" VerticalAlignment="Top" Width="75" Command="{Binding SeeBracketCommand}" CommandParameter="{Binding SelectedCompletedTournament}" Height="45" IsEnabled="{Binding SelectedCompletedTournament, Converter={StaticResource ValueNotNull}}"/>
                 </Grid>
             </TabItem>
         </TabControl>

@@ -16,7 +16,7 @@
         <helper:IsTournamentWinner x:Key="IsTournamentWinner" />
         <Style TargetType="Button" x:Key="TransparentButton">
             <Setter Property="OverridesDefaultStyle" Value="True" />
-
+            <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
@@ -29,7 +29,7 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter Property="Background" Value="LightBlue"/>
-                                <Setter Property="Visibility" Value="Visible"/>
+                                <!--<Setter Property="Visibility" Value="Visible"/>-->
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -40,7 +40,7 @@
             <Grid>
                 <Rectangle RadiusX="5" RadiusY="5">
                     <Rectangle.InputBindings>
-                        <MouseBinding Gesture="LeftClick"  Command="{Binding SelectWinner, ElementName=MyUserControl}" />
+                        <MouseBinding Gesture="LeftClick"  Command="{Binding SelectWinner, ElementName=MyUserControl}" CommandParameter="{Binding}"/>
                     </Rectangle.InputBindings>
                     <Rectangle.Style>
                         <Style TargetType="Rectangle">

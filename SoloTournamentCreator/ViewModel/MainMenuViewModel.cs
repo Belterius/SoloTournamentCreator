@@ -20,10 +20,14 @@ namespace SoloTournamentCreator.ViewModel
         SavingContext MyDatabaseContext;
         Tournament _SelectedOpenTournament;
         Tournament _SelectedStartedTournament;
+        Tournament _SelectedCompletedTournament;
         Team _SelectedStartedTournamentTeam;
+        Team _SelectedCompletedTournamentTeam;
         Student _SelectedTeamSelectedPlayer;
         Student _SavedSwapPlayer;
-        Team _SavedSwapTeam;
+        Team _SavedSwapTeam; 
+        string _SummonerFilter;
+        string _StartedTournamentSummonerFilter;
         public ObservableCollection<Tournament> MyTournaments
         {
             get
@@ -31,11 +35,11 @@ namespace SoloTournamentCreator.ViewModel
                 return MyDatabaseContext.MyTournaments.Local;
             }
         }
-        public ObservableCollection<Student> MyPlayers
+        public IEnumerable<Student> MyPlayers
         {
             get
             {
-                return MyDatabaseContext.MyStudents.Local;
+                return MyDatabaseContext.MyStudents.Local.Where(x => x.Pseudo.ToLower().Contains(SummonerFilter ?? ""));
             }
         }
         public IEnumerable<Tournament> MyOpenTournaments
@@ -73,12 +77,23 @@ namespace SoloTournamentCreator.ViewModel
                 RaisePropertyChanged("SelectedOpenTournament");
             }
         }
-        public List<Team> MyTeams
+        public List<Team> MyStartedTournamentTeams
         {
             get
             {
                 if (SelectedStartedTournament != null)
-                    return SelectedStartedTournament.Teams.ToList();
+                {
+                    return SelectedStartedTournament.Teams.Where(x => x.TeamMember.Where(y => y.Pseudo.ToLower().Contains(StartedTournamentSummonerFilter ?? "")).Count() != 0).ToList();
+                }
+                return null;
+            }
+        }
+        public List<Team> MyCompletedTournamentTeams
+        {
+            get
+            {
+                if (SelectedCompletedTournament != null)
+                    return SelectedCompletedTournament.Teams.ToList();
                 return null;
             }
         }
@@ -93,7 +108,7 @@ namespace SoloTournamentCreator.ViewModel
             {
                 _SelectedStartedTournament = value;
                 RaisePropertyChanged("SelectedStartedTournament");
-                RaisePropertyChanged("MyTeams");
+                RaisePropertyChanged("MyStartedTournamentTeams");
                 RaisePropertyChanged("SelectedTeamAdditionnalPlayers");
             }
         }
@@ -110,10 +125,10 @@ namespace SoloTournamentCreator.ViewModel
                 if(_SelectedStartedTournamentTeam != null)//If I'm selecting a team, I need to reset my SelectedPlayer, but if my value is null, it means I'm either reseting the team because I'm chosing an additional player (so I don't want to reset my SelectedPlayer) or I'm changing tournament (and then I already reset my SelectedPlayer)
                     _SelectedTeamSelectedPlayer = null;
                 RaisePropertyChanged("SelectedStartedTournamentTeam");
-                RaisePropertyChanged("SelectedTeamPlayers");
+                RaisePropertyChanged("SelectedStartedTournamentTeamPlayers");
             }
         }
-        public List<Student> SelectedTeamPlayers
+        public List<Student> SelectedStartedTournamentTeamPlayers
         {
             get
             {
@@ -200,6 +215,71 @@ namespace SoloTournamentCreator.ViewModel
             set
             {
                 _SavedSwapTeam = value;
+            }
+        }
+
+        public Tournament SelectedCompletedTournament
+        {
+            get
+            {
+                return _SelectedCompletedTournament;
+            }
+
+            set
+            {
+                _SelectedCompletedTournament = value;
+                RaisePropertyChanged("SelectedCompletedTournament");
+                RaisePropertyChanged("MyCompletedTournamentTeams");
+            }
+        }
+        public Team SelectedCompletedTournamentTeam
+        {
+            get
+            {
+                return _SelectedCompletedTournamentTeam;
+            }
+
+            set
+            {
+                _SelectedCompletedTournamentTeam = value;
+                if (_SelectedCompletedTournamentTeam != null)//If I'm selecting a team, I need to reset my SelectedPlayer, but if my value is null, it means I'm either reseting the team because I'm chosing an additional player (so I don't want to reset my SelectedPlayer) or I'm changing tournament (and then I already reset my SelectedPlayer)
+                    _SelectedTeamSelectedPlayer = null;
+                RaisePropertyChanged("SelectedCompletedTournamentTeam");
+                RaisePropertyChanged("SelectedCompletedTournamentTeamPlayers");
+            }
+        }
+        public List<Student> SelectedCompletedTournamentTeamPlayers
+        {
+            get
+            {
+                if (SelectedCompletedTournamentTeam != null)
+                    return SelectedCompletedTournamentTeam.TeamMember.ToList();
+                return null;
+            }
+        }
+        
+        public string SummonerFilter
+        {
+            get
+            {
+                return _SummonerFilter;
+            }
+            set
+            {
+                _SummonerFilter = value.ToLower();
+                RaisePropertyChanged("MyPlayers");
+            }
+        }
+        public string StartedTournamentSummonerFilter
+        {
+            get
+            {
+                return _StartedTournamentSummonerFilter;
+            }
+            set
+            {
+                _StartedTournamentSummonerFilter = value.ToLower();
+                RaisePropertyChanged("MyStartedTournamentTeams");
             }
         }
         public RelayCommand CreateTournamentCommand { get; set; }
@@ -350,8 +430,8 @@ namespace SoloTournamentCreator.ViewModel
             if(SavedSwapPlayer == null)
             {
                 SavedSwapPlayer = SelectedTeamSelectedPlayer;
-                RaisePropertyChanged("MyTeams");
-                RaisePropertyChanged("SelectedTeamPlayers"); 
+                RaisePropertyChanged("MyStartedTournamentTeams");
+                RaisePropertyChanged("SelectedStartedTournamentTeamPlayers"); 
                 RaisePropertyChanged("SelectedTeamAdditionnalPlayers");
                 return;
             }
@@ -382,8 +462,8 @@ namespace SoloTournamentCreator.ViewModel
             
             MyDatabaseContext.SaveChanges();
             SavedSwapPlayer = null;
-            RaisePropertyChanged("MyTeams");
-            RaisePropertyChanged("SelectedTeamPlayers");
+            RaisePropertyChanged("MyStartedTournamentTeams");
+            RaisePropertyChanged("SelectedStartedTournamentTeamPlayers");
             RaisePropertyChanged("SelectedTeamAdditionnalPlayers");
         }
         private void CustomPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -463,15 +543,15 @@ namespace SoloTournamentCreator.ViewModel
                         return;
                     }
                     MyDatabaseContext.SaveChanges();
-                    RaisePropertyChanged("MyTeams");
+                    RaisePropertyChanged("MyStartedTournamentTeams");
                 }
             }
         }
         private void SeeBracket(object obj)
         {
-            if(SelectedStartedTournament != null)
+            if(obj is Tournament)
             {
-                TournamentBracket tb = new TournamentBracket() { DataContext = new TournamentBracketViewModel(MyDatabaseContext, SelectedStartedTournament) };
+                TournamentBracket tb = new TournamentBracket() { DataContext = new TournamentBracketViewModel(MyDatabaseContext, (Tournament)obj) };
                 tb.ShowDialog();
             }
         }

@@ -95,6 +95,18 @@
     <Compile Include="Migrations\201610211346259_MatchScore.Designer.cs">
       <DependentUpon>201610211346259_MatchScore.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610241036091_pbTeamHashSet.cs" />
+    <Compile Include="Migrations\201610241036091_pbTeamHashSet.Designer.cs">
+      <DependentUpon>201610241036091_pbTeamHashSet.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610241059417_pbTeamHashSet1.cs" />
+    <Compile Include="Migrations\201610241059417_pbTeamHashSet1.Designer.cs">
+      <DependentUpon>201610241059417_pbTeamHashSet1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610241128532_ManyToManyStudentTeam.cs" />
+    <Compile Include="Migrations\201610241128532_ManyToManyStudentTeam.Designer.cs">
+      <DependentUpon>201610241128532_ManyToManyStudentTeam.cs</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\TournamentBracketViewModel.cs" />
     <Compile Include="View\TournamentBracket.xaml.cs">
       <DependentUpon>TournamentBracket.xaml</DependentUpon>
@@ -277,6 +289,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610211346259_MatchScore.resx">
       <DependentUpon>201610211346259_MatchScore.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610241036091_pbTeamHashSet.resx">
+      <DependentUpon>201610241036091_pbTeamHashSet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610241059417_pbTeamHashSet1.resx">
+      <DependentUpon>201610241059417_pbTeamHashSet1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610241128532_ManyToManyStudentTeam.resx">
+      <DependentUpon>201610241128532_ManyToManyStudentTeam.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
