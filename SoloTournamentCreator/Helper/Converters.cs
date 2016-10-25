@@ -128,6 +128,25 @@ namespace SoloTournamentCreator.Helper
             throw new NotSupportedException();
         }
     }
+    public class IsTournamentWinningTeam : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (!(values[0] is Tournament) || !(values[1] is Team))
+            {
+                return System.Windows.Media.Brushes.Transparent;
+            }
+            Tournament myTournament = (Tournament)values[0];
+            Team myTeam = (Team)values[1];
+            if (myTournament.TournamentWinner == myTeam)
+                return System.Windows.Media.Brushes.Gold;
+            return System.Windows.Media.Brushes.Transparent;
+        }
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
     public class PlayerSwapSelectedDisplay : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)

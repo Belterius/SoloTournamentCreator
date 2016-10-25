@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -25,7 +26,7 @@ namespace SoloTournamentCreator.ViewModel
         Team _SelectedCompletedTournamentTeam;
         Student _SelectedTeamSelectedPlayer;
         Student _SavedSwapPlayer;
-        Team _SavedSwapTeam; 
+        Team _SavedSwapTeam;
         string _SummonerFilter;
         string _StartedTournamentSummonerFilter;
         public ObservableCollection<Tournament> MyTournaments
@@ -122,7 +123,7 @@ namespace SoloTournamentCreator.ViewModel
             set
             {
                 _SelectedStartedTournamentTeam = value;
-                if(_SelectedStartedTournamentTeam != null)//If I'm selecting a team, I need to reset my SelectedPlayer, but if my value is null, it means I'm either reseting the team because I'm chosing an additional player (so I don't want to reset my SelectedPlayer) or I'm changing tournament (and then I already reset my SelectedPlayer)
+                if (_SelectedStartedTournamentTeam != null)//If I'm selecting a team, I need to reset my SelectedPlayer, but if my value is null, it means I'm either reseting the team because I'm chosing an additional player (so I don't want to reset my SelectedPlayer) or I'm changing tournament (and then I already reset my SelectedPlayer)
                     _SelectedTeamSelectedPlayer = null;
                 RaisePropertyChanged("SelectedStartedTournamentTeam");
                 RaisePropertyChanged("SelectedStartedTournamentTeamPlayers");
@@ -146,7 +147,7 @@ namespace SoloTournamentCreator.ViewModel
                 return null;
             }
         }
-        
+
         public Student SelectedTeamSelectedPlayer
         {
             get
@@ -178,10 +179,11 @@ namespace SoloTournamentCreator.ViewModel
         {
             get
             {
-                if(SavedSwapPlayer != null)
+                if (SavedSwapPlayer != null)
                 {
                     return System.Windows.Media.Brushes.DarkSalmon;
-                }else
+                }
+                else
                 {
                     return System.Windows.Media.Brushes.Transparent;
                 }
@@ -257,7 +259,7 @@ namespace SoloTournamentCreator.ViewModel
                 return null;
             }
         }
-        
+
         public string SummonerFilter
         {
             get
@@ -307,16 +309,15 @@ namespace SoloTournamentCreator.ViewModel
 
                 MyDatabaseContext.MyStudents.Include(x => x.SummonerData).Include(x => x.DetailSoloQueueData.MiniSeries).Load();
                 MyDatabaseContext.MyMatchs.Load();
-                MyDatabaseContext.MyTeams.Load();
+                MyDatabaseContext.MyTeams.Include(x => x.TeamMember).Load();
                 MyDatabaseContext.MyTournamentTrees.Load();
                 MyDatabaseContext.MyTournaments.Include(x => x.Participants).Include(x => x.Teams).Load();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
                 throw;
             }
-            if(MyDatabaseContext.MyTournaments.Where(x => x.Status == Tournament.TournamentStage.Open).Count() != 0)
+            if (MyDatabaseContext.MyTournaments.Where(x => x.Status == Tournament.TournamentStage.Open).Count() != 0)
             {
                 SelectedOpenTournament = MyOpenTournaments.First();
             }
@@ -341,6 +342,7 @@ namespace SoloTournamentCreator.ViewModel
         {
             MyDatabaseContext.Dispose();
         }
+        [Conditional("DEBUG")]
         private void ClearDatabase()
         {
             lock (MyDatabaseContext)
@@ -349,6 +351,7 @@ namespace SoloTournamentCreator.ViewModel
                 MyDatabaseContext.SaveChanges();
             }
         }
+        [Conditional("DEBUG")]
         private void PopulateDatabase()
         {
             IEnumerable<RiotApi.Net.RestClient.Dto.League.LeagueDto.LeagueEntryDto> pgm = RiotToEntity.ApiRequest.GetSampleChallenger();
@@ -363,13 +366,13 @@ namespace SoloTournamentCreator.ViewModel
                         Student std = new Student(challenjour.PlayerOrTeamName + "@", challenjour.PlayerOrTeamName, challenjour.PlayerOrTeamName, challenjour.PlayerOrTeamName, 2016);
                         MyDatabaseContext.MyStudents.Add(std);
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
 
                     }
                     i--;
                     Console.WriteLine(i + " : " + challenjour.PlayerOrTeamName);
-                    if(i % 5 == 0)
+                    if (i % 5 == 0)
                     {
                         Thread.Sleep(10000);
                     }
@@ -388,12 +391,7 @@ namespace SoloTournamentCreator.ViewModel
             }
             if (MessageBox.Show("Are you sure you want to start the Tournament?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
-                //SelectedOpenTournament.Start();
-
-                SelectedOpenTournament.Clean();
-                SelectedOpenTournament.CreateTeam();
-                SelectedOpenTournament.BalanceTeam();
-                SelectedOpenTournament.CreateTournamentTree();
+                SelectedOpenTournament.Start();
                 MyDatabaseContext.SaveChanges();
 
                 RaisePropertyChanged("MyTournaments");
@@ -409,7 +407,7 @@ namespace SoloTournamentCreator.ViewModel
             }
             if (MessageBox.Show("Are you sure you want to archive the Tournament ?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
-                if(SelectedStartedTournament.TournamentWinner == null)
+                if (SelectedStartedTournament.TournamentWinner == null)
                 {
                     if (MessageBox.Show("This tournament doesn't have a Winner yet, are you really sure you want to Archive it ?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
                     {
@@ -427,11 +425,11 @@ namespace SoloTournamentCreator.ViewModel
         {
             if (SelectedTeamSelectedPlayer == null)
                 return;
-            if(SavedSwapPlayer == null)
+            if (SavedSwapPlayer == null)
             {
                 SavedSwapPlayer = SelectedTeamSelectedPlayer;
                 RaisePropertyChanged("MyStartedTournamentTeams");
-                RaisePropertyChanged("SelectedStartedTournamentTeamPlayers"); 
+                RaisePropertyChanged("SelectedStartedTournamentTeamPlayers");
                 RaisePropertyChanged("SelectedTeamAdditionnalPlayers");
                 return;
             }
@@ -459,7 +457,7 @@ namespace SoloTournamentCreator.ViewModel
                 SelectedStartedTournament.Participants.Remove(SavedSwapPlayer);
                 SelectedStartedTournament.Participants.Add(SelectedTeamSelectedPlayer);
             }
-            
+
             MyDatabaseContext.SaveChanges();
             SavedSwapPlayer = null;
             RaisePropertyChanged("MyStartedTournamentTeams");
@@ -485,7 +483,7 @@ namespace SoloTournamentCreator.ViewModel
         private void PlayerChecked(object obj)
         {
             Student selectedPlayer = (Student)obj;
-            if(SelectedOpenTournament == null)
+            if (SelectedOpenTournament == null)
             {
                 return;
             }
@@ -521,7 +519,7 @@ namespace SoloTournamentCreator.ViewModel
         }
         private void CreateTournament(object obj)
         {
-            CreateTournamentMenu CTM = new CreateTournamentMenu(){DataContext = new CreateTournamentViewModel(MyDatabaseContext)};
+            CreateTournamentMenu CTM = new CreateTournamentMenu() { DataContext = new CreateTournamentViewModel(MyDatabaseContext) };
             CTM.ShowDialog();
             RaisePropertyChanged("MyOpenTournaments");
         }
@@ -530,8 +528,9 @@ namespace SoloTournamentCreator.ViewModel
             CreatePlayerMenu CPM = new CreatePlayerMenu() { DataContext = new CreatePlayerViewModel(MyDatabaseContext) };
             CPM.ShowDialog();
         }
-        private void RenameTeam(object obj) {
-            if(SelectedStartedTournamentTeam != null)
+        private void RenameTeam(object obj)
+        {
+            if (SelectedStartedTournamentTeam != null)
             {
                 DialogBox teamName = new DialogBox("Rename Team", "Please enter a new Team Name");
                 teamName.ShowDialog();
@@ -549,7 +548,7 @@ namespace SoloTournamentCreator.ViewModel
         }
         private void SeeBracket(object obj)
         {
-            if(obj is Tournament)
+            if (obj is Tournament)
             {
                 TournamentBracket tb = new TournamentBracket() { DataContext = new TournamentBracketViewModel(MyDatabaseContext, (Tournament)obj) };
                 tb.ShowDialog();

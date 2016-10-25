@@ -15,6 +15,7 @@ namespace SoloTournamentCreator.Model
         List<Match> _LeftEndPoint;
         List<Match> _RightEndPoint;
         Match _MyTournamentTree;
+        Match _MyThirdMatchPlace;
         public Match MyTournamentTree
         {
             get
@@ -27,7 +28,18 @@ namespace SoloTournamentCreator.Model
                 _MyTournamentTree = value;
             }
         }
+        public Match MyThirdMatchPlace
+        {
+            get
+            {
+                return _MyThirdMatchPlace;
+            }
 
+            set
+            {
+                _MyThirdMatchPlace = value;
+            }
+        }
         private List<Match> LeftEndPoint
         {
             get
@@ -60,12 +72,21 @@ namespace SoloTournamentCreator.Model
         public TournamentTree(HashSet<Team> teams)
         {
             MyTournamentTree = new Match();
+            MyThirdMatchPlace = new Match();
+            MyThirdMatchPlace.LeftContendant = new Match();
+            MyThirdMatchPlace.RightContendant = new Match();
             LeftEndPoint = new List<Match>();
             RightEndPoint = new List<Match>();
             GenerateTournamentTree(MyTournamentTree, Math.Ceiling(Math.Log(teams.Count(), 2)));
             SetTeamStartingPosition(teams);
             SetFreeWin();
-            printTree();
+        }
+        public TournamentTree(int depth)
+        {
+            MyTournamentTree = new Match();
+            LeftEndPoint = new List<Match>();
+            RightEndPoint = new List<Match>();
+            GenerateTournamentTree(MyTournamentTree, depth);
         }
 
         private void GenerateTournamentTree(Match node, double depth)

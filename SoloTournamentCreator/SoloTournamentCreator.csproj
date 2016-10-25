@@ -130,10 +130,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -205,7 +201,6 @@
     <Compile Include="ViewModel\CreatePlayerViewModel.cs" />
     <Compile Include="ViewModel\CreateTournamentViewModel.cs" />
     <Compile Include="ViewModel\MainMenuViewModel.cs" />
-    <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="View\CreatePlayerMenu.xaml.cs">
       <DependentUpon>CreatePlayerMenu.xaml</DependentUpon>
     </Compile>
@@ -217,10 +212,6 @@
     </Compile>
     <Compile Include="View\MainMenu.xaml.cs">
       <DependentUpon>MainMenu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
     </Compile>
     <Page Include="View\TournamentBracket.xaml">
       <SubType>Designer</SubType>

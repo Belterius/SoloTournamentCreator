@@ -72,7 +72,6 @@
                         </Style>
                     </Rectangle.Style>
                 </Rectangle>
-                <!--<Button Content="{Binding Display}" Margin="5 0 0 0" Background="Transparent" BorderBrush="Transparent" Style="{StaticResource TransparentButton}" Command="{Binding SelectWinner, ElementName=MyUserControl}" CommandParameter="{Binding}" IsEnabled="{Binding Converter={StaticResource WinnerSelectionAvailable}, Mode=OneWay}" />-->
                 <Button Content="{Binding Display}" Margin="5 0 0 0"  Style="{StaticResource TransparentButton}" Command="{Binding SelectWinner, ElementName=MyUserControl}" CommandParameter="{Binding}"  >
                     <Button.IsEnabled>
                         <MultiBinding Converter="{StaticResource WinnerSelectionAvailable}" Mode="OneWay">

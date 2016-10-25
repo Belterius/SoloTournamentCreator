@@ -26,7 +26,7 @@ namespace SoloTournamentCreator
                 while(ShowMyDialogBox() == "")
                 {
                 }
-                MainWindow MW = new MainWindow();
+                MainMenu MW = new MainMenu();
                 MW.Show();
             }else
             {

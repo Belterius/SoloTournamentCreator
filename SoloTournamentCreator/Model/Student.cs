@@ -190,5 +190,22 @@ namespace SoloTournamentCreator.Model
                 throw;
             }
         }
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Student))
+                return false;
+            if(this.SummonerData == null || ((Student)obj).SummonerData == null)
+            {
+                if(this.Pseudo == ((Student)obj).Pseudo)
+                    return true;
+            }else
+            if (this.SummonerData.Id == ((Student)obj).SummonerData.Id)
+                return true;
+            return false;
+        }
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }

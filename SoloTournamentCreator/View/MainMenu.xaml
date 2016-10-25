@@ -23,9 +23,10 @@
         <helper:TournamentInformation x:Key="TournamentInformation" />
         <helper:TournamentTeamInformation x:Key="TournamentTeamInformation" />
         <helper:PlayerToTournamentRegistered x:Key="PlayerToTournamentRegistered" />
-        <helper:PlayerDisplayLevel x:Key="PlayerDisplayLevel" />
+        <helper:PlayerDisplayLevel x:Key="PlayerDisplayLevel" /> 
         <helper:PlayerSwapSelectedDisplay x:Key="PlayerSwapSelectedDisplay" />
         <helper:TeamSwapSelectedDisplay x:Key="TeamSwapSelectedDisplay" />
+        <helper:IsTournamentWinningTeam x:Key="IsTournamentWinningTeam" />
         <helper:InternalListBoxItemClick x:Key="InternalListBoxItemClick" />
     </Window.Resources>
     <Grid>
@@ -200,7 +201,7 @@
                     <Button x:Name="buttonRenameTeam" Content="Rename Team" HorizontalAlignment="Left" Margin="417,59,0,0" VerticalAlignment="Top" Command="{Binding RenameTeamCommand}" IsEnabled="{Binding Converter={StaticResource ValueNotNull}, Path=SelectedStartedTournamentTeam}"/>
                     <Button x:Name="buttonSeeBracket" Content="See Bracket" HorizontalAlignment="Left" Margin="420,171,0,0" VerticalAlignment="Top" Width="75" Command="{Binding SeeBracketCommand}" CommandParameter="{Binding SelectedStartedTournament}" Height="45" IsEnabled="{Binding Converter={StaticResource ValueNotNull}, Path=SelectedStartedTournament}"/>
                     <Button x:Name="buttonCloseTournament" Content="Archive Tournament" HorizontalAlignment="Left" Margin="399,246,0,0" VerticalAlignment="Top" Height="20" Command="{Binding ArchiveTournamentCommand}" IsEnabled="{Binding Converter={StaticResource ValueNotNull}, Path=SelectedStartedTournament}"/>
-                    <TextBox x:Name="textBox1" Text="{Binding StartedTournamentSummonerFilter, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Converter={StaticResource ValueNotNull}, Path=SelectedStartedTournamentTeam}" HorizontalAlignment="Left" Height="23" Margin="417,105,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="75"/>
+                    <TextBox x:Name="textBox1" Text="{Binding StartedTournamentSummonerFilter, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Converter={StaticResource ValueNotNull}, Path=SelectedStartedTournament}" HorizontalAlignment="Left" Height="23" Margin="417,105,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="75"/>
                     <Label x:Name="label1" Content="Find player :" HorizontalAlignment="Left" Margin="414,83,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.138,0.319"/>
                 </Grid>
             </TabItem>
@@ -232,6 +233,13 @@
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <ListBoxItem>
+                                    <ListBoxItem.Background>
+                                        <MultiBinding Converter="{StaticResource IsTournamentWinningTeam}">
+                                            <Binding Path="DataContext.SelectedCompletedTournament" RelativeSource="{RelativeSource Mode=FindAncestor,
+                                                     AncestorType=Window}"/>
+                                            <Binding />
+                                        </MultiBinding>
+                                    </ListBoxItem.Background>
                                     <TextBlock Text="{Binding TeamName}">
                                         <i:Interaction.Triggers>
                                             <i:EventTrigger EventName="MouseLeftButtonDown">
