@@ -1,6 +1,6 @@
 namespace SoloTournamentCreator.Migrations
 {
-    using Model;
+    using MySql.Data.Entity;
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
@@ -10,6 +10,7 @@ namespace SoloTournamentCreator.Migrations
     {
         public Configuration()
         {
+            DbConfiguration.SetConfiguration(new MySqlEFConfiguration());
             AutomaticMigrationsEnabled = false;
         }
 
@@ -19,12 +20,14 @@ namespace SoloTournamentCreator.Migrations
 
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
             //  to avoid creating duplicate seed data. E.g.
-
-            //context.MyStudents.AddOrUpdate(new Student("mail@", "Loic", "Bailleul", "Belterius", 2018));
-            //context.MyStudents.AddOrUpdate(new Student("mail@", "Olivier", "Cano", "Kindermoumoute", 2018));
-            //context.MyStudents.AddOrUpdate(new Student("mail@", "Nicolas", "Wycaert", "Ninochin", 2018));
-            //context.MyStudents.AddOrUpdate(new Student("mail@", "Christopher", "LaBrute", "Darkmonstre", 2018));
-            //context.SaveChanges();
+            //
+            //    context.People.AddOrUpdate(
+            //      p => p.FullName,
+            //      new Person { FullName = "Andrew Peters" },
+            //      new Person { FullName = "Brice Lambson" },
+            //      new Person { FullName = "Rowan Miller" }
+            //    );
+            //
         }
     }
 }

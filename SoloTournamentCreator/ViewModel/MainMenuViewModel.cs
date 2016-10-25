@@ -590,10 +590,11 @@ namespace SoloTournamentCreator.ViewModel
         }
         //private void TestConnectionEntityFramework()
         //{
-        //    string connectionString = "Server=ns344589.ip-5-39-89.eu;Database=paintfusion;Uid=root;Pwd='*******';Port=3306;";
+        //    string connectionString = "Server=ns344589.ip-5-39-89.eu;Database=paintfusion;Uid=root;Pwd='*****';Port=3306;";
         //    using (MySqlConnection connection = new MySqlConnection(connectionString))
         //    {
         //        // Create database if not exists
+
         //        using (SavingContext contextDB = new SavingContext(connection, false))
         //        {
         //            contextDB.Database.CreateIfNotExists();
@@ -616,9 +617,9 @@ namespace SoloTournamentCreator.ViewModel
 
         //                // DbSet.AddRange
         //                List<Student> students = new List<Student>();
-                        
-        //                students.Add(new Student("test@","test","test","Belterius",2015));
-        //                students.Add(new Student("test@","test","test","Kindermoumoute",2015));
+
+        //                students.Add(new Student("test@", "test", "test", "Belterius", 2015));
+        //                students.Add(new Student("test@", "test", "test", "Kindermoumoute", 2015));
 
         //                context.MyStudents.AddRange(students);
 
@@ -627,7 +628,7 @@ namespace SoloTournamentCreator.ViewModel
 
         //            transaction.Commit();
         //        }
-        //        catch(Exception ex)
+        //        catch (Exception ex)
         //        {
         //            transaction.Rollback();
         //            throw;

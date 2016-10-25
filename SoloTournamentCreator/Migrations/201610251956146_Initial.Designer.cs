@@ -7,13 +7,13 @@ namespace SoloTournamentCreator.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class nullWinNext : IMigrationMetadata
+    public sealed partial class Initial : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(nullWinNext));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Initial));
         
         string IMigrationMetadata.Id
         {
-            get { return "201610210917025_nullWinNext"; }
+            get { return "201610251956146_Initial"; }
         }
         
         string IMigrationMetadata.Source

@@ -111,38 +111,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Migrations\201610201410427_Matchtweak.cs" />
-    <Compile Include="Migrations\201610201410427_Matchtweak.Designer.cs">
-      <DependentUpon>201610201410427_Matchtweak.cs</DependentUpon>
+    <Compile Include="Migrations\201610251956146_Initial.cs" />
+    <Compile Include="Migrations\201610251956146_Initial.Designer.cs">
+      <DependentUpon>201610251956146_Initial.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201610210917025_nullWinNext.cs" />
-    <Compile Include="Migrations\201610210917025_nullWinNext.Designer.cs">
-      <DependentUpon>201610210917025_nullWinNext.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610211346259_MatchScore.cs" />
-    <Compile Include="Migrations\201610211346259_MatchScore.Designer.cs">
-      <DependentUpon>201610211346259_MatchScore.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610241036091_pbTeamHashSet.cs" />
-    <Compile Include="Migrations\201610241036091_pbTeamHashSet.Designer.cs">
-      <DependentUpon>201610241036091_pbTeamHashSet.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610241059417_pbTeamHashSet1.cs" />
-    <Compile Include="Migrations\201610241059417_pbTeamHashSet1.Designer.cs">
-      <DependentUpon>201610241059417_pbTeamHashSet1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610241128532_ManyToManyStudentTeam.cs" />
-    <Compile Include="Migrations\201610241128532_ManyToManyStudentTeam.Designer.cs">
-      <DependentUpon>201610241128532_ManyToManyStudentTeam.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610250917139_ThirdPlaceMatch.cs" />
-    <Compile Include="Migrations\201610250917139_ThirdPlaceMatch.Designer.cs">
-      <DependentUpon>201610250917139_ThirdPlaceMatch.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610250953361_ThirdPlaceMatch1.cs" />
-    <Compile Include="Migrations\201610250953361_ThirdPlaceMatch1.Designer.cs">
-      <DependentUpon>201610250953361_ThirdPlaceMatch1.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ViewModel\TournamentBracketViewModel.cs" />
     <Compile Include="View\TournamentBracket.xaml.cs">
       <DependentUpon>TournamentBracket.xaml</DependentUpon>
@@ -175,55 +148,6 @@
     <Compile Include="Helper\DialogCloser.cs" />
     <Compile Include="Helper\IClosableViewModel.cs" />
     <Compile Include="Helper\RelayCommand.cs" />
-    <Compile Include="Migrations\201610170959416_Self-Reference_Match.cs" />
-    <Compile Include="Migrations\201610170959416_Self-Reference_Match.Designer.cs">
-      <DependentUpon>201610170959416_Self-Reference_Match.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610171146122_updateSoloQueue.cs" />
-    <Compile Include="Migrations\201610171146122_updateSoloQueue.Designer.cs">
-      <DependentUpon>201610171146122_updateSoloQueue.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610180835196_TournamentStage.cs" />
-    <Compile Include="Migrations\201610180835196_TournamentStage.Designer.cs">
-      <DependentUpon>201610180835196_TournamentStage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610181003439_TournamentName.cs" />
-    <Compile Include="Migrations\201610181003439_TournamentName.Designer.cs">
-      <DependentUpon>201610181003439_TournamentName.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610181055529_tournamentupdate.cs" />
-    <Compile Include="Migrations\201610181055529_tournamentupdate.Designer.cs">
-      <DependentUpon>201610181055529_tournamentupdate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610181410513_tournamentupdate1.cs" />
-    <Compile Include="Migrations\201610181410513_tournamentupdate1.Designer.cs">
-      <DependentUpon>201610181410513_tournamentupdate1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610181456019_tournamentupdate2.cs" />
-    <Compile Include="Migrations\201610181456019_tournamentupdate2.Designer.cs">
-      <DependentUpon>201610181456019_tournamentupdate2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610190813008_CustomLeagueDTOEntry.cs" />
-    <Compile Include="Migrations\201610190813008_CustomLeagueDTOEntry.Designer.cs">
-      <DependentUpon>201610190813008_CustomLeagueDTOEntry.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610190829187_CustomMiniSeries.cs" />
-    <Compile Include="Migrations\201610190829187_CustomMiniSeries.Designer.cs">
-      <DependentUpon>201610190829187_CustomMiniSeries.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610200754156_SelfReferencingMatch.cs" />
-    <Compile Include="Migrations\201610200754156_SelfReferencingMatch.Designer.cs">
-      <DependentUpon>201610200754156_SelfReferencingMatch.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610200837290_SelfReferencingMatch1.cs" />
-    <Compile Include="Migrations\201610200837290_SelfReferencingMatch1.Designer.cs">
-      <DependentUpon>201610200837290_SelfReferencingMatch1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610200850569_PublicTeamSize.cs" />
-    <Compile Include="Migrations\201610200850569_PublicTeamSize.Designer.cs">
-      <DependentUpon>201610200850569_PublicTeamSize.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\CustomLeagueEntry.cs" />
     <Compile Include="Model\Match.cs" />
     <Compile Include="Model\Student.cs" />
@@ -272,65 +196,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Migrations\201610170959416_Self-Reference_Match.resx">
-      <DependentUpon>201610170959416_Self-Reference_Match.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610171146122_updateSoloQueue.resx">
-      <DependentUpon>201610171146122_updateSoloQueue.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610180835196_TournamentStage.resx">
-      <DependentUpon>201610180835196_TournamentStage.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610181003439_TournamentName.resx">
-      <DependentUpon>201610181003439_TournamentName.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610181055529_tournamentupdate.resx">
-      <DependentUpon>201610181055529_tournamentupdate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610181410513_tournamentupdate1.resx">
-      <DependentUpon>201610181410513_tournamentupdate1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610181456019_tournamentupdate2.resx">
-      <DependentUpon>201610181456019_tournamentupdate2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610190813008_CustomLeagueDTOEntry.resx">
-      <DependentUpon>201610190813008_CustomLeagueDTOEntry.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610190829187_CustomMiniSeries.resx">
-      <DependentUpon>201610190829187_CustomMiniSeries.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610200754156_SelfReferencingMatch.resx">
-      <DependentUpon>201610200754156_SelfReferencingMatch.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610200837290_SelfReferencingMatch1.resx">
-      <DependentUpon>201610200837290_SelfReferencingMatch1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610200850569_PublicTeamSize.resx">
-      <DependentUpon>201610200850569_PublicTeamSize.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610201410427_Matchtweak.resx">
-      <DependentUpon>201610201410427_Matchtweak.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610210917025_nullWinNext.resx">
-      <DependentUpon>201610210917025_nullWinNext.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610211346259_MatchScore.resx">
-      <DependentUpon>201610211346259_MatchScore.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610241036091_pbTeamHashSet.resx">
-      <DependentUpon>201610241036091_pbTeamHashSet.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610241059417_pbTeamHashSet1.resx">
-      <DependentUpon>201610241059417_pbTeamHashSet1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610241128532_ManyToManyStudentTeam.resx">
-      <DependentUpon>201610241128532_ManyToManyStudentTeam.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610250917139_ThirdPlaceMatch.resx">
-      <DependentUpon>201610250917139_ThirdPlaceMatch.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610250953361_ThirdPlaceMatch1.resx">
-      <DependentUpon>201610250953361_ThirdPlaceMatch1.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201610251956146_Initial.resx">
+      <DependentUpon>201610251956146_Initial.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
