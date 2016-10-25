@@ -300,6 +300,7 @@ namespace SoloTournamentCreator.ViewModel
         public MainMenuViewModel()
         {
             //TestConnection();
+            //TestRiotSharp();
             this.PropertyChanged += CustomPropertyChanged;
             MyDatabaseContext = new SavingContext();
             //ClearDatabase();
@@ -334,6 +335,36 @@ namespace SoloTournamentCreator.ViewModel
             SeeBracketCommand = new RelayCommand(SeeBracket);
             ArchiveTournamentCommand = new RelayCommand(ArchiveTournament);
         }
+        [Conditional("DEBUG")]
+        private void TestRiotSharp()
+        {
+            var api = RiotSharp.RiotApi.GetInstance(Properties.Settings.Default.RiotApiKey);
+            try
+            {
+                var summoner = api.GetSummoner(RiotSharp.Region.euw, "Belterius");
+            }
+            catch (RiotSharp.RiotSharpException ex)
+            {
+                // Handle the exception however you want.
+            }
+            try
+            {
+                var tournamentApi = RiotSharp.TournamentRiotApi.GetInstance(Properties.Settings.Default.RiotApiKey);
+                var provider = tournamentApi.CreateProvider(RiotSharp.Region.euw, "172.27.86.89");
+                var tournament = tournamentApi.CreateTournament(provider.Id, "TOURNAMENT_NAME");
+                var tournamentCode = tournamentApi.CreateTournamentCode(tournament.Id,
+                    5, null, RiotSharp.TournamentEndpoint.TournamentSpectatorType.All,
+                    RiotSharp.TournamentEndpoint.TournamentPickType.TournamentDraft, RiotSharp.TournamentEndpoint.TournamentMapType.SummonersRift,
+                    string.Empty);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+            
+        }
+
         private void InternalListBoxItemClick(object obj)
         {
             ((ListBox)((object[])obj)[0]).SelectedItem = ((ListBoxItem)((object[])obj)[1]).DataContext;
@@ -560,8 +591,7 @@ namespace SoloTournamentCreator.ViewModel
             MySql.Data.MySqlClient.MySqlConnection conn;
             string myConnectionString;
 
-            myConnectionString = "Server=eleves.ig2i.fr;Uid=paintfusion;Pwd=c0l0r3dl1f3;Database=paintfusion;Port=3306";
-            //myConnectionString = "Server=127.0.0.1;Uid=root;Database=paintfusion;";
+            myConnectionString = "Server=127.0.0.1;Uid=root;Database=paintfusion;";
 
             try
             {
