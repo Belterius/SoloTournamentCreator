@@ -1,10 +1,13 @@
 namespace SoloTournamentCreator
 {
     using Data;
+    using MySql.Data.Entity;
     using System;
+    using System.Data.Common;
     using System.Data.Entity;
     using System.Linq;
 
+    //[DbConfigurationType(typeof(MySqlEFConfiguration))]
     public class SavingContext : DbContext
     {
         // Your context has been configured to use a 'MyDatabase' connection string from your application's 
@@ -16,6 +19,11 @@ namespace SoloTournamentCreator
         public SavingContext() : base("name=SavingContext")
         {
         }
+        //public SavingContext(DbConnection existingConnection, bool contextOwnsConnection)
+        //: base(existingConnection, contextOwnsConnection)
+        //{
+
+        //}
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Add(new NonPublicColumnAttributeConvention());

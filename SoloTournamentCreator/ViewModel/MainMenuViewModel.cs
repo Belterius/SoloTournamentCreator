@@ -1,4 +1,5 @@
-﻿using SoloTournamentCreator.Helper;
+﻿using MySql.Data.MySqlClient;
+using SoloTournamentCreator.Helper;
 using SoloTournamentCreator.Model;
 using SoloTournamentCreator.View;
 using System;
@@ -300,6 +301,7 @@ namespace SoloTournamentCreator.ViewModel
         public MainMenuViewModel()
         {
             //TestConnection();
+            //TestConnectionEntityFramework();
             //TestRiotSharp();
             this.PropertyChanged += CustomPropertyChanged;
             MyDatabaseContext = new SavingContext();
@@ -390,7 +392,7 @@ namespace SoloTournamentCreator.ViewModel
             Thread.Sleep(10000);
             lock (MyDatabaseContext)
             {
-                int i = 100;
+                int i = 50;
                 foreach (RiotApi.Net.RestClient.Dto.League.LeagueDto.LeagueEntryDto challenjour in pgm)
                 {
                     try
@@ -586,23 +588,51 @@ namespace SoloTournamentCreator.ViewModel
                 tb.ShowDialog();
             }
         }
-        private void TestConnection()
-        {
-            MySql.Data.MySqlClient.MySqlConnection conn;
-            string myConnectionString;
+        //private void TestConnectionEntityFramework()
+        //{
+        //    string connectionString = "Server=ns344589.ip-5-39-89.eu;Database=paintfusion;Uid=root;Pwd='*******';Port=3306;";
+        //    using (MySqlConnection connection = new MySqlConnection(connectionString))
+        //    {
+        //        // Create database if not exists
+        //        using (SavingContext contextDB = new SavingContext(connection, false))
+        //        {
+        //            contextDB.Database.CreateIfNotExists();
+        //        }
 
-            myConnectionString = "Server=127.0.0.1;Uid=root;Database=paintfusion;";
+        //        connection.Open();
+        //        MySqlTransaction transaction = connection.BeginTransaction();
 
-            try
-            {
-                conn = new MySql.Data.MySqlClient.MySqlConnection();
-                conn.ConnectionString = myConnectionString;
-                conn.Open();
-            }
-            catch (MySql.Data.MySqlClient.MySqlException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
+        //        try
+        //        {
+        //            // DbConnection that is already opened
+        //            using (SavingContext context = new SavingContext(connection, false))
+        //            {
+
+        //                // Interception/SQL logging
+        //                context.Database.Log = (string message) => { Console.WriteLine(message); };
+
+        //                // Passing an existing transaction to the context
+        //                context.Database.UseTransaction(transaction);
+
+        //                // DbSet.AddRange
+        //                List<Student> students = new List<Student>();
+                        
+        //                students.Add(new Student("test@","test","test","Belterius",2015));
+        //                students.Add(new Student("test@","test","test","Kindermoumoute",2015));
+
+        //                context.MyStudents.AddRange(students);
+
+        //                context.SaveChanges();
+        //            }
+
+        //            transaction.Commit();
+        //        }
+        //        catch(Exception ex)
+        //        {
+        //            transaction.Rollback();
+        //            throw;
+        //        }
+        //    }
+        //}
     }
 }
