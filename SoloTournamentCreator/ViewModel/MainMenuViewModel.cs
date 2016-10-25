@@ -299,10 +299,11 @@ namespace SoloTournamentCreator.ViewModel
 
         public MainMenuViewModel()
         {
+            TestConnection();
             this.PropertyChanged += CustomPropertyChanged;
             MyDatabaseContext = new SavingContext();
-            //ClearDatabase();
-            //PopulateDatabase();
+            ClearDatabase();
+            PopulateDatabase();
             try
             {
                 //cf http://stackoverflow.com/questions/3356541/entity-framework-linq-query-include-multiple-children-entities
@@ -358,7 +359,7 @@ namespace SoloTournamentCreator.ViewModel
             Thread.Sleep(10000);
             lock (MyDatabaseContext)
             {
-                int i = 50;
+                int i = 100;
                 foreach (RiotApi.Net.RestClient.Dto.League.LeagueDto.LeagueEntryDto challenjour in pgm)
                 {
                     try
@@ -552,6 +553,25 @@ namespace SoloTournamentCreator.ViewModel
             {
                 TournamentBracket tb = new TournamentBracket() { DataContext = new TournamentBracketViewModel(MyDatabaseContext, (Tournament)obj) };
                 tb.ShowDialog();
+            }
+        }
+        private void TestConnection()
+        {
+            MySql.Data.MySqlClient.MySqlConnection conn;
+            string myConnectionString;
+
+            myConnectionString = "Server=195.83.230.242;Uid=paintfusion;Pwd=c0l0r3dl1f3;Database=paintfusion;";
+            //myConnectionString = "Server=127.0.0.1;Uid=root;Database=paintfusion;";
+
+            try
+            {
+                conn = new MySql.Data.MySqlClient.MySqlConnection();
+                conn.ConnectionString = myConnectionString;
+                conn.Open();
+            }
+            catch (MySql.Data.MySqlClient.MySqlException ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
     }
