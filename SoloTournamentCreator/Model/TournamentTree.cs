@@ -11,6 +11,7 @@ namespace SoloTournamentCreator.Model
     {
         [Key]
         public int TournamentTreeId { get; set; }
+        private double _MaxDepth;
         //Separated Right and Left starting position so we are sure to never have a double Bye on the first round
         List<Match> _LeftEndPoint;
         List<Match> _RightEndPoint;
@@ -65,42 +66,58 @@ namespace SoloTournamentCreator.Model
                 _RightEndPoint = value;
             }
         }
+
+        public double MaxDepth
+        {
+            get
+            {
+                return _MaxDepth;
+            }
+
+            set
+            {
+                _MaxDepth = value;
+            }
+        }
+
         private TournamentTree()
         {
 
         }
         public TournamentTree(HashSet<Team> teams)
         {
-            MyTournamentTree = new Match();
-            MyThirdMatchPlace = new Match();
-            MyThirdMatchPlace.LeftContendant = new Match();
-            MyThirdMatchPlace.RightContendant = new Match();
+            MyTournamentTree = new Match(0);
+            MyThirdMatchPlace = new Match(0);
+            MyThirdMatchPlace.LeftContendant = new Match(MyThirdMatchPlace.Depth + 1);
+            MyThirdMatchPlace.RightContendant = new Match(MyThirdMatchPlace.Depth + 1);
             LeftEndPoint = new List<Match>();
             RightEndPoint = new List<Match>();
-            GenerateTournamentTree(MyTournamentTree, Math.Ceiling(Math.Log(teams.Count(), 2)));
+            MaxDepth = Math.Ceiling(Math.Log(teams.Count(), 2));
+            GenerateTournamentTree(MyTournamentTree, 1);
             SetTeamStartingPosition(teams);
             SetFreeWin();
         }
         public TournamentTree(int depth)
         {
-            MyTournamentTree = new Match();
+            MyTournamentTree = new Match(0);
             LeftEndPoint = new List<Match>();
             RightEndPoint = new List<Match>();
-            GenerateTournamentTree(MyTournamentTree, depth);
+            MaxDepth = depth;
+            GenerateTournamentTree(MyTournamentTree, 1);
         }
 
-        private void GenerateTournamentTree(Match node, double depth)
+        private void GenerateTournamentTree(Match node, int depth)
         {
-            if(depth > 1)
+            if(MaxDepth > depth)
             {
-                node.LeftContendant = new Match();
-                GenerateTournamentTree(node.LeftContendant, depth - 1);
-                node.RightContendant = new Match();
-                GenerateTournamentTree(node.RightContendant, depth - 1);
+                node.LeftContendant = new Match(depth);
+                GenerateTournamentTree(node.LeftContendant, depth + 1);
+                node.RightContendant = new Match(depth);
+                GenerateTournamentTree(node.RightContendant, depth + 1);
             }else
             {
-                node.LeftContendant = new Match();
-                node.RightContendant = new Match();
+                node.LeftContendant = new Match(depth);
+                node.RightContendant = new Match(depth);
                 LeftEndPoint.Add(node.LeftContendant);
                 RightEndPoint.Add(node.RightContendant);
             }
@@ -167,6 +184,30 @@ namespace SoloTournamentCreator.Model
         private void SetFreeWin()
         {
             MyTournamentTree.SetAutoWinner();
+        }
+        public void UpdateThirdMatchPlace()
+        {
+            if(MyTournamentTree?.LeftContendant?.Winner != null)
+            {
+                if(MyTournamentTree.LeftContendant.Winner != MyTournamentTree.LeftContendant.LeftContendant.Winner)
+                {
+                    MyThirdMatchPlace.LeftContendant.Winner = MyTournamentTree.LeftContendant.LeftContendant.Winner;
+                }else
+                {
+                    MyThirdMatchPlace.LeftContendant.Winner = MyTournamentTree.LeftContendant.RightContendant.Winner;
+                }
+            }
+            if (MyTournamentTree?.RightContendant?.Winner != null)
+            {
+                if (MyTournamentTree.RightContendant.Winner != MyTournamentTree.RightContendant.LeftContendant.Winner)
+                {
+                    MyThirdMatchPlace.RightContendant.Winner = MyTournamentTree.RightContendant.LeftContendant.Winner;
+                }
+                else
+                {
+                    MyThirdMatchPlace.RightContendant.Winner = MyTournamentTree.RightContendant.RightContendant.Winner;
+                }
+            }
         }
     }
 }

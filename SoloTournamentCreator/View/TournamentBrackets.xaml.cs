@@ -91,7 +91,7 @@ namespace SoloTournamentCreator.View
             if (SelectedTournament != null)
             {
                 AddBracket(SelectedTournament.MyTournamentTree.MyTournamentTree, (Math.Log(SelectedTournament.NbTeam, 2) + 1) * bracketwidth, 0, Colors.Silver);
-                AddBracket(SelectedTournament.MyTournamentTree.MyThirdMatchPlace, (Math.Log(SelectedTournament.NbTeam, 2) + 1) * bracketwidth - bracketwidth, 4*20 + 4*20, Colors.Silver); //I need to be 4 below space to not disturb the main Tournament Tree, so 4 * spacing + 4 * slot.Height and one bracket width on the left
+                AddBracket(SelectedTournament.MyTournamentTree.MyThirdMatchPlace, (Math.Log(SelectedTournament.NbTeam, 2) + 1) * bracketwidth - bracketwidth, 6*20 + 7*20, Colors.Silver); //I am one bracket width on the left because my final Slot must be at the same level as my Final, I put the bracket down too to not disturb my main tournament tree. TODO : give the option to transform the third match place into a loser bracket !
             }
         }
 

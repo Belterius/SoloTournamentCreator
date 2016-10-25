@@ -107,6 +107,14 @@
     <Compile Include="Migrations\201610241128532_ManyToManyStudentTeam.Designer.cs">
       <DependentUpon>201610241128532_ManyToManyStudentTeam.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610250917139_ThirdPlaceMatch.cs" />
+    <Compile Include="Migrations\201610250917139_ThirdPlaceMatch.Designer.cs">
+      <DependentUpon>201610250917139_ThirdPlaceMatch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610250953361_ThirdPlaceMatch1.cs" />
+    <Compile Include="Migrations\201610250953361_ThirdPlaceMatch1.Designer.cs">
+      <DependentUpon>201610250953361_ThirdPlaceMatch1.cs</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\TournamentBracketViewModel.cs" />
     <Compile Include="View\TournamentBracket.xaml.cs">
       <DependentUpon>TournamentBracket.xaml</DependentUpon>
@@ -289,6 +297,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610241128532_ManyToManyStudentTeam.resx">
       <DependentUpon>201610241128532_ManyToManyStudentTeam.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610250917139_ThirdPlaceMatch.resx">
+      <DependentUpon>201610250917139_ThirdPlaceMatch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610250953361_ThirdPlaceMatch1.resx">
+      <DependentUpon>201610250953361_ThirdPlaceMatch1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

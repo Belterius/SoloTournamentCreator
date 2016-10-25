@@ -19,6 +19,7 @@ namespace SoloTournamentCreator.Model
         Match _RightContendant;
         private int _WinnerScore;
         private int _LoserScore;
+        private int _Depth;
         public Team Winner
         {
             get
@@ -96,10 +97,29 @@ namespace SoloTournamentCreator.Model
             }
         }
 
-        public Match()
+        public int Depth
+        {
+            get
+            {
+                return _Depth;
+            }
+
+            set
+            {
+                _Depth = value;
+            }
+        }
+
+        private Match()
         {
             WinnerScore = 0;
             LoserScore = 0;
+        }
+        public Match(int depth)
+        {
+            WinnerScore = 0;
+            LoserScore = 0;
+            Depth = depth;
         }
         public Match(Team winner)
         {
