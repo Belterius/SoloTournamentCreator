@@ -33,11 +33,13 @@ namespace SoloTournamentCreator.View
         }
         public int VerticalSize
         {
+            //TODO : make it more pretty :(
+            //The additionnal *2 are because of the Third place match, in case I want the space for a full second Tree
             get
             {
                 if(SelectedTournament != null)
-                    return 30 * SelectedTournament.NbTeam;
-                return 30 * 16;
+                    return 30 * SelectedTournament.NbTeam * 2;
+                return 30 * 16 * 2;
             }
         }
         public int HorizontalSize
@@ -90,8 +92,8 @@ namespace SoloTournamentCreator.View
             Brackets.Children.Clear();
             if (SelectedTournament != null)
             {
-                AddBracket(SelectedTournament.MyTournamentTree.MyTournamentTree, (Math.Log(SelectedTournament.NbTeam, 2) + 1) * bracketwidth, 0, Colors.Silver);
-                AddBracket(SelectedTournament.MyTournamentTree.MyThirdMatchPlace, (Math.Log(SelectedTournament.NbTeam, 2) + 1) * bracketwidth - bracketwidth, 6*20 + 7*20, Colors.Silver); //I am one bracket width on the left because my final Slot must be at the same level as my Final, I put the bracket down too to not disturb my main tournament tree. TODO : give the option to transform the third match place into a loser bracket !
+                BracketLocation MainTree = AddBracket(SelectedTournament.MyTournamentTree.MyTournamentTree, (Math.Log(SelectedTournament.NbTeam, 2) + 1) * bracketwidth, 0, Colors.Silver);
+                AddBracket(SelectedTournament.MyTournamentTree.MyThirdMatchPlace, (Math.Log(SelectedTournament.NbTeam, 2) + 1) * bracketwidth - bracketwidth, MainTree.Height, Colors.Silver); //I am one bracket width on the left because my final Slot must be at the same level as my Final, I put the bracket down too to not disturb my main tournament tree. TODO : give the option to transform the third match place into a loser bracket !
             }
         }
 

@@ -299,11 +299,11 @@ namespace SoloTournamentCreator.ViewModel
 
         public MainMenuViewModel()
         {
-            TestConnection();
+            //TestConnection();
             this.PropertyChanged += CustomPropertyChanged;
             MyDatabaseContext = new SavingContext();
-            ClearDatabase();
-            PopulateDatabase();
+            //ClearDatabase();
+            //PopulateDatabase();
             try
             {
                 //cf http://stackoverflow.com/questions/3356541/entity-framework-linq-query-include-multiple-children-entities
@@ -560,7 +560,7 @@ namespace SoloTournamentCreator.ViewModel
             MySql.Data.MySqlClient.MySqlConnection conn;
             string myConnectionString;
 
-            myConnectionString = "Server=195.83.230.242;Uid=paintfusion;Pwd=c0l0r3dl1f3;Database=paintfusion;";
+            myConnectionString = "Server=eleves.ig2i.fr;Uid=paintfusion;Pwd=c0l0r3dl1f3;Database=paintfusion;Port=3306";
             //myConnectionString = "Server=127.0.0.1;Uid=root;Database=paintfusion;";
 
             try

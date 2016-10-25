@@ -20,7 +20,6 @@ namespace SoloTournamentCreator
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-
             if (!ApiRequest.ApiKeyIsValid(SoloTournamentCreator.Properties.Settings.Default.RiotApiKey))
             {
                 while(ShowMyDialogBox() == "")
