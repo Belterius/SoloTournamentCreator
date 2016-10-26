@@ -73,6 +73,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Reactive.Core, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Rx-Core.2.2.5\lib\net45\System.Reactive.Core.dll</HintPath>
@@ -111,12 +112,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Data\UpdateConnection.cs" />
     <Compile Include="Migrations\201610251956146_Initial.cs" />
     <Compile Include="Migrations\201610251956146_Initial.Designer.cs">
       <DependentUpon>201610251956146_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="ViewModel\MenuSettingsViewModel.cs" />
     <Compile Include="ViewModel\TournamentBracketViewModel.cs" />
+    <Compile Include="View\MenuSettings.xaml.cs">
+      <DependentUpon>MenuSettings.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\TournamentBracket.xaml.cs">
       <DependentUpon>TournamentBracket.xaml</DependentUpon>
     </Compile>
@@ -173,6 +179,10 @@
     <Compile Include="View\MainMenu.xaml.cs">
       <DependentUpon>MainMenu.xaml</DependentUpon>
     </Compile>
+    <Page Include="View\MenuSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\TournamentBracket.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

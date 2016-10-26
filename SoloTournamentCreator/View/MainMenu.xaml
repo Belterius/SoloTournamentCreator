@@ -23,7 +23,7 @@
         <helper:TournamentInformation x:Key="TournamentInformation" />
         <helper:TournamentTeamInformation x:Key="TournamentTeamInformation" />
         <helper:PlayerToTournamentRegistered x:Key="PlayerToTournamentRegistered" />
-        <helper:PlayerDisplayLevel x:Key="PlayerDisplayLevel" /> 
+        <helper:PlayerDisplayLevel x:Key="PlayerDisplayLevel" />
         <helper:PlayerSwapSelectedDisplay x:Key="PlayerSwapSelectedDisplay" />
         <helper:TeamSwapSelectedDisplay x:Key="TeamSwapSelectedDisplay" />
         <helper:IsTournamentWinningTeam x:Key="IsTournamentWinningTeam" />
@@ -284,6 +284,9 @@
                 </Grid>
             </TabItem>
         </TabControl>
+        <Button x:Name="buttonSettings" Content="settings" Command="{Binding OpenSettingsCommand}" Margin="514,0,0,303.2">
+            
+        </Button>
 
     </Grid>
 </Window>

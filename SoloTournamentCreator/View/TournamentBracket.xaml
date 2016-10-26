@@ -11,7 +11,7 @@
         xmlns:view="clr-namespace:SoloTournamentCreator.View"
         xmlns:local="clr-namespace:SoloTournamentCreator"
         mc:Ignorable="d"
-        Title="MainWindow" Height="556.955" Width="1093.295"
+        Title="Tournament Bracket" Height="556.955" Width="1093.295"
         DataContext="{DynamicResource TournamentBracketViewModel}">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closing">

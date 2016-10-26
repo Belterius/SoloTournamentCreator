@@ -113,8 +113,11 @@ namespace SoloTournamentCreator.ViewModel
                 try
                 {
                     Student newPlayer = new Student(Mail, FirstName, LastName, Pseudo, Convert.ToInt32(GraduationYear));
-                    MyDatabaseContext.MyStudents.Add(newPlayer);
-                    MyDatabaseContext.SaveChanges();
+                    lock (MyDatabaseContext)
+                    {
+                        MyDatabaseContext.MyStudents.Add(newPlayer);
+                        MyDatabaseContext.SaveChanges();
+                    }
                     MessageBox.Show("Player successfully created !");
                     CleanFields();
                 }

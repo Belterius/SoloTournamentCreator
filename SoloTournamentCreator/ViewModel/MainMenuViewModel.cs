@@ -2,6 +2,7 @@
 using SoloTournamentCreator.Helper;
 using SoloTournamentCreator.Model;
 using SoloTournamentCreator.View;
+using SoloTournamentCreator.Data;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -296,12 +297,11 @@ namespace SoloTournamentCreator.ViewModel
         public RelayCommand SeeBracketCommand { get; set; }
         public RelayCommand ArchiveTournamentCommand { get; set; }
         public RelayCommand ClosingCommand { get; set; }
+        public RelayCommand OpenSettingsCommand { get; set; }
 
 
         public MainMenuViewModel()
         {
-            //TestConnection();
-            //TestConnectionEntityFramework();
             //TestRiotSharp();
             this.PropertyChanged += CustomPropertyChanged;
             MyDatabaseContext = new SavingContext();
@@ -336,7 +336,15 @@ namespace SoloTournamentCreator.ViewModel
             InternalListBoxItemClickCommand = new RelayCommand(InternalListBoxItemClick);
             SeeBracketCommand = new RelayCommand(SeeBracket);
             ArchiveTournamentCommand = new RelayCommand(ArchiveTournament);
+            OpenSettingsCommand = new RelayCommand(OpenSettings);
         }
+
+        private void OpenSettings(object obj)
+        {
+            MenuSettings MS = new MenuSettings() { DataContext = new MenuSettingsViewModel(MyDatabaseContext)};
+            MS.ShowDialog();
+        }
+
         [Conditional("DEBUG")]
         private void TestRiotSharp()
         {
@@ -449,7 +457,7 @@ namespace SoloTournamentCreator.ViewModel
                     }
                 }
                 SelectedStartedTournament.Archive();
-                //MyDatabaseContext.SaveChanges();
+                MyDatabaseContext.SaveChanges();
                 RaisePropertyChanged("MyTournaments");
             }
 
@@ -467,8 +475,6 @@ namespace SoloTournamentCreator.ViewModel
                 RaisePropertyChanged("SelectedTeamAdditionnalPlayers");
                 return;
             }
-            //var teamOne = MyDatabaseContext.MyTournaments.Local.Where(x => x.TournamentId == SelectedStartedTournament.TournamentId).Select(x => x.Teams.Where(y => y.TeamMember.Contains(MyDatabaseContext.MyStudents.Where(std => std.StudentId == SavedSwapPlayer.StudentId).FirstOrDefault()))).Single();
-            //var teamTwo = MyDatabaseContext.MyTournaments.Local.Where(x => x.TournamentId == SelectedStartedTournament.TournamentId).Select(x => x.Teams.Where(y => y.TeamMember.Contains(MyDatabaseContext.MyStudents.Where(std => std.StudentId == SelectedTeamSelectedPlayer.StudentId).FirstOrDefault()))).Single();
             if (SelectedStartedTournamentTeam != null)
             {
                 SelectedStartedTournamentTeam.RemoveMember(SelectedTeamSelectedPlayer);
@@ -561,6 +567,7 @@ namespace SoloTournamentCreator.ViewModel
         {
             CreatePlayerMenu CPM = new CreatePlayerMenu() { DataContext = new CreatePlayerViewModel(MyDatabaseContext) };
             CPM.ShowDialog();
+            RaisePropertyChanged("MyPlayers");
         }
         private void RenameTeam(object obj)
         {
@@ -588,52 +595,5 @@ namespace SoloTournamentCreator.ViewModel
                 tb.ShowDialog();
             }
         }
-        //private void TestConnectionEntityFramework()
-        //{
-        //    string connectionString = "Server=ns344589.ip-5-39-89.eu;Database=paintfusion;Uid=root;Pwd='*****';Port=3306;";
-        //    using (MySqlConnection connection = new MySqlConnection(connectionString))
-        //    {
-        //        // Create database if not exists
-
-        //        using (SavingContext contextDB = new SavingContext(connection, false))
-        //        {
-        //            contextDB.Database.CreateIfNotExists();
-        //        }
-
-        //        connection.Open();
-        //        MySqlTransaction transaction = connection.BeginTransaction();
-
-        //        try
-        //        {
-        //            // DbConnection that is already opened
-        //            using (SavingContext context = new SavingContext(connection, false))
-        //            {
-
-        //                // Interception/SQL logging
-        //                context.Database.Log = (string message) => { Console.WriteLine(message); };
-
-        //                // Passing an existing transaction to the context
-        //                context.Database.UseTransaction(transaction);
-
-        //                // DbSet.AddRange
-        //                List<Student> students = new List<Student>();
-
-        //                students.Add(new Student("test@", "test", "test", "Belterius", 2015));
-        //                students.Add(new Student("test@", "test", "test", "Kindermoumoute", 2015));
-
-        //                context.MyStudents.AddRange(students);
-
-        //                context.SaveChanges();
-        //            }
-
-        //            transaction.Commit();
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            transaction.Rollback();
-        //            throw;
-        //        }
-        //    }
-        //}
     }
 }
