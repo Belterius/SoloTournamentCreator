@@ -5,11 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SoloTournamentCreator.View"
         mc:Ignorable="d"
-        Title="DialogBox" Height="113.068" Width="335.227">
+        ResizeMode="NoResize"
+        Title="DialogBox" Height="117.997" Width="335.227">
     <Grid>
         <Label x:Name="labelInformation" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,0,0,0"/>
-        <TextBox x:Name="textBoxInput" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Margin="93,30,0,0"/>
-        <Button x:Name="buttonConfirm" Content="Confirm" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="117,58,0,0" Click="buttonConfirm_Click"/>
+        <TextBox x:Name="textBoxInput" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Margin="93,27,0,0"/>
+        <Button x:Name="buttonConfirm" Content="Confirm" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="114,55,0,0" Click="buttonConfirm_Click" Height="20"/>
 
     </Grid>
 </Window>

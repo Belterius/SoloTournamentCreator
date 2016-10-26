@@ -286,6 +286,19 @@ namespace SoloTournamentCreator.ViewModel
                 RaisePropertyChanged("MyStartedTournamentTeams");
             }
         }
+        public Visibility AdminOnlyVisible
+        {
+            get
+            {
+                if (Properties.Settings.Default.AdminRight)
+                {
+                    return Visibility.Visible;
+                }else
+                {
+                    return Visibility.Hidden;
+                }
+            }
+        }
         public RelayCommand CreateTournamentCommand { get; set; }
         public RelayCommand CreatePlayerCommand { get; set; }
         public RelayCommand PlayerCheckedCommand { get; set; }
@@ -304,7 +317,7 @@ namespace SoloTournamentCreator.ViewModel
         {
             //TestRiotSharp();
             this.PropertyChanged += CustomPropertyChanged;
-            MyDatabaseContext = new SavingContext();
+            InitDatabaseContext();
             //ClearDatabase();
             //PopulateDatabase();
             try
@@ -339,10 +352,28 @@ namespace SoloTournamentCreator.ViewModel
             OpenSettingsCommand = new RelayCommand(OpenSettings);
         }
 
+        private void InitDatabaseContext()
+        {
+            MyDatabaseContext = new SavingContext();
+            MyDatabaseContext.ChangeConnectionString(
+                    Properties.Settings.Default.Server,
+                    Properties.Settings.Default.Port,
+                    Properties.Settings.Default.Database,
+                    Properties.Settings.Default.UserId,
+                    Properties.Settings.Default.Password
+                    );
+            if (!MyDatabaseContext.CheckConnection())
+            {
+                MyDatabaseContext = new SavingContext();
+            }
+
+        }
+
         private void OpenSettings(object obj)
         {
             MenuSettings MS = new MenuSettings() { DataContext = new MenuSettingsViewModel(MyDatabaseContext)};
             MS.ShowDialog();
+            RaisePropertyChanged("AdminOnlyVisible");
         }
 
         [Conditional("DEBUG")]

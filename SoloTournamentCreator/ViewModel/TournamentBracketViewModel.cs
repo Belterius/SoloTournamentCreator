@@ -82,12 +82,9 @@ namespace SoloTournamentCreator.ViewModel
                 return new List<Team>();
             }
         }
+
         private int _FirstScore;
         private int _SecondScore;
-        public RelayCommand ClosingCommand { get; set; }
-        public RelayCommand SelectWinnerCommand { get; set; }
-        public RelayCommand ConfirmMatchResultCommand { get; set; }
-
         public int FirstScore
         {
             get
@@ -115,7 +112,23 @@ namespace SoloTournamentCreator.ViewModel
                 RaisePropertyChanged("SecondScore");
             }
         }
-
+        public System.Windows.Visibility AdminOnlyVisible
+        {
+            get
+            {
+                if (Properties.Settings.Default.AdminRight)
+                {
+                    return System.Windows.Visibility.Visible;
+                }
+                else
+                {
+                    return System.Windows.Visibility.Hidden;
+                }
+            }
+        }
+        public RelayCommand ClosingCommand { get; set; }
+        public RelayCommand SelectWinnerCommand { get; set; }
+        public RelayCommand ConfirmMatchResultCommand { get; set; }
         public TournamentBracketViewModel()
         {
             MyDataContext = new SavingContext();

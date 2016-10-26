@@ -11,6 +11,7 @@
         xmlns:local="clr-namespace:SoloTournamentCreator"
         mc:Ignorable="d"
         Title="MainWindow" Height="356.764" Width="546.582"
+        ResizeMode="CanMinimize"
         DataContext="{DynamicResource MainMenuViewModel}">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closing">
@@ -30,6 +31,9 @@
         <helper:InternalListBoxItemClick x:Key="InternalListBoxItemClick" />
     </Window.Resources>
     <Grid>
+        <Grid.Resources>
+            <ImageBrush x:Key="SettingImage" ImageSource="/Images/settings.png" Stretch="UniformToFill"/>
+        </Grid.Resources>
         <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="304" VerticalAlignment="Top" Width="520" Margin="10,10,0,0">
             <TabItem Header="Open Tournament">
                 <Grid Background="#FFE5E5E5" Margin="0,0,0,-4">
@@ -79,9 +83,9 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                    <Button x:Name="buttonStartTournament" Content="Start Tournament" Margin="410,10,10.4,0" VerticalAlignment="Top" Command="{Binding StartTournamentCommand}" IsEnabled="{Binding Converter={StaticResource ValueNotNull}, Path=SelectedOpenTournament}"/>
-                    <Button x:Name="buttonCreateTournament" Content="Create Tournament" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,257,0,0" Command="{Binding CreateTournamentCommand}"/>
-                    <Button x:Name="buttonAddPlayer" Content="Add Player" HorizontalAlignment="Left" Margin="113,257,0,0" VerticalAlignment="Top" Width="75" Command="{Binding CreatePlayerCommand}"/>
+                    <Button x:Name="buttonStartTournament" Content="Start Tournament" Margin="410,10,10.4,0" VerticalAlignment="Top" Command="{Binding StartTournamentCommand}" IsEnabled="{Binding Converter={StaticResource ValueNotNull}, Path=SelectedOpenTournament}" Visibility="{Binding AdminOnlyVisible}"/>
+                    <Button x:Name="buttonCreateTournament" Content="Create Tournament" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,257,0,0" Command="{Binding CreateTournamentCommand}" Visibility="{Binding AdminOnlyVisible, Mode=OneWay}" />
+                    <Button x:Name="buttonAddPlayer" Content="Add Player"  HorizontalAlignment="Left" Margin="113,257,0,0" VerticalAlignment="Top" Width="75" Command="{Binding CreatePlayerCommand}" Visibility="{Binding AdminOnlyVisible, Mode=OneWay}"/>
                     <TextBox x:Name="textBox" Text="{Binding SummonerFilter, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="23" Margin="275,255,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" ToolTip="Summoner Name search"/>
                     <Label x:Name="label" Content="Filter :" HorizontalAlignment="Left" Margin="232,252,0,0" VerticalAlignment="Top"/>
                 </Grid>
@@ -168,7 +172,7 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                    <Button x:Name="buttonSwap" Content="Swap Players" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="417,21,0,0" Command="{Binding SwapPlayerCommand}" Background="{Binding IsSwapInProgress}" IsEnabled="{Binding Converter={StaticResource ValueNotNull}, Path=SelectedTeamSelectedPlayer}" Width="75"/>
+                    <Button x:Name="buttonSwap" Content="Swap Players" Visibility="{Binding AdminOnlyVisible}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="417,21,0,0" Command="{Binding SwapPlayerCommand}" Background="{Binding IsSwapInProgress}" IsEnabled="{Binding Converter={StaticResource ValueNotNull}, Path=SelectedTeamSelectedPlayer}" Width="75"/>
                     <ListBox ItemsSource="{Binding SelectedTeamAdditionnalPlayers}" SelectedItem="{Binding SelectedStartedTournamentAdditionnalPlayer}" Margin="170,157,0,0" HorizontalAlignment="Left" Width="224">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
@@ -198,9 +202,9 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
                     <Label x:Name="labelReplacement" Content="Additionnal Players :" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="165,136,0,0"/>
-                    <Button x:Name="buttonRenameTeam" Content="Rename Team" HorizontalAlignment="Left" Margin="417,59,0,0" VerticalAlignment="Top" Command="{Binding RenameTeamCommand}" IsEnabled="{Binding Converter={StaticResource ValueNotNull}, Path=SelectedStartedTournamentTeam}"/>
+                    <Button x:Name="buttonRenameTeam" Content="Rename Team" Visibility="{Binding AdminOnlyVisible}" HorizontalAlignment="Left" Margin="417,59,0,0" VerticalAlignment="Top" Command="{Binding RenameTeamCommand}" IsEnabled="{Binding Converter={StaticResource ValueNotNull}, Path=SelectedStartedTournamentTeam}"/>
                     <Button x:Name="buttonSeeBracket" Content="See Bracket" HorizontalAlignment="Left" Margin="420,171,0,0" VerticalAlignment="Top" Width="75" Command="{Binding SeeBracketCommand}" CommandParameter="{Binding SelectedStartedTournament}" Height="45" IsEnabled="{Binding Converter={StaticResource ValueNotNull}, Path=SelectedStartedTournament}"/>
-                    <Button x:Name="buttonCloseTournament" Content="Archive Tournament" HorizontalAlignment="Left" Margin="399,246,0,0" VerticalAlignment="Top" Height="20" Command="{Binding ArchiveTournamentCommand}" IsEnabled="{Binding Converter={StaticResource ValueNotNull}, Path=SelectedStartedTournament}"/>
+                    <Button x:Name="buttonCloseTournament" Content="Archive Tournament" Visibility="{Binding AdminOnlyVisible}" HorizontalAlignment="Left" Margin="399,246,0,0" VerticalAlignment="Top" Height="20" Command="{Binding ArchiveTournamentCommand}" IsEnabled="{Binding Converter={StaticResource ValueNotNull}, Path=SelectedStartedTournament}"/>
                     <TextBox x:Name="textBox1" Text="{Binding StartedTournamentSummonerFilter, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Converter={StaticResource ValueNotNull}, Path=SelectedStartedTournament}" HorizontalAlignment="Left" Height="23" Margin="417,105,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="75"/>
                     <Label x:Name="label1" Content="Find player :" HorizontalAlignment="Left" Margin="414,83,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.138,0.319"/>
                 </Grid>
@@ -284,7 +288,7 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        <Button x:Name="buttonSettings" Content="settings" Command="{Binding OpenSettingsCommand}" Margin="514,0,0,303.2">
+        <Button x:Name="buttonSettings" Background="{StaticResource SettingImage}" Command="{Binding OpenSettingsCommand}" Margin="507,1,2,296.2">
             
         </Button>
 

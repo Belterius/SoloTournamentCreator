@@ -10,6 +10,7 @@
         xmlns:vm="clr-namespace:SoloTournamentCreator.ViewModel"
         xmlns:local="clr-namespace:SoloTournamentCreator"
         mc:Ignorable="d"
+        ResizeMode="NoResize"
         Title="Settings" Height="293.564" Width="309.382"
         DataContext="{DynamicResource MenuSettingsViewModel}">
     <i:Interaction.Triggers>
@@ -32,7 +33,7 @@
         <TextBox x:Name="textBoxPassword" Text="{Binding Password}" HorizontalAlignment="Center" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="131" Margin="104,132,22.8,0"/>
         <Label x:Name="labelServer" Content="Server :" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="49,18,158.8,0"/>
         <TextBox x:Name="textBoxServer" Text="{Binding Server}" HorizontalAlignment="Center" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="131" Margin="104,18,22.8,0"/>
-        <Button x:Name="buttonSave" Content="Save Settings" HorizontalAlignment="Center" VerticalAlignment="Top" Width="75" Margin="117,207,117.8,0" Command="{Binding SaveCommand}"/>
-        <Label x:Name="labelAdmin" Content="Admin mode : Auto" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="97,169,95.8,0" Width="117" ToolTip="Depending on your User and ID the admin mode will be activated, or not"/>
+        <Button x:Name="buttonSave" Content="Save Settings" HorizontalAlignment="Left" VerticalAlignment="Top" Width="109" Margin="109,207,0,0" Command="{Binding SaveCommand}"/>
+        <Label x:Name="labelAdmin" Content="Admin mode : Auto" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="107,170,85.8,0" Width="117" ToolTip="Depending on your User and ID the admin mode will be activated, or not"/>
     </Grid>
 </Window>

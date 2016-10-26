@@ -112,8 +112,17 @@ namespace SoloTournamentCreator.ViewModel
                     Properties.Settings.Default.UserId,
                     Properties.Settings.Default.Password
                     );
-                MessageBox.Show("Error, couldn't connect to the database ! Reverted all changes to the previous working config");
-            }else
+            }
+        }
+
+        private void Save(object obj)
+        {
+            MyDatabaseContext.ChangeConnectionString(Server,Port,Database,UserId,Password);
+            if (!MyDatabaseContext.CheckConnection())
+            {
+                MessageBox.Show("Error, couldn't connect to the database ! All change will be reverted to the previous working config on exit");
+            }
+            else
             {
                 Properties.Settings.Default.Server = Server;
                 Properties.Settings.Default.Port = Port;
@@ -121,19 +130,10 @@ namespace SoloTournamentCreator.ViewModel
                 Properties.Settings.Default.UserId = UserId;
                 Properties.Settings.Default.Password = Password;
                 Properties.Settings.Default.AdminRight = MyDatabaseContext.CheckWriteRight();
+                Properties.Settings.Default.Save();
                 MessageBox.Show("Change Saved ! Admin mode : " + Properties.Settings.Default.AdminRight.ToString());
+                this.CloseWindow();
             }
-        }
-
-        private void Save(object obj)
-        {
-            MyDatabaseContext.ChangeConnectionString(Server, Port, Database, UserId, Password);
-            if (!MyDatabaseContext.CheckConnection())
-            {
-                MessageBox.Show("Error, couldn't connect to the database !");
-                return;
-            }
-            this.CloseWindow();
         }
     }
 }

@@ -11,6 +11,7 @@
         xmlns:local="clr-namespace:SoloTournamentCreator"
         mc:Ignorable="d"
         Title="Create Player" Height="224.873" Width="288.735"
+        ResizeMode="NoResize"
         DataContext="{DynamicResource CreatePlayerViewModel}">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closing">

@@ -30,7 +30,6 @@ namespace SoloTournamentCreator
             }else
             {
                 this.StartupUri = new Uri("View/MainMenu.xaml", UriKind.Relative);
-                //this.StartupUri = new Uri("View/MainWindow.xaml", UriKind.Relative);
             }
         }
 
