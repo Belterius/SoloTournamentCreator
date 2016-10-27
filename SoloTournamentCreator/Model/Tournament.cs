@@ -19,6 +19,7 @@ namespace SoloTournamentCreator.Model
         [Key]
         public int TournamentId { get; set; }
         private readonly int nbPlayerPerTeam = 5;
+        private bool _HasLoserBracket;
         private int _NbTeam;
         TournamentStage _Status;
         HashSet<Student> _Participants;
@@ -125,18 +126,33 @@ namespace SoloTournamentCreator.Model
                 return MyTournamentTree.MyTournamentTree.Winner;
             }
         }
+
+        public bool HasLoserBracket
+        {
+            get
+            {
+                return _HasLoserBracket;
+            }
+
+            set
+            {
+                _HasLoserBracket = value;
+            }
+        }
+
         private Tournament()
         {
             Participants = new HashSet<Student>();
             Teams = new HashSet<Team>();
         }
-        public Tournament(string name="NoName", int nbTeam = 8)
+        public Tournament(string name="NoName", int nbTeam = 8, bool hasLoserBracket = false)
         {
             Participants = new HashSet<Student>();
             Teams = new HashSet<Team>();
             Status = TournamentStage.Open;
             Name = name;
             NbTeam = nbTeam;
+            HasLoserBracket = hasLoserBracket;
         }
 
         public bool Register(Student participant)
@@ -185,7 +201,7 @@ namespace SoloTournamentCreator.Model
         }
         private void CreateTournamentTree()
         {
-            MyTournamentTree = new TournamentTree(Teams);
+            MyTournamentTree = new TournamentTree(Teams, HasLoserBracket);
             Status = TournamentStage.Started;
         }
         public void Archive()

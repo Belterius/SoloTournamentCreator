@@ -11,7 +11,7 @@
         xmlns:local="clr-namespace:SoloTournamentCreator"
         mc:Ignorable="d"
         ResizeMode="NoResize"
-        Title="Create Tournament" Height="134" Width="266.6"
+        Title="Create Tournament" Height="150.8" Width="266.6"
         DataContext="{DynamicResource CreateTournamentViewModel}">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closing">
@@ -22,15 +22,20 @@
         <vm:CreateTournamentViewModel x:Key="CreateTournamentViewModel"/>
     </Window.Resources>
     <Grid>
-        <Label x:Name="label" Content="Tournament Name :" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0"/>
-        <Label x:Name="label1" Content="Number Of Team :" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,41,0,0" Width="114"/>
+        <Label x:Name="label" Content="Tournament Name :" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8,10,0,0"/>
+        <Label x:Name="label1" Content="Number Of Team :" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,41,0,0"/>
         <TextBox x:Name="textBox" Text="{Binding TournamentName}" HorizontalAlignment="Left" Height="23" Margin="127,13,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <ComboBox SelectedIndex="0" x:Name="comboBox" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Margin="127,41,0,0">
             <ComboBoxItem Content="8"></ComboBoxItem>
             <ComboBoxItem Content="16"></ComboBoxItem>
             <ComboBoxItem Content="32"></ComboBoxItem>
         </ComboBox>
-        <Button x:Name="buttonCreateTournament" Content="Create Tournament" HorizontalAlignment="Left" Margin="83,72,0,0" VerticalAlignment="Top" Width="109" Command="{Binding CreateTournamentCommand}" CommandParameter="{Binding ElementName=comboBox, Path=SelectedValue}"/>
+        <Button x:Name="buttonCreateTournament" Content="Create Tournament" HorizontalAlignment="Left" Margin="83,92,0,0" VerticalAlignment="Top" Width="109" Command="{Binding CreateTournamentCommand}" CommandParameter="{Binding ElementName=comboBox, Path=SelectedValue}"/>
+        <CheckBox x:Name="checkBox" FlowDirection="RightToLeft" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="83,72,0,0" IsChecked="{Binding HasLoserBracket}">
+            <TextBlock FlowDirection="LeftToRight">
+                Loser bracket : 
+            </TextBlock>
+        </CheckBox>
 
     </Grid>
 </Window>

@@ -16,7 +16,7 @@ namespace SoloTournamentCreator.Model
     //Decided to still create the same FK, but this time MySQL executed the code, and it worked
     //I then had to rename the table back to CustomLeagueEntryDtoes because no table named CLED existed ...
     //Not sure why it acted like that, I'm leaving the comment in case I have the same problem another time.
-    public class CustomLeagueEntryDtoes
+    public class CLED
     {
         //Requiered to have a Key to be able to save the data in EntityFrameWork, so had to create a custom "copy"
         public string Division { get; set; }
@@ -31,13 +31,13 @@ namespace SoloTournamentCreator.Model
         public string PlayerOrTeamName { get; set; }
         public int Wins { get; set; }
         [Key]
-        public int CustomLeagueEntryDtoId { get; set; }
+        public int CLEDId { get; set; }
 
-        public CustomLeagueEntryDtoes()
+        public CLED()
         {
 
         }
-        public CustomLeagueEntryDtoes(RiotApi.Net.RestClient.Dto.League.LeagueDto.LeagueEntryDto leagueEntryDto)
+        public CLED(RiotApi.Net.RestClient.Dto.League.LeagueDto.LeagueEntryDto leagueEntryDto)
         {
             Division = leagueEntryDto.Division;
             IsFreshBlood = leagueEntryDto.IsFreshBlood;

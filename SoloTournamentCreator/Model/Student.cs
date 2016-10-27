@@ -21,7 +21,7 @@ namespace SoloTournamentCreator.Model
         private int _GraduationYear;
         private SummonerDto _SummonerData;
         private LeagueDto _SummonerSoloQueueData;
-        private CustomLeagueEntryDtoes _DetailSoloQueueData;
+        private CLED _DetailSoloQueueData;
         private ICollection<Tournament> _ParticipatingTournament;
         public virtual ICollection<Team> MyTeams { get; set; }
         public string Mail
@@ -134,7 +134,7 @@ namespace SoloTournamentCreator.Model
             }
         }
 
-        public CustomLeagueEntryDtoes DetailSoloQueueData
+        public CLED DetailSoloQueueData
         {
             get
             {
@@ -168,7 +168,7 @@ namespace SoloTournamentCreator.Model
             try
             {
                 SummonerSoloQueueData = ApiRequest.GetSummonerSoloQueueRating(SummonerData.Id);
-                DetailSoloQueueData = new CustomLeagueEntryDtoes(SummonerSoloQueueData.Entries.First());
+                DetailSoloQueueData = new CLED(SummonerSoloQueueData.Entries.First());
             }
             catch (Exception)
             {

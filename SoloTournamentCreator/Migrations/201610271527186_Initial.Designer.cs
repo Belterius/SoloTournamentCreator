@@ -13,7 +13,7 @@ namespace SoloTournamentCreator.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201610270743370_Initial"; }
+            get { return "201610271527186_Initial"; }
         }
         
         string IMigrationMetadata.Source

@@ -113,9 +113,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Data\UpdateConnection.cs" />
-    <Compile Include="Migrations\201610270743370_Initial.cs" />
-    <Compile Include="Migrations\201610270743370_Initial.Designer.cs">
-      <DependentUpon>201610270743370_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201610271527186_Initial.cs" />
+    <Compile Include="Migrations\201610271527186_Initial.Designer.cs">
+      <DependentUpon>201610271527186_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ViewModel\MenuSettingsViewModel.cs" />
@@ -206,8 +206,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Migrations\201610270743370_Initial.resx">
-      <DependentUpon>201610270743370_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201610271527186_Initial.resx">
+      <DependentUpon>201610271527186_Initial.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

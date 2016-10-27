@@ -315,11 +315,11 @@ namespace SoloTournamentCreator.ViewModel
 
         public MainMenuViewModel()
         {
-            //TestRiotSharp();
+            testfunction();
             this.PropertyChanged += CustomPropertyChanged;
             InitDatabaseContext();
             //ClearDatabase();
-            //PopulateDatabase();
+            PopulateDatabase();
             try
             {
                 //cf http://stackoverflow.com/questions/3356541/entity-framework-linq-query-include-multiple-children-entities
@@ -352,20 +352,32 @@ namespace SoloTournamentCreator.ViewModel
             OpenSettingsCommand = new RelayCommand(OpenSettings);
         }
 
+        private void testfunction()
+        {
+            //TournamentTree tt = new TournamentTree(3);
+            //tt.SetLoserPosition(new Team(5, "t1-3"), 3);
+            //tt.SetLoserPosition(new Team(5, "t2-3"), 3);
+            //tt.SetLoserPosition(new Team(5, "t3-3"), 3);
+            //tt.SetLoserPosition(new Team(5, "t4-3"), 3);
+            //tt.SetLoserPosition(new Team(5, "t1-2"), 2);
+            //tt.SetLoserPosition(new Team(5, "t2-2"), 2);
+            //tt.SetLoserPosition(new Team(5, "t1-1"), 1);
+        }
+
         private void InitDatabaseContext()
         {
             MyDatabaseContext = new SavingContext();
-            //MyDatabaseContext.ChangeConnectionString(
-            //        Properties.Settings.Default.Server,
-            //        Properties.Settings.Default.Port,
-            //        Properties.Settings.Default.Database,
-            //        Properties.Settings.Default.UserId,
-            //        Properties.Settings.Default.Password
-            //        );
-            //if (!MyDatabaseContext.CheckConnection())
-            //{
-            //    MyDatabaseContext = new SavingContext();
-            //}
+            MyDatabaseContext.ChangeConnectionString(
+                    Properties.Settings.Default.Server,
+                    Properties.Settings.Default.Port,
+                    Properties.Settings.Default.Database,
+                    Properties.Settings.Default.UserId,
+                    Properties.Settings.Default.Password
+                    );
+            if (!MyDatabaseContext.CheckConnection())
+            {
+                MyDatabaseContext = new SavingContext();
+            }
 
         }
 

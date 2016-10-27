@@ -170,9 +170,9 @@ namespace SoloTournamentCreator.ViewModel
                     SelectedMatch.LeftContendant.WinNext = false;
                     SelectedMatch.RightContendant.WinNext = true;
                 }
-                SelectedTournament.MyTournamentTree.UpdateThirdMatchPlace();
                 SelectedMatch.WinnerScore = Math.Max(FirstScore, SecondScore);
                 SelectedMatch.LoserScore = Math.Min(FirstScore, SecondScore);
+                SelectedTournament.MyTournamentTree.UpdateThirdMatchPlace(SelectedMatch);
                 FirstScore = 0;
                 SecondScore = 0;
                 SelectedMatch = null;

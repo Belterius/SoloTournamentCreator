@@ -13,6 +13,7 @@ namespace SoloTournamentCreator.ViewModel
     {
         SavingContext MyDatabaseContext;
         string _TournamentName;
+        bool _HasLoserBracket;
         public RelayCommand CreateTournamentCommand { get; set; }
         public RelayCommand ClosingCommand { get; set; }
 
@@ -27,6 +28,20 @@ namespace SoloTournamentCreator.ViewModel
             {
                 _TournamentName = value;
                 RaisePropertyChanged("TournamentName");
+            }
+        }
+
+        public bool HasLoserBracket
+        {
+            get
+            {
+                return _HasLoserBracket;
+            }
+
+            set
+            {
+                _HasLoserBracket = value;
+                RaisePropertyChanged("HasLoserBracket");
             }
         }
 
@@ -48,7 +63,7 @@ namespace SoloTournamentCreator.ViewModel
         }
         private void CreateTournament(object obj)
         {
-            Tournament newTournament = new Tournament(TournamentName, Convert.ToInt32(((ComboBoxItem)obj).Content));
+            Tournament newTournament = new Tournament(TournamentName, Convert.ToInt32(((ComboBoxItem)obj).Content), HasLoserBracket);
             lock (MyDatabaseContext)
             {
                 MyDatabaseContext.MyTournaments.Add(newTournament);
