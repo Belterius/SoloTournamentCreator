@@ -12,9 +12,9 @@ This application function in client mode (readonly access to the database, can o
 
 It is by default parametered in Client mode.
 
-To use in Admin mode :
+To use in Admin mode :  
 A League of Legends Developer API Key is required to use the program (https://developer.riotgames.com/docs/getting-started)  
-A Database (MySQL Server v >= 5.1) is required.  
+A Database (MySQL Server v >= 5.1) is required. Configure it using the Migration Files.    
 Create at least 2 account on your database, one with write/read access, the other with only read access.  
 In the parameters, if you connect using a write/read access account, you'll unlock the Admin commands.  
 If you don't, you'll only have the client options  
