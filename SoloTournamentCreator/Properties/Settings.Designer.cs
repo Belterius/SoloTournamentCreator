@@ -37,7 +37,7 @@ namespace SoloTournamentCreator.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("merchez.com")]
+        [global::System.Configuration.DefaultSettingValueAttribute("ns344589.ip-5-39-89.eu")]
         public string Server {
             get {
                 return ((string)(this["Server"]));
@@ -49,7 +49,7 @@ namespace SoloTournamentCreator.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("db_loic")]
+        [global::System.Configuration.DefaultSettingValueAttribute("paintfusiontournament")]
         public string Database {
             get {
                 return ((string)(this["Database"]));
@@ -73,7 +73,7 @@ namespace SoloTournamentCreator.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("loic_readonly")]
+        [global::System.Configuration.DefaultSettingValueAttribute("visitor")]
         public string UserId {
             get {
                 return ((string)(this["UserId"]));
@@ -85,7 +85,7 @@ namespace SoloTournamentCreator.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("L2U7dcNtrgWvn4SV")]
+        [global::System.Configuration.DefaultSettingValueAttribute("aReallySimplePassword")]
         public string Password {
             get {
                 return ((string)(this["Password"]));

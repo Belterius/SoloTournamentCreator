@@ -1,6 +1,5 @@
 namespace SoloTournamentCreator.Migrations
 {
-    using MySql.Data.Entity;
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
@@ -10,8 +9,7 @@ namespace SoloTournamentCreator.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = true;
-            DbConfiguration.SetConfiguration(new MySqlEFConfiguration());
+            AutomaticMigrationsEnabled = false;
         }
 
         protected override void Seed(SoloTournamentCreator.SavingContext context)

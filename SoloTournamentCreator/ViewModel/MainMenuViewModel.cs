@@ -355,17 +355,17 @@ namespace SoloTournamentCreator.ViewModel
         private void InitDatabaseContext()
         {
             MyDatabaseContext = new SavingContext();
-            MyDatabaseContext.ChangeConnectionString(
-                    Properties.Settings.Default.Server,
-                    Properties.Settings.Default.Port,
-                    Properties.Settings.Default.Database,
-                    Properties.Settings.Default.UserId,
-                    Properties.Settings.Default.Password
-                    );
-            if (!MyDatabaseContext.CheckConnection())
-            {
-                MyDatabaseContext = new SavingContext();
-            }
+            //MyDatabaseContext.ChangeConnectionString(
+            //        Properties.Settings.Default.Server,
+            //        Properties.Settings.Default.Port,
+            //        Properties.Settings.Default.Database,
+            //        Properties.Settings.Default.UserId,
+            //        Properties.Settings.Default.Password
+            //        );
+            //if (!MyDatabaseContext.CheckConnection())
+            //{
+            //    MyDatabaseContext = new SavingContext();
+            //}
 
         }
 

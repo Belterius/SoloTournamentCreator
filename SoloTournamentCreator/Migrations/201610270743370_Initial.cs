@@ -58,13 +58,13 @@ namespace SoloTournamentCreator.Migrations
                         SummonerData_Id = c.Long(),
                     })
                 .PrimaryKey(t => t.StudentId)
-                .ForeignKey("dbo.CustomLeagueEntryDtoes", t => t.DetailSoloQueueData_CustomLeagueEntryDtoId)
+                .ForeignKey("dbo.CLEDs", t => t.DetailSoloQueueData_CustomLeagueEntryDtoId)
                 .ForeignKey("dbo.SummonerDtoes", t => t.SummonerData_Id)
                 .Index(t => t.DetailSoloQueueData_CustomLeagueEntryDtoId)
                 .Index(t => t.SummonerData_Id);
             
             CreateTable(
-                "dbo.CustomLeagueEntryDtoes",
+                "dbo.CLEDs",
                 c => new
                     {
                         CustomLeagueEntryDtoId = c.Int(nullable: false, identity: true),
@@ -177,8 +177,8 @@ namespace SoloTournamentCreator.Migrations
             DropForeignKey("dbo.TournamentTrees", "MyThirdMatchPlace_MatchId", "dbo.Matches");
             DropForeignKey("dbo.StudentTeams", "Team_TeamId", "dbo.Teams");
             DropForeignKey("dbo.StudentTeams", "Student_StudentId", "dbo.Students");
-            DropForeignKey("dbo.Students", "DetailSoloQueueData_CustomLeagueEntryDtoId", "dbo.CustomLeagueEntryDtoes");
-            DropForeignKey("dbo.CustomLeagueEntryDtoes", "MiniSeries_CustomMiniSeriesId", "dbo.CustomMiniSeries");
+            DropForeignKey("dbo.Students", "DetailSoloQueueData_CustomLeagueEntryDtoId", "dbo.CLEDs");
+            DropForeignKey("dbo.CLEDs", "MiniSeries_CustomMiniSeriesId", "dbo.CustomMiniSeries");
             DropForeignKey("dbo.Matches", "RightContendantId", "dbo.Matches");
             DropForeignKey("dbo.Matches", "LeftContendantId", "dbo.Matches");
             DropIndex("dbo.TournamentStudents", new[] { "Student_StudentId" });
@@ -188,7 +188,7 @@ namespace SoloTournamentCreator.Migrations
             DropIndex("dbo.TournamentTrees", new[] { "MyTournamentTree_MatchId" });
             DropIndex("dbo.TournamentTrees", new[] { "MyThirdMatchPlace_MatchId" });
             DropIndex("dbo.Tournaments", new[] { "MyTournamentTree_TournamentTreeId" });
-            DropIndex("dbo.CustomLeagueEntryDtoes", new[] { "MiniSeries_CustomMiniSeriesId" });
+            DropIndex("dbo.CLEDs", new[] { "MiniSeries_CustomMiniSeriesId" });
             DropIndex("dbo.Students", new[] { "SummonerData_Id" });
             DropIndex("dbo.Students", new[] { "DetailSoloQueueData_CustomLeagueEntryDtoId" });
             DropIndex("dbo.Teams", new[] { "Tournament_TournamentId" });
@@ -201,7 +201,7 @@ namespace SoloTournamentCreator.Migrations
             DropTable("dbo.TournamentTrees");
             DropTable("dbo.Tournaments");
             DropTable("dbo.CustomMiniSeries");
-            DropTable("dbo.CustomLeagueEntryDtoes");
+            DropTable("dbo.CLEDs");
             DropTable("dbo.Students");
             DropTable("dbo.Teams");
             DropTable("dbo.Matches");

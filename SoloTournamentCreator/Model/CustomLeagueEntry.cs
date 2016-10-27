@@ -7,7 +7,16 @@ using System.Threading.Tasks;
 
 namespace SoloTournamentCreator.Model
 {
-    public class CustomLeagueEntryDto
+    //CustomLeagueEntryDto : AWFULL name, but because of the way EntityFramework maps the ForeignKey in my SKL, on of my Foreign Key ended up being FK_Students_CustomLeagueEntryDtoes_DetailSoloQueueData_CustomLeagueEntryDtoId
+    //And was too long for MySQL ...
+    //it was not possible to rename the mapping of internal table CLED, so I had no completly rename it, or remap student as something like S ...
+    //Decided renaming this class was more clear.
+
+    //Edit : So I don't know why, but after renaming the table and regeneration my Migration script, EntityFramework still decided to name the table as before
+    //Decided to still create the same FK, but this time MySQL executed the code, and it worked
+    //I then had to rename the table back to CustomLeagueEntryDtoes because no table named CLED existed ...
+    //Not sure why it acted like that, I'm leaving the comment in case I have the same problem another time.
+    public class CustomLeagueEntryDtoes
     {
         //Requiered to have a Key to be able to save the data in EntityFrameWork, so had to create a custom "copy"
         public string Division { get; set; }
@@ -24,11 +33,11 @@ namespace SoloTournamentCreator.Model
         [Key]
         public int CustomLeagueEntryDtoId { get; set; }
 
-        public CustomLeagueEntryDto()
+        public CustomLeagueEntryDtoes()
         {
 
         }
-        public CustomLeagueEntryDto(RiotApi.Net.RestClient.Dto.League.LeagueDto.LeagueEntryDto leagueEntryDto)
+        public CustomLeagueEntryDtoes(RiotApi.Net.RestClient.Dto.League.LeagueDto.LeagueEntryDto leagueEntryDto)
         {
             Division = leagueEntryDto.Division;
             IsFreshBlood = leagueEntryDto.IsFreshBlood;
