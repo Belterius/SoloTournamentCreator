@@ -90,6 +90,8 @@ namespace SoloTournamentCreator.Helper
                 return false;
             if (myTournament.TournamentWinner != myMatch.Winner)
                 return false;
+            if (myTournament.HasLoserBracket && myTournament.MyTournamentTree.MySecondaryTournamentTree != null)
+                return false;
             return true;
         }
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
@@ -109,19 +111,22 @@ namespace SoloTournamentCreator.Helper
             {
                 return false;
             }
-            if(((Tournament)values[1]).Status != Tournament.TournamentStage.Started)
-            {
-                return false;
-            }
+            Tournament myTournament = (Tournament)values[1];
             Match myMatch = (Match)values[0];
-            if (myMatch.RightContendant == null || myMatch.LeftContendant == null)
+            if (myTournament.Status != Tournament.TournamentStage.Started)
             {
                 return false;
             }
-            if (myMatch.LeftContendant.Winner == null || myMatch.RightContendant.Winner == null)
+            if (myTournament.MyTournamentTree.MySecondaryTournamentTree == null && myMatch != myTournament.MyTournamentTree.MyMainTournamentTree)//myTournament.MyTournamentTree.MySecondaryTournamentTree == null means I'm on the final stage, at that point I only allow result on the last match (the finale)
+                return false;
+            if (myMatch.LeftContendant?.Winner == null && myMatch.RightContendant?.Winner == null)
             {
                 return false;
             }
+            //I can't win against noone unless it's the first round, because there's only during the first round that there may be a lack of opponent, if the tournament wasn't full
+            //If it's the mainTournament, I never allow to win against noone, because I give the "free win" on tournament creation, if it doesn't have a loserBracket, same, I don't allow a free win (that would mean I only have 3 team ..)
+            if ((myMatch.RightContendant?.Winner == null || myMatch.LeftContendant?.Winner == null) && (myMatch.IsMainMatch || !myTournament.HasLoserBracket || (myMatch.LeftContendant?.LeftContendant?.Winner != null || myMatch.LeftContendant?.RightContendant?.Winner != null)))
+                return false;
             return true;
         }
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

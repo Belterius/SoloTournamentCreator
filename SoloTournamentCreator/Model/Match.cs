@@ -20,6 +20,7 @@ namespace SoloTournamentCreator.Model
         private int _WinnerScore;
         private int _LoserScore;
         private int _Depth;
+        private bool _IsMainMatch;
         public Team Winner
         {
             get
@@ -38,9 +39,9 @@ namespace SoloTournamentCreator.Model
             {
                 if (Winner != null)
                     return Winner.TeamName;
-                if(RightContendant != null || LeftContendant != null)
-                    return "???";
-                return "Bye";
+                if (RightContendant == null && LeftContendant == null && IsMainMatch)
+                    return "Bye";
+                return "???";
             }
         }
         public bool? WinNext { get; set; }
@@ -110,18 +111,32 @@ namespace SoloTournamentCreator.Model
             }
         }
 
+        public bool IsMainMatch
+        {
+            get
+            {
+                return _IsMainMatch;
+            }
+
+            set
+            {
+                _IsMainMatch = value;
+            }
+        }
+
         private Match()
         {
             WinnerScore = 0;
             LoserScore = 0;
         }
-        public Match(int depth)
+        public Match(int depth, bool isMainMatch)
         {
             WinnerScore = 0;
             LoserScore = 0;
             Depth = depth;
+            IsMainMatch = isMainMatch;
         }
-        public Match(Team winner)
+        private Match(Team winner)
         {
             WinnerScore = 0;
             LoserScore = 0;

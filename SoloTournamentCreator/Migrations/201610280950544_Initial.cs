@@ -18,20 +18,15 @@ namespace SoloTournamentCreator.Migrations
                         WinnerScore = c.Int(nullable: false),
                         LoserScore = c.Int(nullable: false),
                         Depth = c.Int(nullable: false),
-                        TournamentTree_TournamentTreeId = c.Int(),
-                        TournamentTree_TournamentTreeId1 = c.Int(),
+                        IsMainMatch = c.Boolean(nullable: false),
                         Winner_TeamId = c.Int(),
                     })
                 .PrimaryKey(t => t.MatchId)
                 .ForeignKey("dbo.Matches", t => t.LeftContendantId)
                 .ForeignKey("dbo.Matches", t => t.RightContendantId)
-                .ForeignKey("dbo.TournamentTrees", t => t.TournamentTree_TournamentTreeId)
-                .ForeignKey("dbo.TournamentTrees", t => t.TournamentTree_TournamentTreeId1)
                 .ForeignKey("dbo.Teams", t => t.Winner_TeamId)
                 .Index(t => t.LeftContendantId)
                 .Index(t => t.RightContendantId)
-                .Index(t => t.TournamentTree_TournamentTreeId)
-                .Index(t => t.TournamentTree_TournamentTreeId1)
                 .Index(t => t.Winner_TeamId);
             
             CreateTable(
@@ -124,14 +119,14 @@ namespace SoloTournamentCreator.Migrations
                         TournamentTreeId = c.Int(nullable: false, identity: true),
                         MaxDepth = c.Double(nullable: false),
                         HasLoserBracket = c.Boolean(nullable: false),
-                        MyThirdMatchPlace_MatchId = c.Int(),
-                        MyTournamentTree_MatchId = c.Int(),
+                        MyMainTournamentTree_MatchId = c.Int(),
+                        MySecondaryTournamentTree_MatchId = c.Int(),
                     })
                 .PrimaryKey(t => t.TournamentTreeId)
-                .ForeignKey("dbo.Matches", t => t.MyThirdMatchPlace_MatchId)
-                .ForeignKey("dbo.Matches", t => t.MyTournamentTree_MatchId)
-                .Index(t => t.MyThirdMatchPlace_MatchId)
-                .Index(t => t.MyTournamentTree_MatchId);
+                .ForeignKey("dbo.Matches", t => t.MyMainTournamentTree_MatchId)
+                .ForeignKey("dbo.Matches", t => t.MySecondaryTournamentTree_MatchId)
+                .Index(t => t.MyMainTournamentTree_MatchId)
+                .Index(t => t.MySecondaryTournamentTree_MatchId);
             
             CreateTable(
                 "dbo.SummonerDtoes",
@@ -181,10 +176,8 @@ namespace SoloTournamentCreator.Migrations
             DropForeignKey("dbo.TournamentStudents", "Student_StudentId", "dbo.Students");
             DropForeignKey("dbo.TournamentStudents", "Tournament_TournamentId", "dbo.Tournaments");
             DropForeignKey("dbo.Tournaments", "MyTournamentTree_TournamentTreeId", "dbo.TournamentTrees");
-            DropForeignKey("dbo.TournamentTrees", "MyTournamentTree_MatchId", "dbo.Matches");
-            DropForeignKey("dbo.TournamentTrees", "MyThirdMatchPlace_MatchId", "dbo.Matches");
-            DropForeignKey("dbo.Matches", "TournamentTree_TournamentTreeId1", "dbo.TournamentTrees");
-            DropForeignKey("dbo.Matches", "TournamentTree_TournamentTreeId", "dbo.TournamentTrees");
+            DropForeignKey("dbo.TournamentTrees", "MySecondaryTournamentTree_MatchId", "dbo.Matches");
+            DropForeignKey("dbo.TournamentTrees", "MyMainTournamentTree_MatchId", "dbo.Matches");
             DropForeignKey("dbo.StudentTeams", "Team_TeamId", "dbo.Teams");
             DropForeignKey("dbo.StudentTeams", "Student_StudentId", "dbo.Students");
             DropForeignKey("dbo.Students", "DetailSoloQueueData_CLEDId", "dbo.CLEDs");
@@ -195,16 +188,14 @@ namespace SoloTournamentCreator.Migrations
             DropIndex("dbo.TournamentStudents", new[] { "Tournament_TournamentId" });
             DropIndex("dbo.StudentTeams", new[] { "Team_TeamId" });
             DropIndex("dbo.StudentTeams", new[] { "Student_StudentId" });
-            DropIndex("dbo.TournamentTrees", new[] { "MyTournamentTree_MatchId" });
-            DropIndex("dbo.TournamentTrees", new[] { "MyThirdMatchPlace_MatchId" });
+            DropIndex("dbo.TournamentTrees", new[] { "MySecondaryTournamentTree_MatchId" });
+            DropIndex("dbo.TournamentTrees", new[] { "MyMainTournamentTree_MatchId" });
             DropIndex("dbo.Tournaments", new[] { "MyTournamentTree_TournamentTreeId" });
             DropIndex("dbo.CLEDs", new[] { "MiniSeries_CustomMiniSeriesId" });
             DropIndex("dbo.Students", new[] { "SummonerData_Id" });
             DropIndex("dbo.Students", new[] { "DetailSoloQueueData_CLEDId" });
             DropIndex("dbo.Teams", new[] { "Tournament_TournamentId" });
             DropIndex("dbo.Matches", new[] { "Winner_TeamId" });
-            DropIndex("dbo.Matches", new[] { "TournamentTree_TournamentTreeId1" });
-            DropIndex("dbo.Matches", new[] { "TournamentTree_TournamentTreeId" });
             DropIndex("dbo.Matches", new[] { "RightContendantId" });
             DropIndex("dbo.Matches", new[] { "LeftContendantId" });
             DropTable("dbo.TournamentStudents");

@@ -315,11 +315,9 @@ namespace SoloTournamentCreator.ViewModel
 
         public MainMenuViewModel()
         {
-            testfunction();
             this.PropertyChanged += CustomPropertyChanged;
             InitDatabaseContext();
-            //ClearDatabase();
-            PopulateDatabase();
+            //PopulateDatabase();
             try
             {
                 //cf http://stackoverflow.com/questions/3356541/entity-framework-linq-query-include-multiple-children-entities
@@ -351,32 +349,18 @@ namespace SoloTournamentCreator.ViewModel
             ArchiveTournamentCommand = new RelayCommand(ArchiveTournament);
             OpenSettingsCommand = new RelayCommand(OpenSettings);
         }
-
-        private void testfunction()
-        {
-            //TournamentTree tt = new TournamentTree(3);
-            //tt.SetLoserPosition(new Team(5, "t1-3"), 3);
-            //tt.SetLoserPosition(new Team(5, "t2-3"), 3);
-            //tt.SetLoserPosition(new Team(5, "t3-3"), 3);
-            //tt.SetLoserPosition(new Team(5, "t4-3"), 3);
-            //tt.SetLoserPosition(new Team(5, "t1-2"), 2);
-            //tt.SetLoserPosition(new Team(5, "t2-2"), 2);
-            //tt.SetLoserPosition(new Team(5, "t1-1"), 1);
-        }
-
+        
         private void InitDatabaseContext()
         {
-            MyDatabaseContext = new SavingContext();
-            MyDatabaseContext.ChangeConnectionString(
-                    Properties.Settings.Default.Server,
-                    Properties.Settings.Default.Port,
-                    Properties.Settings.Default.Database,
-                    Properties.Settings.Default.UserId,
-                    Properties.Settings.Default.Password
-                    );
+            string connectionString = $"server={Properties.Settings.Default.Server};port={Properties.Settings.Default.Port};database={Properties.Settings.Default.Database};uid={Properties.Settings.Default.UserId};password='{Properties.Settings.Default.Password}'";
+            MyDatabaseContext = new SavingContext(connectionString);
             if (!MyDatabaseContext.CheckConnection())
             {
                 MyDatabaseContext = new SavingContext();
+            }
+            if (!MyDatabaseContext.CheckWriteRight())
+            {
+                Properties.Settings.Default.AdminRight = false;
             }
 
         }
@@ -430,42 +414,38 @@ namespace SoloTournamentCreator.ViewModel
         [Conditional("DEBUG")]
         private void ClearDatabase()
         {
-            lock (MyDatabaseContext)
-            {
-                MyDatabaseContext.Database.Delete();
-                MyDatabaseContext.SaveChanges();
-            }
+            MyDatabaseContext.Database.Delete();
+            MyDatabaseContext.SaveChanges();
         }
         [Conditional("DEBUG")]
-        private void PopulateDatabase()
+        private void PopulateDatabase()// retrieve the Challengers players and add them as sample data
         {
             IEnumerable<RiotApi.Net.RestClient.Dto.League.LeagueDto.LeagueEntryDto> pgm = RiotToEntity.ApiRequest.GetSampleChallenger();
+            pgm.OrderBy(x => x.LeaguePoints);
             Thread.Sleep(10000);
-            lock (MyDatabaseContext)
+            int i = 190;
+            foreach (RiotApi.Net.RestClient.Dto.League.LeagueDto.LeagueEntryDto challenjour in pgm)
             {
-                int i = 50;
-                foreach (RiotApi.Net.RestClient.Dto.League.LeagueDto.LeagueEntryDto challenjour in pgm)
+                try
                 {
-                    try
-                    {
-                        Student std = new Student(challenjour.PlayerOrTeamName + "@", challenjour.PlayerOrTeamName, challenjour.PlayerOrTeamName, challenjour.PlayerOrTeamName, 2016);
-                        MyDatabaseContext.MyStudents.Add(std);
-                    }
-                    catch (Exception)
-                    {
-
-                    }
-                    i--;
-                    Console.WriteLine(i + " : " + challenjour.PlayerOrTeamName);
-                    if (i % 5 == 0)
-                    {
-                        Thread.Sleep(10000);
-                    }
-                    if (i <= 0)
-                        break;
+                    Student std = new Student(challenjour.PlayerOrTeamName + "@", challenjour.PlayerOrTeamName, challenjour.PlayerOrTeamName, challenjour.PlayerOrTeamName, 2016);
+                    MyDatabaseContext.MyStudents.Add(std);
                 }
-                MyDatabaseContext.SaveChanges();
+                catch (Exception)
+                {
+
+                }
+                i--;
+                Console.WriteLine(i + " : " + challenjour.PlayerOrTeamName);
+                if (i % 5 == 0)
+                {
+                    MyDatabaseContext.SaveChanges();
+                    Thread.Sleep(10000);
+                }
+                if (i <= 0)
+                    break;
             }
+            MyDatabaseContext.SaveChanges();
         }
         private void StartTournament(object obj)
         {
@@ -478,7 +458,6 @@ namespace SoloTournamentCreator.ViewModel
             {
                 SelectedOpenTournament.Start();
                 MyDatabaseContext.SaveChanges();
-
                 RaisePropertyChanged("MyTournaments");
             }
 
@@ -574,11 +553,8 @@ namespace SoloTournamentCreator.ViewModel
             {
                 return;
             }
-            lock (MyDatabaseContext)
-            {
-                MyDatabaseContext.MyTournaments.Where(x => x.TournamentId == SelectedOpenTournament.TournamentId).Single().Register(selectedPlayer);
-                MyDatabaseContext.SaveChanges();
-            }
+            MyDatabaseContext.MyTournaments.Where(x => x.TournamentId == SelectedOpenTournament.TournamentId).Single().Register(selectedPlayer);
+            MyDatabaseContext.SaveChanges();
             RaisePropertyChanged("MyTournaments");
 
         }
@@ -593,11 +569,8 @@ namespace SoloTournamentCreator.ViewModel
             {
                 return;
             }
-            lock (MyDatabaseContext)
-            {
-                MyDatabaseContext.MyTournaments.Where(x => x.TournamentId == SelectedOpenTournament.TournamentId).Single().Deregister(selectedPlayer);
-                MyDatabaseContext.SaveChanges();
-            }
+            MyDatabaseContext.MyTournaments.Where(x => x.TournamentId == SelectedOpenTournament.TournamentId).Single().Deregister(selectedPlayer);
+            MyDatabaseContext.SaveChanges();
             RaisePropertyChanged("MyTournaments");
         }
         private void CreateTournament(object obj)

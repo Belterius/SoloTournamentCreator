@@ -33,13 +33,12 @@ namespace SoloTournamentCreator.View
         }
         public int VerticalSize
         {
-            //TODO : make it more pretty :(
             //The additionnal *2 are because of the Third place match, in case I want the space for a full second Tree
             get
             {
-                if(SelectedTournament != null)
+                if (SelectedTournament != null)
                     return 30 * SelectedTournament.NbTeam * 2;
-                return 30 * 16 * 2;
+                return 30 * 32 * 2;
             }
         }
         public int HorizontalSize
@@ -47,8 +46,8 @@ namespace SoloTournamentCreator.View
             get
             {
                 if (SelectedTournament != null)
-                    return Convert.ToInt32((Math.Log(SelectedTournament.NbTeam, 2) + 1) * bracketwidth + 50);
-                return Convert.ToInt32((Math.Log(16, 2) + 1) * bracketwidth + 50);
+                    return Convert.ToInt32( NumberOfSecondaryStage + 1 * bracketwidth + 50);
+                return Convert.ToInt32((Math.Log(16, 2) + 1 + 3) * bracketwidth + 50);
             }
         }
         public RelayCommand SelectWinner
@@ -70,7 +69,7 @@ namespace SoloTournamentCreator.View
 
         private static void OnSelectedTournamentUpdated(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if(e.NewValue != null) //cf TournamentBracketViewModel.ConfirmMatchResult
+            if (e.NewValue != null) //cf TournamentBracketViewModel.RefreshUserControl() for explanation
                 ((TournamentBrackets)d).UpdateBrackets();
         }
 
@@ -87,13 +86,35 @@ namespace SoloTournamentCreator.View
             InitializeComponent();
         }
 
+        
+        private double NumberOfSecondaryStage
+        {
+            get
+            {
+                //After the first 3 Stages, when the Main bracket grows by one stage (== round), the LoserBracket grows by 2
+                return NumberOfMainStage + Math.Max(0, (NumberOfMainStage - 3));
+            }
+        }
+        private double NumberOfMainStage
+        {
+            get
+            {
+                return Math.Log(SelectedTournament.NbTeam, 2) + 1;
+            }
+        }
         private void UpdateBrackets()
         {
             Brackets.Children.Clear();
             if (SelectedTournament != null)
             {
-                BracketLocation MainTree = AddBracket(SelectedTournament.MyTournamentTree.MyTournamentTree, (Math.Log(SelectedTournament.NbTeam, 2) + 1) * bracketwidth, 0, Colors.Silver);
-                AddBracket(SelectedTournament.MyTournamentTree.MyThirdMatchPlace, (Math.Log(SelectedTournament.NbTeam, 2) + 1) * bracketwidth - bracketwidth, MainTree.Height, Colors.Silver); //I am one bracket width on the left because my final Slot must be at the same level as my Final, I put the bracket down too to not disturb my main tournament tree. TODO : give the option to transform the third match place into a loser bracket !
+                BracketLocation MainTree = AddBracket(SelectedTournament.MyTournamentTree.MyMainTournamentTree, NumberOfSecondaryStage * bracketwidth, 0, Colors.Silver);
+                if(SelectedTournament.MyTournamentTree.MySecondaryTournamentTree != null)
+                {
+                    if (SelectedTournament.HasLoserBracket)
+                        AddBracket(SelectedTournament.MyTournamentTree.MySecondaryTournamentTree, NumberOfSecondaryStage * bracketwidth, MainTree.Height + 40, Colors.Silver); //My "top" is the end of my MainBracket, plus a margin
+                    else//I want my SecondaryTree Winner to be one stage back from the main tournament, because it's only the third place, not the second
+                        AddBracket(SelectedTournament.MyTournamentTree.MySecondaryTournamentTree, (NumberOfSecondaryStage - 1) * bracketwidth, MainTree.Height + 40, Colors.Silver); //My "top" is the end of my MainBracket, plus a margin
+                }
             }
         }
 

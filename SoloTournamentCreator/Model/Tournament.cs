@@ -123,7 +123,7 @@ namespace SoloTournamentCreator.Model
         {
             get
             {
-                return MyTournamentTree.MyTournamentTree.Winner;
+                return MyTournamentTree.MyMainTournamentTree.Winner;
             }
         }
 
@@ -171,6 +171,10 @@ namespace SoloTournamentCreator.Model
             CreateTeam();
             BalanceTeam();
             CreateTournamentTree();
+        }
+        public void StartFinalStage()
+        {
+            MyTournamentTree?.StartFinalStage();
         }
         private void Clean()
         {

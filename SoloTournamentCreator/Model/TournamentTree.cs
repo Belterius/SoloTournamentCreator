@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,30 +19,32 @@ namespace SoloTournamentCreator.Model
         List<Match> _RightEndPoint;
         List<Match> _LoserBracketLeftEndPoint;
         List<Match> _LoserBracketRightEndPoint;
-        Match _MyTournamentTree;
-        Match _MyThirdMatchPlace;
-        public Match MyTournamentTree
+        Match _MyMainTournamentTree;
+        Match _MySecondaryTournamentTree;
+
+        public Match MyMainTournamentTree
         {
             get
             {
-                return _MyTournamentTree;
+                return _MyMainTournamentTree;
             }
 
             set
             {
-                _MyTournamentTree = value;
+                _MyMainTournamentTree = value;
             }
         }
-        public Match MyThirdMatchPlace
+
+        public Match MySecondaryTournamentTree
         {
             get
             {
-                return _MyThirdMatchPlace;
+                return _MySecondaryTournamentTree;
             }
 
             set
             {
-                _MyThirdMatchPlace = value;
+                _MySecondaryTournamentTree = value;
             }
         }
         private List<Match> LeftEndPoint
@@ -83,7 +86,7 @@ namespace SoloTournamentCreator.Model
             }
         }
 
-        public List<Match> LoserBracketLeftEndPoint
+        private List<Match> LoserBracketLeftEndPoint
         {
             get
             {
@@ -96,7 +99,7 @@ namespace SoloTournamentCreator.Model
             }
         }
 
-        public List<Match> LoserBracketRightEndPoint
+        private List<Match> LoserBracketRightEndPoint
         {
             get
             {
@@ -124,26 +127,29 @@ namespace SoloTournamentCreator.Model
 
         private TournamentTree()
         {
-
+            LeftEndPoint = new List<Match>();
+            RightEndPoint = new List<Match>();
+            LoserBracketLeftEndPoint = new List<Match>();
+            LoserBracketRightEndPoint = new List<Match>();
         }
         public TournamentTree(HashSet<Team> teams, bool hasLoserBracket)
         {
             HasLoserBracket = hasLoserBracket;
-            MyTournamentTree = new Match(0);
-            MyThirdMatchPlace = new Match(0);
+            MyMainTournamentTree = new Match(0, true);
+            MySecondaryTournamentTree = new Match(0, false);
             LeftEndPoint = new List<Match>();
             RightEndPoint = new List<Match>();
             LoserBracketLeftEndPoint = new List<Match>();
             LoserBracketRightEndPoint = new List<Match>();
             MaxDepth = Math.Ceiling(Math.Log(teams.Count(), 2));
-            GenerateTournamentTree(MyTournamentTree, 1);
+            GenerateTournamentTree(MyMainTournamentTree, 1);
             if (HasLoserBracket)
             {
-                GenerateLoserBracketTree(MyThirdMatchPlace, 1);
+                GenerateLoserBracketTree(MySecondaryTournamentTree, 1);
             }
             else
             {
-                GenerateThirdMatchPlaceTree(MyThirdMatchPlace);
+                GenerateThirdMatchPlaceTree(MySecondaryTournamentTree);
             }
             SetTeamStartingPosition(teams);
             SetFreeWin();
@@ -152,17 +158,17 @@ namespace SoloTournamentCreator.Model
         private void GenerateThirdMatchPlaceTree(Match node)
         {
             
-            node.LeftContendant = new Match(node.Depth + 1);
-            node.RightContendant = new Match(node.Depth + 1);
+            node.LeftContendant = new Match(node.Depth + 1, false);
+            node.RightContendant = new Match(node.Depth + 1, false);
         }
         private void GenerateLoserBracketTree(Match node, int depth)
         {
-            node.RightContendant = new Match(depth);
-            node.LeftContendant = new Match(depth);
+            node.RightContendant = new Match(depth, false);
+            node.LeftContendant = new Match(depth, false);
             if((MaxDepth - 1) * 2 > depth)
             {
                 GenerateLoserBracketTree(node.LeftContendant, depth + 1);
-                if(depth%2 == 0)//Every other time the right contendant comme just straight from the main Tree
+                if(depth % 2 == 0)//Every other time the right contendant comme just straight from the main Tree
                 {
                     GenerateLoserBracketTree(node.RightContendant, depth + 1);
                 }else
@@ -176,6 +182,30 @@ namespace SoloTournamentCreator.Model
             }
             //Think if it's better to have TournamentTree.Left = TournamentTree TournamentTree.Right = MyThirdMatchPlace
             //Or if I generate a Final Third tree with one match <-- easier but let pretty I think
+        }
+        private void SetLoserEndPoint(Match match)
+        {
+            if(match.RightContendant == null && match.LeftContendant == null)
+            {
+                return;
+            }
+            if(match.RightContendant != null)
+            {
+                SetLoserEndPoint(match.RightContendant);
+                if (match.RightContendant.RightContendant == null && match.RightContendant.LeftContendant == null)
+                {
+                    LoserBracketRightEndPoint.Add(match.RightContendant);
+                }
+            }
+            if (match.LeftContendant != null)
+            {
+                SetLoserEndPoint(match.LeftContendant);
+                if (match.LeftContendant.RightContendant == null && match.LeftContendant.LeftContendant == null)
+                {
+                    LoserBracketLeftEndPoint.Add(match.LeftContendant);
+                }
+            }
+            
         }
         private void SetLoserPosition(Team team, int depth)
         {
@@ -232,7 +262,7 @@ namespace SoloTournamentCreator.Model
                 loserDepth = depth * 2 - 1;
             }
             Random randomizer = new Random();
-            if (LoserBracketLeftEndPoint.Where(x => x.Depth == loserDepth && x.Winner == team).SingleOrDefault() != null || LoserBracketRightEndPoint.Where(x => x.Depth == loserDepth && x.Winner == team).Single() != null)
+            if (LoserBracketLeftEndPoint.Where(x => x.Depth == loserDepth && x.Winner == team).SingleOrDefault() != null || LoserBracketRightEndPoint.Where(x => x.Depth == loserDepth && x.Winner == team).SingleOrDefault() != null)
             {
                 try
                 {
@@ -250,34 +280,33 @@ namespace SoloTournamentCreator.Model
         {
             //WARNING FUNCTION FOR TESTING PURPOSE ONLY, DO NOT CALL IT UNDER ANY OTHER CIRCUMSTANCE
             //It only allows to check the structure of the trees without having to bother creating teams
-            MyTournamentTree = new Match(0);
-            MyThirdMatchPlace = new Match(0);
+            MyMainTournamentTree = new Match(0, true);
+            MySecondaryTournamentTree = new Match(0, true);
             LeftEndPoint = new List<Match>();
             RightEndPoint = new List<Match>();
             LoserBracketLeftEndPoint = new List<Match>();
             LoserBracketRightEndPoint = new List<Match>();
             MaxDepth = depth;
-            GenerateTournamentTree(MyTournamentTree, 1);
-            GenerateLoserBracketTree(MyThirdMatchPlace, 1);
+            GenerateTournamentTree(MyMainTournamentTree, 1);
+            GenerateLoserBracketTree(MySecondaryTournamentTree, 1);
             
         }
 
         private void GenerateTournamentTree(Match node, int depth)
         {
-            if(MaxDepth > depth)
+            node.LeftContendant = new Match(depth, true);
+            node.RightContendant = new Match(depth, true);
+            if (MaxDepth > depth)
             {
-                node.LeftContendant = new Match(depth);
                 GenerateTournamentTree(node.LeftContendant, depth + 1);
-                node.RightContendant = new Match(depth);
                 GenerateTournamentTree(node.RightContendant, depth + 1);
             }else
             {
-                node.LeftContendant = new Match(depth);
-                node.RightContendant = new Match(depth);
                 LeftEndPoint.Add(node.LeftContendant);
                 RightEndPoint.Add(node.RightContendant);
             }
         }
+        
         private void SetTeamStartingPosition(HashSet<Team> teams)
         {
             Random randomizer = new Random();
@@ -318,7 +347,7 @@ namespace SoloTournamentCreator.Model
         private void printTree()
         {
             Queue<Match> queue = new Queue<Match>();
-            queue.Enqueue(MyTournamentTree);
+            queue.Enqueue(MyMainTournamentTree);
             string output = "";
             while (queue.Count != 0)
             {
@@ -339,49 +368,78 @@ namespace SoloTournamentCreator.Model
         }
         private void SetFreeWin()
         {
-            MyTournamentTree.SetAutoWinner();
+            MyMainTournamentTree.SetAutoWinner();
         }
         public void UpdateThirdMatchPlace(Match match)
         {
+            if(MySecondaryTournamentTree == null)
+            {
+                return;
+            }
+            if (! match.IsMainMatch)
+            {
+                //If the match is from the Loser Bracket already, we don't need to do any additionnal work
+                return;
+            }
             if (HasLoserBracket)
             {
-                RemoveLoserPosition(match.Winner, match.Depth);
+                if(LoserBracketLeftEndPoint.Count == 0 && LoserBracketRightEndPoint.Count == 0)
+                {
+                    // We can't save our EndPoint because we don't have any direct acces to our Matchs
+                    //In the case of the MainTournamentTree it doesn't matter because we only use the EndPoint when creating our Tree, but here we have EndPoint at all differents stage
+                    //So we need a way to keep them in case we don't finish the tournament in one go
+                    //the best way to do that, is simply to regenerate our end point if we don't have any
+                    SetLoserEndPoint(MySecondaryTournamentTree);
+                }
+                RemoveLoserPosition(match.Winner, match.Depth + 1);
 
                 if (match.LeftContendant.Winner != match.Winner)
                 {
-                    SetLoserPosition(match.LeftContendant.Winner, match.Depth);
+                    SetLoserPosition(match.LeftContendant.Winner, match.Depth + 1);
                 }
                 else{
-                    SetLoserPosition(match.RightContendant.Winner, match.Depth);
+                    SetLoserPosition(match.RightContendant.Winner, match.Depth + 1);
                 }
 
             }
             else
             {
-                if (MyTournamentTree?.LeftContendant?.Winner != null)
+                if (MyMainTournamentTree?.LeftContendant?.Winner != null)
                 {
-                    if (MyTournamentTree.LeftContendant.Winner != MyTournamentTree.LeftContendant.LeftContendant.Winner)
+                    if (MyMainTournamentTree.LeftContendant.Winner != MyMainTournamentTree.LeftContendant.LeftContendant.Winner)
                     {
-                        MyThirdMatchPlace.LeftContendant.Winner = MyTournamentTree.LeftContendant.LeftContendant.Winner;
+                        MySecondaryTournamentTree.LeftContendant.Winner = MyMainTournamentTree.LeftContendant.LeftContendant.Winner;
                     }
                     else
                     {
-                        MyThirdMatchPlace.LeftContendant.Winner = MyTournamentTree.LeftContendant.RightContendant.Winner;
+                        MySecondaryTournamentTree.LeftContendant.Winner = MyMainTournamentTree.LeftContendant.RightContendant.Winner;
                     }
                 }
-                if (MyTournamentTree?.RightContendant?.Winner != null)
+                if (MyMainTournamentTree?.RightContendant?.Winner != null)
                 {
-                    if (MyTournamentTree.RightContendant.Winner != MyTournamentTree.RightContendant.LeftContendant.Winner)
+                    if (MyMainTournamentTree.RightContendant.Winner != MyMainTournamentTree.RightContendant.LeftContendant.Winner)
                     {
-                        MyThirdMatchPlace.RightContendant.Winner = MyTournamentTree.RightContendant.LeftContendant.Winner;
+                        MySecondaryTournamentTree.RightContendant.Winner = MyMainTournamentTree.RightContendant.LeftContendant.Winner;
                     }
                     else
                     {
-                        MyThirdMatchPlace.RightContendant.Winner = MyTournamentTree.RightContendant.RightContendant.Winner;
+                        MySecondaryTournamentTree.RightContendant.Winner = MyMainTournamentTree.RightContendant.RightContendant.Winner;
                     }
                 }
             }
             
+        }
+
+        internal void StartFinalStage()
+        {
+            if (MySecondaryTournamentTree == null)
+                return;
+
+            var tempo = new Match(0, true);
+            tempo.LeftContendant = MyMainTournamentTree;
+            tempo.RightContendant = MySecondaryTournamentTree;
+            MyMainTournamentTree = tempo;
+            MySecondaryTournamentTree = null;
         }
     }
 }

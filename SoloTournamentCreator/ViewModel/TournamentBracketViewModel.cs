@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace SoloTournamentCreator.ViewModel
 {
@@ -25,6 +26,16 @@ namespace SoloTournamentCreator.ViewModel
 
             }
         }
+        public System.Windows.Visibility FinalStageLaunch
+        {
+            get
+            {
+                if (SelectedTournament!= null && CanStartFinalStage())
+                    return System.Windows.Visibility.Visible;
+                return System.Windows.Visibility.Hidden;
+
+            }
+        }
         public Tournament SelectedTournament
         {
             get
@@ -36,6 +47,7 @@ namespace SoloTournamentCreator.ViewModel
             {
                 _SelectedTournament = value;
                 RaisePropertyChanged("SelectedTournament");
+                RaisePropertyChanged("FinalStageLaunch");
             }
         }
         public Match SelectedMatch
@@ -60,7 +72,7 @@ namespace SoloTournamentCreator.ViewModel
             get
             {
                 if (SelectedMatch != null)
-                    return SelectedMatch.LeftContendant.Winner.TeamName;
+                    return SelectedMatch.LeftContendant.Winner?.TeamName;
                 return String.Empty;
             }
         }
@@ -69,7 +81,7 @@ namespace SoloTournamentCreator.ViewModel
             get
             {
                 if(SelectedMatch != null)
-                    return SelectedMatch.RightContendant.Winner.TeamName;
+                    return SelectedMatch.RightContendant.Winner?.TeamName;
                 return String.Empty;
             }
         }
@@ -78,7 +90,11 @@ namespace SoloTournamentCreator.ViewModel
             get
             {
                 if (SelectedMatch != null)
-                    return new List<Team>{SelectedMatch.LeftContendant.Winner, SelectedMatch.RightContendant.Winner};
+                {
+                    var list = new List<Team> { SelectedMatch.LeftContendant.Winner, SelectedMatch.RightContendant.Winner};
+                    list.RemoveAll(item => item == null);
+                    return list;
+                }
                 return new List<Team>();
             }
         }
@@ -129,6 +145,7 @@ namespace SoloTournamentCreator.ViewModel
         public RelayCommand ClosingCommand { get; set; }
         public RelayCommand SelectWinnerCommand { get; set; }
         public RelayCommand ConfirmMatchResultCommand { get; set; }
+        public RelayCommand StartFinalStageCommand { get; set; }
         public TournamentBracketViewModel()
         {
             MyDataContext = new SavingContext();
@@ -145,7 +162,37 @@ namespace SoloTournamentCreator.ViewModel
             ClosingCommand = new RelayCommand(Closing);
             SelectWinnerCommand = new RelayCommand(SelectWinner);
             ConfirmMatchResultCommand = new RelayCommand(ConfirmMatchResult);
+            StartFinalStageCommand = new RelayCommand(StartFinalStage);
         }
+        private bool CanStartFinalStage()
+        {
+            if (!Properties.Settings.Default.AdminRight)
+                return false;
+            if (!SelectedTournament.HasLoserBracket)
+                return false;
+            if (SelectedTournament.MyTournamentTree.MySecondaryTournamentTree == null)
+                return false;
+            if (SelectedTournament.MyTournamentTree.MyMainTournamentTree.Winner == null)
+                return false;
+            if (SelectedTournament.MyTournamentTree.MySecondaryTournamentTree.Winner == null)
+                return false;
+            return true;
+        }
+        private void StartFinalStage(object obj)
+        {
+            
+            if(MessageBox.Show("Once the final stage has started, you won't be able to do any modification to the previous result, are you sure you want to continue ?", "WARNING", MessageBoxButton.OKCancel) == MessageBoxResult.OK && CanStartFinalStage())
+            {
+                SelectedTournament.StartFinalStage();
+                var tempo = SelectedTournament;
+                SelectedTournament = null;
+                SelectedTournament = tempo;
+                RefreshUserControl();
+                RaisePropertyChanged("SelectedTournament");
+            }
+            
+        }
+
         private void Closing(object obj)
         {
 
@@ -177,7 +224,13 @@ namespace SoloTournamentCreator.ViewModel
                 SecondScore = 0;
                 SelectedMatch = null;
                 MyDataContext.SaveChanges();
-                /*
+                RefreshUserControl();
+            }
+        }
+
+        private void RefreshUserControl()
+        {
+            /*
                  * I could NOT figure why raising PropertyChanged SelectedTournament does update the SelectedTournament Property from my User Control (when debuging I see the new values if I raiseProperty, I'm not if I don't)
                  * BUT it would NOT fire my OnSelectedTournamentUpdated PropertyChangedCallBack
                  * after lots of try and try, decided to do the dirty trick, I set it to null and back, to fire my event
@@ -187,11 +240,10 @@ namespace SoloTournamentCreator.ViewModel
                  * Cf : http://stackoverflow.com/questions/31990339/propertychangedcallback-not-called for more information
                  * TODO : Remove the trick and implement the full proper way
                  */
-                var tempo = SelectedTournament;
-                SelectedTournament = null;
-                SelectedTournament = tempo;
-                RaisePropertyChanged("SelectedTournament"); 
-            }
+            var tempo = SelectedTournament;
+            SelectedTournament = null;
+            SelectedTournament = tempo;
+            RaisePropertyChanged("SelectedTournament");
         }
     }
 }

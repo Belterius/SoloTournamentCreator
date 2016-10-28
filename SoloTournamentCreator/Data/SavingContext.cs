@@ -20,7 +20,7 @@ namespace SoloTournamentCreator
         {
         }
         public SavingContext(string nameOrConnectionString) 
-        : base("name=SavingContext")
+        : base(nameOrConnectionString)
         {
         }
         public SavingContext(DbConnection existingConnection, bool contextOwnsConnection)

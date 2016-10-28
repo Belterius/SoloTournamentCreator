@@ -13,7 +13,8 @@
         xmlns:properties="clr-namespace:SoloTournamentCreator.Properties"
         mc:Ignorable="d"
         ResizeMode="CanMinimize"
-        Title="Tournament Bracket" Height="556.955" Width="1093.295"
+        Title="Tournament Bracket" Height="765.755" Width="1446.095"
+        Left="10" Top="10"
         DataContext="{DynamicResource TournamentBracketViewModel}">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closing">
@@ -28,12 +29,12 @@
         <helper:InternalListBoxItemClick x:Key="InternalListBoxItemClick" />
     </Window.Resources>
     <Grid>
-        <GroupBox x:Name="groupBoxBracket" Header="Bracket" HorizontalAlignment="Left" VerticalAlignment="Top" Height="517" Width="878">
+        <GroupBox x:Name="groupBoxBracket" Header="Bracket" HorizontalAlignment="Left" VerticalAlignment="Top" Height="718" Width="1201" Margin="10,8,0,0">
             <Grid>
                 <view:TournamentBrackets SelectedTournament="{Binding SelectedTournament}" SelectWinner="{Binding SelectWinnerCommand}" Margin="0,0,-0.4,-0.4" />
             </Grid>
         </GroupBox>
-        <GroupBox x:Name="groupBoxMatchResult" Visibility="{Binding DisplaySelector}" Header="Match Result" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="878,10,0,0" Height="295" Width="209">
+        <GroupBox x:Name="groupBoxMatchResult" Visibility="{Binding DisplaySelector}" Header="Match Result" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1216,186,0,0" Height="295" Width="209">
             <Grid>
                 <Label x:Name="label" Content="{Binding TeamTwoName}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="34,62,28,0"/>
                 <Label x:Name="label1" Content="VS" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="42,36,38.2,0"/>
@@ -47,5 +48,6 @@
                 <Label x:Name="label4_Copy" Content="-" HorizontalAlignment="Center" Margin="110,163,72.8,0" VerticalAlignment="Top"/>
             </Grid>
         </GroupBox>
+        <Button x:Name="button1" Content="Start Final Stage !" Visibility="{Binding FinalStageLaunch}" Command="{Binding StartFinalStageCommand}" HorizontalAlignment="Left" Margin="1231,707,0,0" VerticalAlignment="Top" Width="194"/>
     </Grid>
 </Window>

@@ -28,7 +28,7 @@ namespace SoloTournamentCreator.Data
         }
         public static bool CheckWriteRight(this SavingContext source)
         {
-            Match dummyMatch = new Match(0);
+            Match dummyMatch = new Match(0, true);
             try
             {
                 //TODO : Find a better way to check if I have write access on the database ...
