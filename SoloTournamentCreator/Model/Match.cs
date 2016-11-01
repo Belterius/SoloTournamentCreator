@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 
 namespace SoloTournamentCreator.Model
 {
+    /// <summary>
+    /// A match between two teams, the LeftContendant winner and the RightContendant Winner.
+    /// <para/>The winner become the Match Winner.
+    /// <para/>a depth of 0 correspond to the final, of 1 to the demi final ...
+    /// </summary>
     public class Match
     {
         [Key]
@@ -142,16 +147,18 @@ namespace SoloTournamentCreator.Model
             LoserScore = 0;
             Winner = winner;
         }
-
-        public void DeclareWinner(Match winner)
-        {
-            Winner = winner.Winner;
-        }
+        /// <summary>
+        /// Set the winner of the match, it should always be the right or left contendant winner, unless it is the first match (then right and left contendant are null)
+        /// </summary>
+        /// <param name="winner"></param>
         public void DeclareWinner(Team winner)
         {
             Winner = winner;
         }
-        public void SetAutoWinner()
+        /// <summary>
+        /// Will give a free win to all team having no rival for the last match of the Tree, should be used to init a Tournament once all team have been placed (il will take care of the Bye)
+        /// </summary>
+        public void SetLastRoundAutoWinner()
         {
             if (RightContendant == null && LeftContendant == null)
                 return;
@@ -167,8 +174,48 @@ namespace SoloTournamentCreator.Model
                 LeftContendant.WinNext = true;
                 return;
             }
-            RightContendant.SetAutoWinner();
-            LeftContendant.SetAutoWinner();
+            RightContendant.SetLastRoundAutoWinner();
+            LeftContendant.SetLastRoundAutoWinner();
+        }
+        /// <summary>
+        /// Will resolve ALL free wins for the tournament
+        /// <para/>WARNING : this is NOT appropriate for a loser bracket as new team can appear in the bracket at any stage
+        /// Note : it should not be use in a normal bracket either because only the last stage should contain "free wins"
+        /// <para/> Return true if all matchs have been resolved (a winner have been OR there's no winner because there's no team participating)
+        /// Return false if there is a match result missing (Two teams are competing in a match and there's no winner set)
+        /// </summary>
+        /// <returns>
+        /// </returns>
+        public bool SetAutoWinnerChain()
+        {
+            bool? leftIsResolved = LeftContendant?.SetAutoWinnerChain();
+            bool? rightIsResolved = RightContendant?.SetAutoWinnerChain();
+
+            if (RightContendant == null && LeftContendant == null)
+            {
+                return true;
+            }
+            if (RightContendant.Winner != null && LeftContendant.Winner != null)
+            {
+                return false;
+            }
+            if (RightContendant?.Winner != null && LeftContendant?.Winner == null && leftIsResolved == true)
+            {
+                Winner = RightContendant.Winner;
+                RightContendant.WinNext = true;
+                return true;
+            }
+            if (LeftContendant?.Winner != null && RightContendant?.Winner == null && rightIsResolved == true )
+            {
+                Winner = LeftContendant.Winner;
+                LeftContendant.WinNext = true;
+                return true;
+            }
+            if (rightIsResolved == leftIsResolved == true)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

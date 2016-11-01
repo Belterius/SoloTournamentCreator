@@ -73,6 +73,11 @@ namespace SoloTournamentCreator.Model
             NbPlayerMax = nbPlayerMax;
         }
 
+        /// <summary>
+        /// If the team isn't full, add a Student to the team members.
+        /// </summary>
+        /// <param name="member"></param>
+        /// <returns></returns>
         public bool AddMember(Student member)
         {
             if (TeamMember.Count >= NbPlayerMax)
@@ -80,15 +85,26 @@ namespace SoloTournamentCreator.Model
             return TeamMember.Add(member);
         }
 
+        /// <summary>
+        /// Remove a Student from the team
+        /// <para/> Return true if the Student was part of the team, false else
+        /// </summary>
+        /// <param name="member"></param>
+        /// <returns></returns>
         public bool RemoveMember(Student member)
         {
             return TeamMember.Remove(member);
         }
 
+        /// <summary>
+        /// Rename the team name
+        /// </summary>
+        /// <param name="teamName"></param>
+        /// <returns></returns>
         public bool Rename(string teamName)
         {
-            //Possibility to add a check for offensive name or else, don't need it for now
-            if (teamName == null)
+            //Possibility to add a check for offensive name or else,I don't need it for now
+            if (teamName == null || teamName == "")
                 return false;
 
             TeamName = teamName;

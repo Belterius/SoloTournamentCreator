@@ -368,7 +368,7 @@ namespace SoloTournamentCreator.Model
         }
         private void SetFreeWin()
         {
-            MyMainTournamentTree.SetAutoWinner();
+            MyMainTournamentTree.SetLastRoundAutoWinner();
         }
         public void UpdateThirdMatchPlace(Match match)
         {

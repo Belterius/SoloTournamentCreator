@@ -67,7 +67,7 @@ namespace SoloTournamentCreator.Model
         {
             get
             {
-                return _SummonerData.Name;
+                return _SummonerData?.Name;
             }
         }
 
@@ -151,6 +151,28 @@ namespace SoloTournamentCreator.Model
         {
 
         }
+        /// <summary>
+        /// Should ONLY, EVER be used for testing purpose
+        /// </summary>
+        /// <param name="testConfirm"></param>
+        public Student(string testConfirm)
+        {
+            if(testConfirm != "test")
+            {
+                throw new NotSupportedException();
+            }
+            SummonerData = new SummonerDto();
+        }
+        /// <summary>
+        /// <para/>Create a new Student
+        /// <para/>Will use the Pseudo given to request from the Riot API its Summoner Data, if that fails (pseudo doesn't exist), the constructor will fail.
+        /// <para/>It will then use the SummonerID to request the Summoner SoloQueue Data, if it fails (the player is Unranked) it will set the SoloQueueData and DetailData to null.
+        /// </summary>
+        /// <param name="mail"></param>
+        /// <param name="firstName"></param>
+        /// <param name="lastName"></param>
+        /// <param name="pseudo"></param>
+        /// <param name="gradYear"></param>
         public Student(string mail, string firstName, string lastName, string pseudo, int gradYear)
         {
             Mail = mail;
@@ -170,13 +192,18 @@ namespace SoloTournamentCreator.Model
                 SummonerSoloQueueData = ApiRequest.GetSummonerSoloQueueRating(SummonerData.Id);
                 DetailSoloQueueData = new CLED(SummonerSoloQueueData.Entries.First());
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 SummonerSoloQueueData = null; //Unranked
                 DetailSoloQueueData = null;
             }
         }
 
+        /// <summary>
+        /// Use the SummonerID to update the SoloQueueData and DetailData
+        /// </summary>
+        /// <returns></returns>
         public bool RefreshData()
         {
             try
@@ -185,27 +212,40 @@ namespace SoloTournamentCreator.Model
                 SummonerSoloQueueData = ApiRequest.GetSummonerSoloQueueRating(SummonerData.Id);
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                Console.WriteLine(ex);
+                SummonerSoloQueueData = null; //Unranked
+                DetailSoloQueueData = null;
+                return false;
             }
         }
+
+        /// <summary>
+        /// <para/>Compare the SummonerID of each entity, return true if they are equal.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             if (!(obj is Student))
-                return false;
-            if(this.SummonerData == null || ((Student)obj).SummonerData == null)
             {
-                if(this.Pseudo == ((Student)obj).Pseudo)
-                    return true;
-            }else
+                return false;
+            }
+            if (this.SummonerData == null || ((Student)obj).SummonerData == null)
+            {
+                return false;
+            }
             if (this.SummonerData.Id == ((Student)obj).SummonerData.Id)
+            {
                 return true;
+            }
             return false;
         }
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            var testc =  base.GetHashCode() +  this.SummonerData.Id.GetHashCode() ;
+            return base.GetHashCode() +  this.SummonerData.Id.GetHashCode();
         }
     }
 }
