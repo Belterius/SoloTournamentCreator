@@ -145,26 +145,42 @@ namespace SoloTournamentCreator.Model
             Participants = new HashSet<Student>();
             Teams = new HashSet<Team>();
         }
-        public Tournament(string name="NoName", int nbTeam = 8, bool hasLoserBracket = false)
+        /// <summary>
+        /// Create a Tournament
+        /// </summary>
+        /// <param name="name">The name of the Tournament</param>
+        /// <param name="nbTeam">The Max number of team</param>
+        /// <param name="hasLoserBracket">True if require a loser bracket, false if only third place match</param>
+        public Tournament(string name="NoName", int nbTeam = 8, bool hasLoserBracket = false) : this()
         {
-            Participants = new HashSet<Student>();
-            Teams = new HashSet<Team>();
             Status = TournamentStage.Open;
             Name = name;
             NbTeam = nbTeam;
             HasLoserBracket = hasLoserBracket;
         }
-
+        /// <summary>
+        /// Register a Student to the Tournament
+        /// </summary>
+        /// <param name="participant">The Student to register</param>
+        /// <returns>True if worked, false if the student was already registered</returns>
         public bool Register(Student participant)
         {
             return Participants.Add(participant);
         }
-
+        /// <summary>
+        /// Deregister a Student from the Tournament
+        /// </summary>
+        /// <param name="participant">The Student to deregister</param>
+        /// <returns>True if worked, false if the Student wasn't registered</returns>
         public bool Deregister(Student participant)
         {
             return Participants.Remove(participant);
         }
-
+        /// <summary>
+        /// Start the tournament.
+        /// <para />Create balanced team fron all the registered Students.
+        /// <para />Create a main bracket (and loser bracket if required) and place the Teams in it.
+        /// </summary>
         public void Start()
         {
             Clean();
@@ -172,14 +188,23 @@ namespace SoloTournamentCreator.Model
             BalanceTeam();
             CreateTournamentTree();
         }
+        /// <summary>
+        /// Merge the winner and loser bracket into the final bracket
+        /// </summary>
         public void StartFinalStage()
         {
             MyTournamentTree?.StartFinalStage();
         }
+        /// <summary>
+        /// Remove all existing team
+        /// </summary>
         private void Clean()
         {
             Teams = new HashSet<Team>();
         }
+        /// <summary>
+        /// Create the number of team required to fit all the participants OR to reach the max number of team allowed
+        /// </summary>
         private void CreateTeam()
         {
             for (int i = 0; i < Math.Min(Participants.Count/nbPlayerPerTeam, NbTeam); i++)
@@ -188,6 +213,9 @@ namespace SoloTournamentCreator.Model
             }
 
         }
+        /// <summary>
+        /// Depending on the level of each players, create the most balanced teams possible
+        /// </summary>
         private void BalanceTeam()
         {
             HashSet<Team> availableTeam = new HashSet<Team>(Teams);
@@ -203,11 +231,17 @@ namespace SoloTournamentCreator.Model
                 }
             }
         }
+        /// <summary>
+        /// Create the loser and winner bracket and officially pass our Tournament onto the Started status
+        /// </summary>
         private void CreateTournamentTree()
         {
             MyTournamentTree = new TournamentTree(Teams, HasLoserBracket);
             Status = TournamentStage.Started;
         }
+        /// <summary>
+        /// Pass the Tournament from the Started to the Completed Status
+        /// </summary>
         public void Archive()
         {
             if(Status == TournamentStage.Started)

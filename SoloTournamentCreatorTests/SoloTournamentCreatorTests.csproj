@@ -58,6 +58,7 @@
     <Compile Include="Model\MatchTests.cs" />
     <Compile Include="Model\StudentTests.cs" />
     <Compile Include="Model\TeamTests.cs" />
+    <Compile Include="Model\TournamentTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

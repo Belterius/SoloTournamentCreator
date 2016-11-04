@@ -136,7 +136,8 @@ namespace SoloTournamentCreator.Model.Tests
             Final.LeftContendant = HalfFinal1;
             Final.RightContendant = HalfFinal2;
 
-            Final.SetAutoWinnerChain();
+            PrivateObject obj = new PrivateObject(Final);
+            var retVal = obj.Invoke("SetAutoWinnerChain");
 
             Assert.AreEqual(Final.Winner, null);
             Assert.AreEqual(HalfFinal1.Winner, null);

@@ -76,8 +76,8 @@ namespace SoloTournamentCreator.Model
         /// <summary>
         /// If the team isn't full, add a Student to the team members.
         /// </summary>
-        /// <param name="member"></param>
-        /// <returns></returns>
+        /// <param name="member">The Student to add</param>
+        /// <returns>True if worked, else false</returns>
         public bool AddMember(Student member)
         {
             if (TeamMember.Count >= NbPlayerMax)
@@ -89,18 +89,18 @@ namespace SoloTournamentCreator.Model
         /// Remove a Student from the team
         /// <para/> Return true if the Student was part of the team, false else
         /// </summary>
-        /// <param name="member"></param>
-        /// <returns></returns>
+        /// <param name="member">The Student to remove</param>
+        /// <returns>True if worked, false if the Student wasn't present</returns>
         public bool RemoveMember(Student member)
         {
             return TeamMember.Remove(member);
         }
 
         /// <summary>
-        /// Rename the team name
+        /// Check a new proposed name, and Rename the team name if it is not offensive
         /// </summary>
-        /// <param name="teamName"></param>
-        /// <returns></returns>
+        /// <param name="teamName">The new Team Name</param>
+        /// <returns>True if worked, false if the name was null or not appropriate</returns>
         public bool Rename(string teamName)
         {
             //Possibility to add a check for offensive name or else,I don't need it for now

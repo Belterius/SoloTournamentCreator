@@ -219,7 +219,7 @@ namespace SoloTournamentCreator.ViewModel
                 }
                 SelectedMatch.WinnerScore = Math.Max(FirstScore, SecondScore);
                 SelectedMatch.LoserScore = Math.Min(FirstScore, SecondScore);
-                SelectedTournament.MyTournamentTree.UpdateThirdMatchPlace(SelectedMatch);
+                SelectedTournament.MyTournamentTree.UpdateSecondaryBracket(SelectedMatch);
                 FirstScore = 0;
                 SecondScore = 0;
                 SelectedMatch = null;

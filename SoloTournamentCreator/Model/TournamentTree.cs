@@ -132,15 +132,11 @@ namespace SoloTournamentCreator.Model
             LoserBracketLeftEndPoint = new List<Match>();
             LoserBracketRightEndPoint = new List<Match>();
         }
-        public TournamentTree(HashSet<Team> teams, bool hasLoserBracket)
+        public TournamentTree(HashSet<Team> teams, bool hasLoserBracket) : this()
         {
             HasLoserBracket = hasLoserBracket;
             MyMainTournamentTree = new Match(0, true);
             MySecondaryTournamentTree = new Match(0, false);
-            LeftEndPoint = new List<Match>();
-            RightEndPoint = new List<Match>();
-            LoserBracketLeftEndPoint = new List<Match>();
-            LoserBracketRightEndPoint = new List<Match>();
             MaxDepth = Math.Ceiling(Math.Log(teams.Count(), 2));
             GenerateTournamentTree(MyMainTournamentTree, 1);
             if (HasLoserBracket)
@@ -155,12 +151,24 @@ namespace SoloTournamentCreator.Model
             SetFreeWin();
         }
 
+        /// <summary>
+        /// Generate a third place match tree
+        /// </summary>
+        /// <param name="node">The Final Node for the third place match</param>
         private void GenerateThirdMatchPlaceTree(Match node)
         {
             
             node.LeftContendant = new Match(node.Depth + 1, false);
             node.RightContendant = new Match(node.Depth + 1, false);
         }
+        /// <summary>
+        /// Generate a loser bracket tree of a set depth
+        /// <para />we create a right and left node on which we'll attach the rest of the tree
+        /// <para />the left node are for team progressing throught the bracket, the right node are for the team that have just been kicked from the main tournament
+        /// <para /> when the depth reaches "(MaxDepth - 1) * 2" we stop expanding the Tree, MaxDepth being the Depth of our Main Tournament
+        /// </summary>
+        /// <param name="node">The parent node</param>
+        /// <param name="depth">The depth of the Node</param>
         private void GenerateLoserBracketTree(Match node, int depth)
         {
             node.RightContendant = new Match(depth, false);
@@ -183,6 +191,10 @@ namespace SoloTournamentCreator.Model
             //Think if it's better to have TournamentTree.Left = TournamentTree TournamentTree.Right = MyThirdMatchPlace
             //Or if I generate a Final Third tree with one match <-- easier but let pretty I think
         }
+        /// <summary>
+        /// Set the possibles spawn point for the team being kicked from the main bracket onto the loser bracket
+        /// </summary>
+        /// <param name="match">The node from which we'll start looking for end points</param>
         private void SetLoserEndPoint(Match match)
         {
             if(match.RightContendant == null && match.LeftContendant == null)
@@ -207,6 +219,11 @@ namespace SoloTournamentCreator.Model
             }
             
         }
+        /// <summary>
+        /// Place a team onto one of the possible spawn point of the corresponding stage
+        /// </summary>
+        /// <param name="team">The team to place</param>
+        /// <param name="depth">The depth at which the team lost in the main bracket</param>
         private void SetLoserPosition(Team team, int depth)
         {
             int loserDepth;
@@ -245,6 +262,11 @@ namespace SoloTournamentCreator.Model
                 LoserBracketRightEndPoint.OrderBy(i => randomizer.Next()).Where(x => x.Depth == loserDepth && x.Winner == null).First().Winner = team;
             }
         }
+        /// <summary>
+        /// Remove a team from it's spawn point in the loser bracket, should only be called if wrong results had been reported 
+        /// </summary>
+        /// <param name="team">The team to remove</param>
+        /// <param name="depth">The depth at which the team lost in the main bracket</param>
         private void RemoveLoserPosition(Team team, int depth)
         {
             int loserDepth;
@@ -275,11 +297,14 @@ namespace SoloTournamentCreator.Model
 
             }
         }
-
-        private TournamentTree(int depth)
+        /// <summary>
+        /// WARNING FUNCTION FOR TESTING PURPOSE ONLY, DO NOT CALL IT UNDER ANY OTHER CIRCUMSTANCE
+        /// <para /> It only allows to check the structure of the trees without having to bother creating teams
+        /// </summary>
+        /// <param name="depth">The depth of the main bracket to create</param>
+        public TournamentTree(int depth)
         {
-            //WARNING FUNCTION FOR TESTING PURPOSE ONLY, DO NOT CALL IT UNDER ANY OTHER CIRCUMSTANCE
-            //It only allows to check the structure of the trees without having to bother creating teams
+            
             MyMainTournamentTree = new Match(0, true);
             MySecondaryTournamentTree = new Match(0, true);
             LeftEndPoint = new List<Match>();
@@ -292,6 +317,11 @@ namespace SoloTournamentCreator.Model
             
         }
 
+        /// <summary>
+        /// Create a tournament bracket of size MaxDepth.
+        /// </summary>
+        /// <param name="node">The parent node to the rest of the tree</param>
+        /// <param name="depth">The depth of the parent node</param>
         private void GenerateTournamentTree(Match node, int depth)
         {
             node.LeftContendant = new Match(depth, true);
@@ -306,7 +336,12 @@ namespace SoloTournamentCreator.Model
                 RightEndPoint.Add(node.RightContendant);
             }
         }
-        
+
+        /// <summary>
+        /// Place all the team to a possible spawn point.
+        /// <para /> place on all the left end point first to avoid having an empty match and some full matchs
+        /// </summary>
+        /// <param name="teams">All the team participating</param>
         private void SetTeamStartingPosition(HashSet<Team> teams)
         {
             Random randomizer = new Random();
@@ -343,7 +378,9 @@ namespace SoloTournamentCreator.Model
             }
 
         }
-
+        /// <summary>
+        /// Print a visual output of the main bracket onto the console
+        /// </summary>
         private void printTree()
         {
             Queue<Match> queue = new Queue<Match>();
@@ -366,11 +403,18 @@ namespace SoloTournamentCreator.Model
             }
             Console.WriteLine(output);
         }
+        /// <summary>
+        /// Make all team with no adversary progress throught their match
+        /// </summary>
         private void SetFreeWin()
         {
             MyMainTournamentTree.SetLastRoundAutoWinner();
         }
-        public void UpdateThirdMatchPlace(Match match)
+        /// <summary>
+        /// Depending of the result of a main bracket match, take the necessary steps to update the loser bracket/third place match
+        /// </summary>
+        /// <param name="match">The main bracket match that ended</param>
+        public void UpdateSecondaryBracket(Match match)
         {
             if(MySecondaryTournamentTree == null)
             {
@@ -386,9 +430,9 @@ namespace SoloTournamentCreator.Model
                 if(LoserBracketLeftEndPoint.Count == 0 && LoserBracketRightEndPoint.Count == 0)
                 {
                     // We can't save our EndPoint because we don't have any direct acces to our Matchs
-                    //In the case of the MainTournamentTree it doesn't matter because we only use the EndPoint when creating our Tree, but here we have EndPoint at all differents stage
+                    //In the case of the MainTournamentTree it doesn't matter because we only use the EndPoint when creating our Tree, but here we have EndPoint at all differents stages
                     //So we need a way to keep them in case we don't finish the tournament in one go
-                    //the best way to do that, is simply to regenerate our end point if we don't have any
+                    //the best way to do that, is simply to regenerate our end points if we don't have any (Loaded from the DB)
                     SetLoserEndPoint(MySecondaryTournamentTree);
                 }
                 RemoveLoserPosition(match.Winner, match.Depth + 1);
@@ -430,6 +474,9 @@ namespace SoloTournamentCreator.Model
             
         }
 
+        /// <summary>
+        /// Fusion of the main and secondary bracket into the final tournament tree
+        /// </summary>
         internal void StartFinalStage()
         {
             if (MySecondaryTournamentTree == null)

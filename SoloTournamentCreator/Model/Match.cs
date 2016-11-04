@@ -134,6 +134,11 @@ namespace SoloTournamentCreator.Model
             WinnerScore = 0;
             LoserScore = 0;
         }
+        /// <summary>
+        /// Create a Match
+        /// </summary>
+        /// <param name="depth">The depth of the match in the bracket (0: Finale, 1:Semi-Finale ...)</param>
+        /// <param name="isMainMatch">true if it belongs in the main bracket, false else</param>
         public Match(int depth, bool isMainMatch)
         {
             WinnerScore = 0;
@@ -179,14 +184,14 @@ namespace SoloTournamentCreator.Model
         }
         /// <summary>
         /// Will resolve ALL free wins for the tournament
-        /// <para/>WARNING : this is NOT appropriate for a loser bracket as new team can appear in the bracket at any stage
-        /// Note : it should not be use in a normal bracket either because only the last stage should contain "free wins"
+        /// <para/>WARNING : this is NEVER appropriate for a loser bracket as new team can appear in the bracket at any stage
+        /// Note : it should normally not be used in a normal bracket either because only the last stage should contain "free wins"
         /// <para/> Return true if all matchs have been resolved (a winner have been OR there's no winner because there's no team participating)
         /// Return false if there is a match result missing (Two teams are competing in a match and there's no winner set)
         /// </summary>
         /// <returns>
         /// </returns>
-        public bool SetAutoWinnerChain()
+        private bool SetAutoWinnerChain()
         {
             bool? leftIsResolved = LeftContendant?.SetAutoWinnerChain();
             bool? rightIsResolved = RightContendant?.SetAutoWinnerChain();

@@ -154,7 +154,7 @@ namespace SoloTournamentCreator.Model
         /// <summary>
         /// Should ONLY, EVER be used for testing purpose
         /// </summary>
-        /// <param name="testConfirm"></param>
+        /// <param name="testConfirm">MUST be set to "test" for the function to work</param>
         public Student(string testConfirm)
         {
             if(testConfirm != "test")
@@ -172,7 +172,7 @@ namespace SoloTournamentCreator.Model
         /// <param name="firstName"></param>
         /// <param name="lastName"></param>
         /// <param name="pseudo"></param>
-        /// <param name="gradYear"></param>
+        /// <param name="gradYear">The year at which the student is expected to graduate</param>
         public Student(string mail, string firstName, string lastName, string pseudo, int gradYear)
         {
             Mail = mail;
@@ -224,7 +224,7 @@ namespace SoloTournamentCreator.Model
         /// <summary>
         /// <para/>Compare the SummonerID of each entity, return true if they are equal.
         /// </summary>
-        /// <param name="obj"></param>
+        /// <param name="obj">another Student to compare to</param>
         /// <returns></returns>
         public override bool Equals(object obj)
         {
