@@ -316,6 +316,7 @@ namespace SoloTournamentCreator.ViewModel
         public MainMenuViewModel()
         {
             this.PropertyChanged += CustomPropertyChanged;
+            TestRiotSharp();
             InitDatabaseContext();
             //PopulateDatabase();
             try
@@ -375,31 +376,9 @@ namespace SoloTournamentCreator.ViewModel
         [Conditional("DEBUG")]
         private void TestRiotSharp()
         {
-            var api = RiotSharp.RiotApi.GetInstance(Properties.Settings.Default.RiotApiKey);
-            try
-            {
-                var summoner = api.GetSummoner(RiotSharp.Region.euw, "Belterius");
-            }
-            catch (RiotSharp.RiotSharpException ex)
-            {
-                // Handle the exception however you want.
-            }
-            try
-            {
-                var tournamentApi = RiotSharp.TournamentRiotApi.GetInstance(Properties.Settings.Default.RiotApiKey);
-                var provider = tournamentApi.CreateProvider(RiotSharp.Region.euw, "172.27.86.89");
-                var tournament = tournamentApi.CreateTournament(provider.Id, "TOURNAMENT_NAME");
-                var tournamentCode = tournamentApi.CreateTournamentCode(tournament.Id,
-                    5, null, RiotSharp.TournamentEndpoint.TournamentSpectatorType.All,
-                    RiotSharp.TournamentEndpoint.TournamentPickType.TournamentDraft, RiotSharp.TournamentEndpoint.TournamentMapType.SummonersRift,
-                    string.Empty);
-            }
-            catch (Exception ex)
-            {
 
-                throw;
-            }
-            
+            //var ttest = RiotToEntity.ApiRequest.CreateTournamentAPI("http://eleves.ig2i.fr/", "test");
+            //var ltest = RiotToEntity.ApiRequest.CreateTournamentCode(ttest);
         }
 
         private void InternalListBoxItemClick(object obj)

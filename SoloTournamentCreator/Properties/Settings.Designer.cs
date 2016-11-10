@@ -106,5 +106,17 @@ namespace SoloTournamentCreator.Properties {
                 this["AdminRight"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string RiotTournamentApiKey {
+            get {
+                return ((string)(this["RiotTournamentApiKey"]));
+            }
+            set {
+                this["RiotTournamentApiKey"] = value;
+            }
+        }
     }
 }

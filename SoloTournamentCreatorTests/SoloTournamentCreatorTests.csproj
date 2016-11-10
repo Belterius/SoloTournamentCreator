@@ -70,6 +70,16 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="WikiImage\STC_ArchivedTournament.jpg" />
+    <Content Include="WikiImage\STC_CreatePlayer.jpg" />
+    <Content Include="WikiImage\STC_CreateTournament.jpg" />
+    <Content Include="WikiImage\STC_MainWindow.jpg" />
+    <Content Include="WikiImage\STC_StartedTournament.jpg" />
+    <Content Include="WikiImage\STC_SwapPlayer1.jpg" />
+    <Content Include="WikiImage\STC_TournamentBracket.jpg" />
+    <Content Include="WikiImage\STC_TournamentBracketFinal.jpg" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

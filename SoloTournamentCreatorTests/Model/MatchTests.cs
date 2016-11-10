@@ -30,7 +30,7 @@ namespace SoloTournamentCreator.Model.Tests
             bool isMainMatch = true;
             int depth = 0;
             Match match = new Match(depth, isMainMatch);
-            Team winner = new Team();
+            Team winner = new Team(5,"winningteam");
 
             match.DeclareWinner(winner);
 

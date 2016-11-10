@@ -10,6 +10,19 @@ namespace SoloTournamentCreator.RiotToEntity
 {
     public class ApiRequest
     {
+        public static RiotSharp.TournamentEndpoint.Tournament CreateTournamentAPI(string url, string tournamentName)
+        {
+            var tournamentApi = RiotSharp.TournamentRiotApi.GetInstance(Properties.Settings.Default.RiotTournamentApiKey);
+            var providerw = tournamentApi.CreateProvider(RiotSharp.Region.euw, url);
+            return tournamentApi.CreateTournament(providerw.Id, tournamentName);
+            
+        }
+        public static string CreateTournamentCode(RiotSharp.TournamentEndpoint.Tournament tournament, SoloTournamentCreator.Model.Tournament myTournament)
+        {
+            int teamSize = 5;
+            List<long> allowedSummonerIds = myTournament.Participants.Select(x => x.SummonerData.Id).ToList();
+            return tournament.CreateTournamentCode(teamSize, allowedSummonerIds, RiotSharp.TournamentEndpoint.TournamentSpectatorType.All, RiotSharp.TournamentEndpoint.TournamentPickType.TournamentDraft, RiotSharp.TournamentEndpoint.TournamentMapType.SummonersRift, string.Empty);
+        }
         public static bool ApiKeyIsValid(string key)
         {
             IRiotClient riotClientTest = new RiotClient(key);
