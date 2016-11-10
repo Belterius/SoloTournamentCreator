@@ -51,18 +51,18 @@ namespace SoloTournamentCreator.Migrations
                         FirstName = c.String(unicode: false),
                         LastName = c.String(unicode: false),
                         GraduationYear = c.Int(nullable: false),
-                        SummonerSoloQueueData_Name = c.String(unicode: false),
-                        SummonerSoloQueueData_ParticipantId = c.String(unicode: false),
-                        SummonerSoloQueueData_Queue = c.Int(nullable: false),
-                        SummonerSoloQueueData_Tier = c.Int(nullable: false),
+                        SummonerID = c.Long(nullable: false),
                         DetailSoloQueueData_CLEDId = c.Int(),
                         SummonerData_Id = c.Long(),
+                        SummonerSoloQueueData_CLDId = c.Int(),
                     })
                 .PrimaryKey(t => t.StudentId)
                 .ForeignKey("dbo.CLEDs", t => t.DetailSoloQueueData_CLEDId)
                 .ForeignKey("dbo.SummonerDtoes", t => t.SummonerData_Id)
+                .ForeignKey("dbo.CLDs", t => t.SummonerSoloQueueData_CLDId)
                 .Index(t => t.DetailSoloQueueData_CLEDId)
-                .Index(t => t.SummonerData_Id);
+                .Index(t => t.SummonerData_Id)
+                .Index(t => t.SummonerSoloQueueData_CLDId);
             
             CreateTable(
                 "dbo.CLEDs",
@@ -141,6 +141,18 @@ namespace SoloTournamentCreator.Migrations
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
+                "dbo.CLDs",
+                c => new
+                    {
+                        CLDId = c.Int(nullable: false, identity: true),
+                        Name = c.String(unicode: false),
+                        ParticipantId = c.String(unicode: false),
+                        Queue = c.Int(nullable: false),
+                        Tier = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => t.CLDId);
+            
+            CreateTable(
                 "dbo.StudentTeams",
                 c => new
                     {
@@ -171,6 +183,7 @@ namespace SoloTournamentCreator.Migrations
         public override void Down()
         {
             DropForeignKey("dbo.Matches", "Winner_TeamId", "dbo.Teams");
+            DropForeignKey("dbo.Students", "SummonerSoloQueueData_CLDId", "dbo.CLDs");
             DropForeignKey("dbo.Students", "SummonerData_Id", "dbo.SummonerDtoes");
             DropForeignKey("dbo.Teams", "Tournament_TournamentId", "dbo.Tournaments");
             DropForeignKey("dbo.TournamentStudents", "Student_StudentId", "dbo.Students");
@@ -192,6 +205,7 @@ namespace SoloTournamentCreator.Migrations
             DropIndex("dbo.TournamentTrees", new[] { "MyMainTournamentTree_MatchId" });
             DropIndex("dbo.Tournaments", new[] { "MyTournamentTree_TournamentTreeId" });
             DropIndex("dbo.CLEDs", new[] { "MiniSeries_CustomMiniSeriesId" });
+            DropIndex("dbo.Students", new[] { "SummonerSoloQueueData_CLDId" });
             DropIndex("dbo.Students", new[] { "SummonerData_Id" });
             DropIndex("dbo.Students", new[] { "DetailSoloQueueData_CLEDId" });
             DropIndex("dbo.Teams", new[] { "Tournament_TournamentId" });
@@ -200,6 +214,7 @@ namespace SoloTournamentCreator.Migrations
             DropIndex("dbo.Matches", new[] { "LeftContendantId" });
             DropTable("dbo.TournamentStudents");
             DropTable("dbo.StudentTeams");
+            DropTable("dbo.CLDs");
             DropTable("dbo.SummonerDtoes");
             DropTable("dbo.TournamentTrees");
             DropTable("dbo.Tournaments");

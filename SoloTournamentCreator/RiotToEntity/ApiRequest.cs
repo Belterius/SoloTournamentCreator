@@ -20,7 +20,7 @@ namespace SoloTournamentCreator.RiotToEntity
         public static string CreateTournamentCode(RiotSharp.TournamentEndpoint.Tournament tournament, SoloTournamentCreator.Model.Tournament myTournament)
         {
             int teamSize = 5;
-            List<long> allowedSummonerIds = myTournament.Participants.Select(x => x.SummonerData.Id).ToList();
+            List<long> allowedSummonerIds = myTournament.Participants.Select(x => x.SummonerID).ToList();
             return tournament.CreateTournamentCode(teamSize, allowedSummonerIds, RiotSharp.TournamentEndpoint.TournamentSpectatorType.All, RiotSharp.TournamentEndpoint.TournamentPickType.TournamentDraft, RiotSharp.TournamentEndpoint.TournamentMapType.SummonersRift, string.Empty);
         }
         public static bool ApiKeyIsValid(string key)

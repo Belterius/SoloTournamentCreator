@@ -8,6 +8,7 @@ using RiotApi.Net.RestClient.Dto.League;
 using SoloTournamentCreator.Helper;
 using System.ComponentModel.DataAnnotations;
 using RiotApi.Net.RestClient.Dto.Summoner;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SoloTournamentCreator.Model
 {
@@ -20,10 +21,12 @@ namespace SoloTournamentCreator.Model
         private string _LastName;
         private int _GraduationYear;
         private SummonerDto _SummonerData;
-        private LeagueDto _SummonerSoloQueueData;
+        private long _SummonerID;
+        private CLD _SummonerSoloQueueData;
         private CLED _DetailSoloQueueData;
         private ICollection<Tournament> _ParticipatingTournament;
         public virtual ICollection<Team> MyTeams { get; set; }
+
         public string Mail
         {
             get
@@ -97,7 +100,7 @@ namespace SoloTournamentCreator.Model
             }
         }
 
-        public LeagueDto SummonerSoloQueueData
+        public CLD SummonerSoloQueueData
         {
             get
             {
@@ -147,6 +150,19 @@ namespace SoloTournamentCreator.Model
             }
         }
 
+        public long SummonerID
+        {
+            get
+            {
+                return _SummonerID;
+            }
+
+            set
+            {
+                _SummonerID = value;
+            }
+        }
+
         private Student()
         {
 
@@ -182,6 +198,7 @@ namespace SoloTournamentCreator.Model
             try
             {
                 SummonerData = ApiRequest.GetSummonerData(pseudo.Replace(" ", string.Empty));
+                SummonerID = SummonerData.Id; //WARNING : EntityFrameWork WILL override the SummonerData.Id to its own, so we NEED to save the Riot SummonerID BEFORE saving into EntityFramework !
             }
             catch (Exception)
             {
@@ -189,8 +206,9 @@ namespace SoloTournamentCreator.Model
             }
             try
             {
-                SummonerSoloQueueData = ApiRequest.GetSummonerSoloQueueRating(SummonerData.Id);
-                DetailSoloQueueData = new CLED(SummonerSoloQueueData.Entries.First());
+                LeagueDto MySummonerSoloQueueData = ApiRequest.GetSummonerSoloQueueRating(SummonerID);
+                SummonerSoloQueueData = new CLD(MySummonerSoloQueueData);
+                DetailSoloQueueData = new CLED(MySummonerSoloQueueData.Entries.First());
             }
             catch (Exception ex)
             {
@@ -208,8 +226,9 @@ namespace SoloTournamentCreator.Model
         {
             try
             {
-                SummonerData = ApiRequest.GetSummonerData(this.SummonerData.Id);
-                SummonerSoloQueueData = ApiRequest.GetSummonerSoloQueueRating(SummonerData.Id);
+                LeagueDto MySummonerSoloQueueData = ApiRequest.GetSummonerSoloQueueRating(SummonerID);
+                SummonerSoloQueueData = new CLD(MySummonerSoloQueueData);
+                DetailSoloQueueData = new CLED(MySummonerSoloQueueData.Entries.First());
                 return true;
             }
             catch (Exception ex)
@@ -236,7 +255,7 @@ namespace SoloTournamentCreator.Model
             {
                 return false;
             }
-            if (this.SummonerData.Id == ((Student)obj).SummonerData.Id)
+            if (this.SummonerID == ((Student)obj).SummonerID)
             {
                 return true;
             }
@@ -244,8 +263,8 @@ namespace SoloTournamentCreator.Model
         }
         public override int GetHashCode()
         {
-            var testc =  base.GetHashCode() +  this.SummonerData.Id.GetHashCode() ;
-            return base.GetHashCode() +  this.SummonerData.Id.GetHashCode();
+            var testc =  base.GetHashCode() +  this.SummonerID.GetHashCode() ;
+            return base.GetHashCode() +  this.SummonerID.GetHashCode();
         }
     }
 }

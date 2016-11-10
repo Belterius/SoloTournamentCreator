@@ -7,6 +7,30 @@ using System.Threading.Tasks;
 
 namespace SoloTournamentCreator.Model
 {
+    /// <summary>
+    /// CustomLeagueDto
+    /// </summary>
+    public class CLD
+    {
+        public int CLDId { get; set; }
+        public string Name { get; set; }
+        public string ParticipantId { get; set; }
+        public RiotApi.Net.RestClient.Helpers.Enums.GameQueueType Queue { get; set; }
+        public RiotApi.Net.RestClient.Helpers.Enums.Tier Tier { get; set; }
+
+        public CLD()
+        {
+
+        }
+        public CLD(RiotApi.Net.RestClient.Dto.League.LeagueDto leagueDto)
+        {
+            Name = leagueDto.Name;
+            ParticipantId = leagueDto.ParticipantId;
+            Queue = leagueDto.Queue;
+            Tier = leagueDto.Tier;
+        }
+    }
+
     //CustomLeagueEntryDto : AWFULL name, but because of the way EntityFramework maps the ForeignKey in my SKL, on of my Foreign Key ended up being FK_Students_CustomLeagueEntryDtoes_DetailSoloQueueData_CustomLeagueEntryDtoId
     //And was too long for MySQL ...
     //it was not possible to rename the mapping of internal table CLED, so I had no completly rename it, or remap student as something like S ...
@@ -16,6 +40,9 @@ namespace SoloTournamentCreator.Model
     //Decided to still create the same FK, but this time MySQL executed the code, and it worked
     //I then had to rename the table back to CustomLeagueEntryDtoes because no table named CLED existed ...
     //Not sure why it acted like that, I'm leaving the comment in case I have the same problem another time.
+    /// <summary>
+    /// CustomLeagueEntryDto
+    /// </summary>
     public class CLED
     {
         //Requiered to have a Key to be able to save the data in EntityFrameWork, so had to create a custom "copy"
