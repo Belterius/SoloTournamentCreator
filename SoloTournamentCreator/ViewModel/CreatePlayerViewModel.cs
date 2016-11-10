@@ -128,7 +128,7 @@ namespace SoloTournamentCreator.ViewModel
         private bool CheckParameters()
         {
             bool isValid = true;
-            if (!Mail.Contains('@'))
+            if (!Mail.Contains('@') || !Mail.Contains('.'))
             {
                 MessageBox.Show("Invalid Mail");
                 isValid = false;
@@ -136,11 +136,11 @@ namespace SoloTournamentCreator.ViewModel
             try
             {
                 int gradYear = Convert.ToInt32(GraduationYear);
-                if(gradYear < 2010 || gradYear > 2100)
-                {
-                    isValid = false;
-                    MessageBox.Show("Invalid Graduation Year");
-                }
+                //if(gradYear < 2010 || gradYear > 2100)
+                //{
+                //    isValid = false;
+                //    MessageBox.Show("Invalid Graduation Year");
+                //}
             }
             catch (Exception)
             {

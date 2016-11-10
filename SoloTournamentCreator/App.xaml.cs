@@ -20,17 +20,26 @@ namespace SoloTournamentCreator
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            if (!ApiRequest.ApiKeyIsValid(SoloTournamentCreator.Properties.Settings.Default.RiotApiKey))
+            //if ( SoloTournamentCreator.Properties.Settings.Default.AdminRight && !ApiRequest.ApiKeyIsValid(SoloTournamentCreator.Properties.Settings.Default.RiotApiKey))
+            //{
+            //    while(ShowMyDialogBox() == "")
+            //    {
+            //    }
+            //    MainMenu MW = new MainMenu();
+            //    MW.Show();
+            //}else
+            //{
+            //    this.StartupUri = new Uri("View/MainMenu.xaml", UriKind.Relative);
+            //}
+            SoloTournamentCreator.Properties.Settings.Default.RiotApiKey = SoloTournamentCreator.Properties.Settings.Default.RiotApiKey + "a";
+            if ( SoloTournamentCreator.Properties.Settings.Default.AdminRight && !ApiRequest.ApiKeyIsValid(SoloTournamentCreator.Properties.Settings.Default.RiotApiKey))
             {
-                while(ShowMyDialogBox() == "")
+                while (ShowMyDialogBox() == "")
                 {
                 }
-                MainMenu MW = new MainMenu();
-                MW.Show();
-            }else
-            {
                 this.StartupUri = new Uri("View/MainMenu.xaml", UriKind.Relative);
             }
+                this.StartupUri = new Uri("View/MainMenu.xaml", UriKind.Relative);
         }
 
         private string ShowMyDialogBox()

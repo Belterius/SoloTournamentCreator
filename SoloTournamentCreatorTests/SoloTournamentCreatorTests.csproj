@@ -72,9 +72,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="WikiImage\STC_ArchivedTournament.jpg" />
+    <Content Include="WikiImage\STC_Client_ArchivedTournament.jpg" />
+    <Content Include="WikiImage\STC_Client_MainWindow.jpg" />
+    <Content Include="WikiImage\STC_Client_StartedTournament.jpg" />
     <Content Include="WikiImage\STC_CreatePlayer.jpg" />
     <Content Include="WikiImage\STC_CreateTournament.jpg" />
     <Content Include="WikiImage\STC_MainWindow.jpg" />
+    <Content Include="WikiImage\STC_Settings.jpg" />
     <Content Include="WikiImage\STC_StartedTournament.jpg" />
     <Content Include="WikiImage\STC_SwapPlayer1.jpg" />
     <Content Include="WikiImage\STC_TournamentBracket.jpg" />
