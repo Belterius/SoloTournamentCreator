@@ -20,44 +20,30 @@ namespace SoloTournamentCreator
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            //if ( SoloTournamentCreator.Properties.Settings.Default.AdminRight && !ApiRequest.ApiKeyIsValid(SoloTournamentCreator.Properties.Settings.Default.RiotApiKey))
-            //{
-            //    while(ShowMyDialogBox() == "")
-            //    {
-            //    }
-            //    MainMenu MW = new MainMenu();
-            //    MW.Show();
-            //}else
-            //{
-            //    this.StartupUri = new Uri("View/MainMenu.xaml", UriKind.Relative);
-            //}
-            SoloTournamentCreator.Properties.Settings.Default.RiotApiKey = SoloTournamentCreator.Properties.Settings.Default.RiotApiKey + "a";
+            this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
             if ( SoloTournamentCreator.Properties.Settings.Default.AdminRight && !ApiRequest.ApiKeyIsValid(SoloTournamentCreator.Properties.Settings.Default.RiotApiKey))
             {
-                while (ShowMyDialogBox() == "")
-                {
-                }
-                this.StartupUri = new Uri("View/MainMenu.xaml", UriKind.Relative);
+                SetKeyAPI();
             }
                 this.StartupUri = new Uri("View/MainMenu.xaml", UriKind.Relative);
         }
 
-        private string ShowMyDialogBox()
+        private string SetKeyAPI()
         {
-            DialogBox TestDialog = new DialogBox("API Key Required", "Please enter a Valid Riot API Key");
+            DialogBox APIKeyDialog = new DialogBox("API Key Required", "Please enter a Valid Riot API Key");
 
-            if (TestDialog.ShowDialog() == true)
+            if (APIKeyDialog.ShowDialog() == true)
             {
-                if (ApiRequest.ApiKeyIsValid(TestDialog.GetInput))
+                if (ApiRequest.ApiKeyIsValid(APIKeyDialog.GetInput))
                 {
-                    SoloTournamentCreator.Properties.Settings.Default.RiotApiKey = TestDialog.GetInput;
+                    SoloTournamentCreator.Properties.Settings.Default.RiotApiKey = APIKeyDialog.GetInput;
                     SoloTournamentCreator.Properties.Settings.Default.Save();
-                    return TestDialog.GetInput;
+                    return APIKeyDialog.GetInput;
                 }
                 else
                 {
                     MessageBox.Show("Invalid Api Key");
-                    return "";
+                    return SetKeyAPI();
                 }
             }
             else

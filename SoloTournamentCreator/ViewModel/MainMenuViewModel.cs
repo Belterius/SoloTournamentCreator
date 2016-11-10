@@ -389,6 +389,7 @@ namespace SoloTournamentCreator.ViewModel
         private void Closing(object obj)
         {
             MyDatabaseContext.Dispose();
+            Application.Current.Shutdown();
         }
         [Conditional("DEBUG")]
         private void ClearDatabase()
