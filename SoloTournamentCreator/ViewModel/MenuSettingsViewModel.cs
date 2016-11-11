@@ -131,7 +131,7 @@ namespace SoloTournamentCreator.ViewModel
                 Properties.Settings.Default.Password = Password;
                 Properties.Settings.Default.AdminRight = MyDatabaseContext.CheckWriteRight();
                 Properties.Settings.Default.Save();
-                MessageBox.Show("Change Saved ! Admin mode : " + Properties.Settings.Default.AdminRight.ToString());
+                MessageBox.Show($"Change Saved ! Admin mode : {Properties.Settings.Default.AdminRight.ToString()}");
                 this.CloseWindow();
             }
         }

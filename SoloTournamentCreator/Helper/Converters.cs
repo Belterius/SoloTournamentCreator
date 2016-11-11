@@ -41,7 +41,7 @@ namespace SoloTournamentCreator.Helper
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             Tournament myTournament = (Tournament) value;
-            return myTournament.Name + " (" + myTournament.nbParticipant + "/" + myTournament.nbParticipantMax +")";
+            return $"{myTournament.Name} ({myTournament.nbParticipant}/{myTournament.nbParticipantMax})";
         }
         
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -55,7 +55,7 @@ namespace SoloTournamentCreator.Helper
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             Tournament myTournament = (Tournament)value;
-            return myTournament.Name + " (" + myTournament.Teams.Count + "/" + myTournament.NbTeam + ")";
+            return $"{myTournament.Name} ({myTournament.Teams.Count}/{myTournament.NbTeam})";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -68,7 +68,10 @@ namespace SoloTournamentCreator.Helper
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             Student mySummoner = (Student)value;
-            return mySummoner.Pseudo + " (" + mySummoner.SummonerSoloQueueData.Tier + " " + mySummoner.DetailSoloQueueData.Division +" " +mySummoner.DetailSoloQueueData.LeaguePoints + ")";
+            if (mySummoner.SummonerSoloQueueData != null)
+                return $"{mySummoner.Pseudo} ({mySummoner.SummonerSoloQueueData.Tier} {mySummoner.DetailSoloQueueData.Division} {mySummoner.DetailSoloQueueData.LeaguePoints})";
+            else
+                return $"{mySummoner.Pseudo} (Unranked)";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

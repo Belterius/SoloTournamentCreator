@@ -323,7 +323,7 @@ namespace SoloTournamentCreator.ViewModel
             {
                 //cf http://stackoverflow.com/questions/3356541/entity-framework-linq-query-include-multiple-children-entities
 
-                MyDatabaseContext.MyStudents.Include(x => x.SummonerData).Include(x => x.DetailSoloQueueData.MiniSeries).Load();
+                MyDatabaseContext.MyStudents.Include(x => x.SummonerData).Include(x => x.DetailSoloQueueData.MiniSeries).Include(x => x.SummonerSoloQueueData).Load();
                 MyDatabaseContext.MyMatchs.Load();
                 MyDatabaseContext.MyTeams.Include(x => x.TeamMember).Load();
                 MyDatabaseContext.MyTournamentTrees.Load();
@@ -408,15 +408,14 @@ namespace SoloTournamentCreator.ViewModel
             {
                 try
                 {
-                    Student std = new Student(challenjour.PlayerOrTeamName + "@", challenjour.PlayerOrTeamName, challenjour.PlayerOrTeamName, challenjour.PlayerOrTeamName, 2016);
-                    MyDatabaseContext.MyStudents.Add(std);
+                    CreatePlayerIfNotExist(challenjour);
                 }
                 catch (Exception)
                 {
 
                 }
                 i--;
-                Console.WriteLine(i + " : " + challenjour.PlayerOrTeamName);
+                Console.WriteLine($"{i} : {challenjour.PlayerOrTeamName}");
                 if (i % 5 == 0)
                 {
                     MyDatabaseContext.SaveChanges();
@@ -426,6 +425,47 @@ namespace SoloTournamentCreator.ViewModel
                     break;
             }
             MyDatabaseContext.SaveChanges();
+        }
+        private void CreatePlayerIfNotExist(RiotApi.Net.RestClient.Dto.League.LeagueDto.LeagueEntryDto challenjour)
+        {
+            try
+            {
+                Student newPlayer = new Student(challenjour.PlayerOrTeamName + "@.", challenjour.PlayerOrTeamName, challenjour.PlayerOrTeamName, challenjour.PlayerOrTeamName, 2016);
+                if (MyDatabaseContext.MyStudents.Where(x => x.SummonerID == newPlayer.SummonerID).Any())
+                {
+                    Student currentPlayer = MyDatabaseContext.MyStudents.Where(x => x.SummonerID == newPlayer.SummonerID).Single();
+                    MessageBox.Show($"This summoner is already linked to an account, you should not create a new profile if a player rename ! Name : {currentPlayer.FirstName} {currentPlayer.LastName} old Pseudo : {currentPlayer.Pseudo}");
+                    return;
+                }
+                if (MyDatabaseContext.MyStudents.Where(x => x.FirstName == newPlayer.FirstName && x.LastName == newPlayer.LastName).Any())
+                {
+
+                    if (MessageBox.Show($"There is already a Player with the same First and Last Name with the Pseudo {MyDatabaseContext.MyStudents.Where(x => x.FirstName == newPlayer.FirstName && x.LastName == newPlayer.LastName).First().Pseudo}, are you sure you want to create a new one ?", "Warning", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                    {
+                        MessageBox.Show("Creation cancelled");
+                        return;
+                    }
+                }
+                MyDatabaseContext.MyStudents.Add(newPlayer);
+            }
+            catch (RiotApi.Net.RestClient.Helpers.RiotExceptionRaiser.RiotApiException ex)
+            {
+                if (ex.RiotErrorCode == RiotApi.Net.RestClient.Helpers.RiotExceptionRaiser.RiotErrorCode.DATA_NOT_FOUND)
+                {
+                    return;
+                }
+                if (ex.RiotErrorCode == RiotApi.Net.RestClient.Helpers.RiotExceptionRaiser.RiotErrorCode.SERVER_ERROR)
+                {
+                    return;
+                }
+                if (ex.RiotErrorCode == RiotApi.Net.RestClient.Helpers.RiotExceptionRaiser.RiotErrorCode.RATE_LIMITED)
+                {
+                    return;
+                }
+            }
+            catch (Exception)
+            {
+            }
         }
         private void StartTournament(object obj)
         {
