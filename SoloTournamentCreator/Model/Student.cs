@@ -9,6 +9,8 @@ using SoloTournamentCreator.Helper;
 using System.ComponentModel.DataAnnotations;
 using RiotApi.Net.RestClient.Dto.Summoner;
 using System.ComponentModel.DataAnnotations.Schema;
+using RiotSharp.SummonerEndpoint;
+using RiotSharp.LeagueEndpoint;
 
 namespace SoloTournamentCreator.Model
 {
@@ -22,6 +24,8 @@ namespace SoloTournamentCreator.Model
         private int _GraduationYear;
         private SummonerDto _SummonerData;
         private long _SummonerID;
+        private RiotSharp.SummonerEndpoint.Summoner _MySummonerData;
+        private List<RiotSharp.LeagueEndpoint.League> _MyLeaguesData;
         private CLD _SummonerSoloQueueData;
         private CLED _DetailSoloQueueData;
         private ICollection<Tournament> _ParticipatingTournament;
@@ -163,6 +167,32 @@ namespace SoloTournamentCreator.Model
             }
         }
 
+        public Summoner MySummonerData
+        {
+            get
+            {
+                return _MySummonerData;
+            }
+
+            set
+            {
+                _MySummonerData = value;
+            }
+        }
+
+        public List<League> MyLeaguesData
+        {
+            get
+            {
+                return _MyLeaguesData;
+            }
+
+            set
+            {
+                _MyLeaguesData = value;
+            }
+        }
+
         private Student()
         {
 
@@ -198,7 +228,9 @@ namespace SoloTournamentCreator.Model
             try
             {
                 SummonerData = ApiRequest.GetSummonerData(pseudo.Replace(" ", string.Empty));
-                SummonerID = SummonerData.Id; //WARNING : EntityFrameWork WILL override the SummonerData.Id to its own, so we NEED to save the Riot SummonerID BEFORE saving into EntityFramework !
+                MySummonerData = MyRiotClient.Instance.riotSharpClient.GetSummoner(RiotSharp.Region.euw, pseudo.Replace("", string.Empty));
+                SummonerID = MySummonerData.Id; //WARNING : EntityFrameWork WILL override the SummonerData.Id to its own, so we NEED to save the Riot SummonerID BEFORE saving into EntityFramework !
+
             }
             catch (Exception)
             {

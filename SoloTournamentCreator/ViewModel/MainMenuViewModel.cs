@@ -390,10 +390,6 @@ namespace SoloTournamentCreator.ViewModel
             {
                 // Handle the exception however you want.
             }
-            var test = SoloTournamentCreator.RiotToEntity.ApiRequest.GetSummonerData("bynouz");
-
-            var MySummonerSoloQueueData = ApiRequest.GetSummonerSoloQueueRating(test.Id);
-            var test2 = MyRiotClient.Instance.riotClient.League.GetSummonerLeagueEntriesByIds(RiotApiConfig.Regions.EUW, test.Id);
             //var ttest = RiotToEntity.ApiRequest.CreateTournamentAPI("http://eleves.ig2i.fr/", "test");
             //var ltest = RiotToEntity.ApiRequest.CreateTournamentCode(ttest);
         }

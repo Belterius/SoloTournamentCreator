@@ -11,6 +11,7 @@ namespace SoloTournamentCreator.RiotToEntity
     public sealed class MyRiotClient
     {
         public IRiotClient riotClient = new RiotClient(Properties.Settings.Default.RiotApiKey);
+        public RiotSharp.RiotApi riotSharpClient = RiotSharp.RiotApi.GetInstance(Properties.Settings.Default.RiotApiKey);
         static readonly MyRiotClient INSTANCE = new MyRiotClient();
 
         private MyRiotClient()

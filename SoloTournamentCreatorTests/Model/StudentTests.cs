@@ -36,6 +36,8 @@ namespace SoloTournamentCreator.Model.Tests
             Student std1 = new Student("test");
             Student std2 = new Student("test");
             std1.SummonerData.Name = "Name1";
+            std2.StudentId = std1.StudentId + 1;
+            std2.SummonerID = std1.SummonerID + 1;
             std2.SummonerData.Name = "Name1";
             std2.SummonerData.Id = std1.SummonerData.Id + 1;
 
