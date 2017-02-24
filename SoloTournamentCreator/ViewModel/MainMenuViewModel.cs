@@ -15,6 +15,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using SoloTournamentCreator.RiotToEntity;
+using RiotApi.Net.RestClient.Configuration;
+using RiotSharp;
 
 namespace SoloTournamentCreator.ViewModel
 {
@@ -377,6 +380,20 @@ namespace SoloTournamentCreator.ViewModel
         private void TestRiotSharp()
         {
 
+            var api = RiotSharp.RiotApi.GetInstance(Properties.Settings.Default.RiotApiKey);
+            try { 
+                var summoner = api.GetSummoner(Region.euw, "belterius");
+                var statRanked = summoner.GetStatsRanked();
+                var statRankedd = summoner.GetLeagues();
+            }
+            catch (RiotSharpException ex)
+            {
+                // Handle the exception however you want.
+            }
+            var test = SoloTournamentCreator.RiotToEntity.ApiRequest.GetSummonerData("bynouz");
+
+            var MySummonerSoloQueueData = ApiRequest.GetSummonerSoloQueueRating(test.Id);
+            var test2 = MyRiotClient.Instance.riotClient.League.GetSummonerLeagueEntriesByIds(RiotApiConfig.Regions.EUW, test.Id);
             //var ttest = RiotToEntity.ApiRequest.CreateTournamentAPI("http://eleves.ig2i.fr/", "test");
             //var ltest = RiotToEntity.ApiRequest.CreateTournamentCode(ttest);
         }

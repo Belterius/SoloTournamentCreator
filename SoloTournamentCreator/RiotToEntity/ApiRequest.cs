@@ -17,19 +17,21 @@ namespace SoloTournamentCreator.RiotToEntity
             return tournamentApi.CreateTournament(providerw.Id, tournamentName);
             
         }
+        /*
         public static string CreateTournamentCode(RiotSharp.TournamentEndpoint.Tournament tournament, SoloTournamentCreator.Model.Tournament myTournament)
         {
             int teamSize = 5;
             List<long> allowedSummonerIds = myTournament.Participants.Select(x => x.SummonerID).ToList();
             return tournament.CreateTournamentCode(teamSize, allowedSummonerIds, RiotSharp.TournamentEndpoint.TournamentSpectatorType.All, RiotSharp.TournamentEndpoint.TournamentPickType.TournamentDraft, RiotSharp.TournamentEndpoint.TournamentMapType.SummonersRift, string.Empty);
         }
+        */
         public static bool ApiKeyIsValid(string key)
         {
             IRiotClient riotClientTest = new RiotClient(key);
             try
             {
                 var mySummoner = riotClientTest.Summoner.GetSummonersByName(RiotApiConfig.Regions.EUW, "Belterius");
-                var info = riotClientTest.League.GetSummonerLeagueEntriesByIds(RiotApiConfig.Regions.EUW, mySummoner["belterius"].Id);
+                //var info = riotClientTest.League.GetSummonerLeagueEntriesByIds(RiotApiConfig.Regions.EUW, mySummoner["belterius"].Id);
                 return true;
             }
             catch (Exception)
