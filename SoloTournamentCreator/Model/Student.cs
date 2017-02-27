@@ -22,15 +22,21 @@ namespace SoloTournamentCreator.Model
         private string _FirstName;
         private string _LastName;
         private int _GraduationYear;
-        private SummonerDto _SummonerData;
         private long _SummonerID;
-        private RiotSharp.SummonerEndpoint.Summoner _MySummonerData;
-        private List<RiotSharp.LeagueEndpoint.League> _MyLeaguesData;
-        private CLD _SummonerSoloQueueData;
-        private CLED _DetailSoloQueueData;
+        private Summoner _MySummonerData;
+        private List<League> _MyLeagues;
         private ICollection<Tournament> _ParticipatingTournament;
         public virtual ICollection<Team> MyTeams { get; set; }
 
+
+        public League MyBestLeague
+        {
+            get
+            {
+                List<League> importantLeague = MyLeagues.Where(x => x.Queue == RiotSharp.Queue.RankedFlexSR || x.Queue == RiotSharp.Queue.RankedSolo5x5 ).ToList();
+                return importantLeague.OrderBy(x => x, new LeagueComparer()).FirstOrDefault(); 
+            }
+        }
         public string Mail
         {
             get
@@ -74,7 +80,7 @@ namespace SoloTournamentCreator.Model
         {
             get
             {
-                return _SummonerData?.Name;
+                return _MySummonerData?.Name;
             }
         }
 
@@ -90,41 +96,17 @@ namespace SoloTournamentCreator.Model
                 _GraduationYear = value;
             }
         }
-
-        public SummonerDto SummonerData
-        {
-            get
-            {
-                return _SummonerData;
-            }
-
-            set
-            {
-                _SummonerData = value;
-            }
-        }
-
-        public CLD SummonerSoloQueueData
-        {
-            get
-            {
-                return _SummonerSoloQueueData;
-            }
-
-            set
-            {
-                _SummonerSoloQueueData = value;
-            }
-        }
+        
         public int EstimatedStrenght
         {
             get
             {
-                if(SummonerSoloQueueData == null)
+                if(MyLeagues?.Where(x => x.Queue == RiotSharp.Queue.RankedSolo5x5).Count() == 0 && MyLeagues?.Where(x => x.Queue == RiotSharp.Queue.RankedFlexSR).Count() == 0)
                 {
                     return 80;
                 }
-                return GlobalConverters.RankingToPoint(SummonerSoloQueueData.Tier, DetailSoloQueueData.Division, DetailSoloQueueData.LeaguePoints);
+                //return GlobalConverters.RankingToPoint(SummonerSoloQueueData.Tier, DetailSoloQueueData.Division, DetailSoloQueueData.LeaguePoints);
+                return 0;
             }
         }
 
@@ -140,19 +122,7 @@ namespace SoloTournamentCreator.Model
                 _ParticipatingTournament = value;
             }
         }
-
-        public CLED DetailSoloQueueData
-        {
-            get
-            {
-                return _DetailSoloQueueData;
-            }
-
-            set
-            {
-                _DetailSoloQueueData = value;
-            }
-        }
+        
 
         public long SummonerID
         {
@@ -180,16 +150,16 @@ namespace SoloTournamentCreator.Model
             }
         }
 
-        public List<League> MyLeaguesData
+        public List<League> MyLeagues
         {
             get
             {
-                return _MyLeaguesData;
+                return _MyLeagues;
             }
 
             set
             {
-                _MyLeaguesData = value;
+                _MyLeagues = value;
             }
         }
 
@@ -203,11 +173,14 @@ namespace SoloTournamentCreator.Model
         /// <param name="testConfirm">MUST be set to "test" for the function to work</param>
         public Student(string testConfirm)
         {
-            if(testConfirm != "test")
+            RiotSharp.RiotApi riotSharpClient = RiotSharp.RiotApi.GetInstance("RGAPI-e7c92b92-6c4f-4747-96a9-ac312213da2a");
+            if (testConfirm != "test")
             {
                 throw new NotSupportedException();
             }
-            SummonerData = new SummonerDto();
+            MySummonerData = riotSharpClient.GetSummoner(RiotSharp.Region.euw, "belterius");
+            SummonerID = MySummonerData.Id; //WARNING : EntityFrameWork WILL override the SummonerData.Id to its own, so we NEED to save the Riot SummonerID BEFORE saving into EntityFramework !
+            MyLeagues = MySummonerData.GetLeagues();
         }
         /// <summary>
         /// <para/>Create a new Student
@@ -227,26 +200,13 @@ namespace SoloTournamentCreator.Model
             GraduationYear = gradYear;
             try
             {
-                SummonerData = ApiRequest.GetSummonerData(pseudo.Replace(" ", string.Empty));
-                MySummonerData = MyRiotClient.Instance.riotSharpClient.GetSummoner(RiotSharp.Region.euw, pseudo.Replace("", string.Empty));
+                MySummonerData = MyRiotClient.Instance.riotSharpClient.GetSummoner(RiotSharp.Region.euw, pseudo.Replace(" ", string.Empty));
                 SummonerID = MySummonerData.Id; //WARNING : EntityFrameWork WILL override the SummonerData.Id to its own, so we NEED to save the Riot SummonerID BEFORE saving into EntityFramework !
-
+                MyLeagues = MySummonerData.GetLeagues();
             }
             catch (Exception)
             {
                 throw;
-            }
-            try
-            {
-                LeagueDto MySummonerSoloQueueData = ApiRequest.GetSummonerSoloQueueRating(SummonerID);
-                SummonerSoloQueueData = new CLD(MySummonerSoloQueueData);
-                DetailSoloQueueData = new CLED(MySummonerSoloQueueData.Entries.First());
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                SummonerSoloQueueData = null; //Unranked
-                DetailSoloQueueData = null;
             }
         }
 
@@ -258,16 +218,12 @@ namespace SoloTournamentCreator.Model
         {
             try
             {
-                LeagueDto MySummonerSoloQueueData = ApiRequest.GetSummonerSoloQueueRating(SummonerID);
-                SummonerSoloQueueData = new CLD(MySummonerSoloQueueData);
-                DetailSoloQueueData = new CLED(MySummonerSoloQueueData.Entries.First());
+                MyLeagues = MySummonerData.GetLeagues();
                 return true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                SummonerSoloQueueData = null; //Unranked
-                DetailSoloQueueData = null;
                 return false;
             }
         }
@@ -283,7 +239,7 @@ namespace SoloTournamentCreator.Model
             {
                 return false;
             }
-            if (this.SummonerData == null || ((Student)obj).SummonerData == null)
+            if (this.MySummonerData == null || ((Student)obj).MySummonerData == null)
             {
                 return false;
             }

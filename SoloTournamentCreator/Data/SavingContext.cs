@@ -31,7 +31,6 @@ namespace SoloTournamentCreator
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Add(new NonPublicColumnAttributeConvention());
-            modelBuilder.Entity<Model.Student>().HasOptional(e => e.SummonerSoloQueueData);
             modelBuilder.Entity<Model.Match>().
             HasOptional(e => e.LeftContendant).
             WithMany().

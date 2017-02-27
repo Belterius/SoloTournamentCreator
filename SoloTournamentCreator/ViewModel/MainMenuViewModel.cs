@@ -326,7 +326,7 @@ namespace SoloTournamentCreator.ViewModel
             {
                 //cf http://stackoverflow.com/questions/3356541/entity-framework-linq-query-include-multiple-children-entities
 
-                MyDatabaseContext.MyStudents.Include(x => x.SummonerData).Include(x => x.DetailSoloQueueData.MiniSeries).Include(x => x.SummonerSoloQueueData).Load();
+                MyDatabaseContext.MyStudents.Include(x => x.MySummonerData).Include(x => x.MyLeagues).Include(x => x.MySummonerData).Load();
                 MyDatabaseContext.MyMatchs.Load();
                 MyDatabaseContext.MyTeams.Include(x => x.TeamMember).Load();
                 MyDatabaseContext.MyTournamentTrees.Load();
@@ -381,8 +381,11 @@ namespace SoloTournamentCreator.ViewModel
         {
 
             var api = RiotSharp.RiotApi.GetInstance(Properties.Settings.Default.RiotApiKey);
-            try { 
+            try {
+                var studenttest = new Student("test", "test", "test", "bynouz", 2015);
                 var summoner = api.GetSummoner(Region.euw, "belterius");
+                summoner = api.GetSummoner(Region.euw, "lörth");
+                summoner = api.GetSummoner(Region.euw, "bynouz");
                 var statRanked = summoner.GetStatsRanked();
                 var statRankedd = summoner.GetLeagues();
             }

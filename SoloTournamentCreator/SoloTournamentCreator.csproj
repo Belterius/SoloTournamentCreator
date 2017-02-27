@@ -129,6 +129,7 @@
       <DependentUpon>201611101605173_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Model\LeagueComparer.cs" />
     <Compile Include="ViewModel\MenuSettingsViewModel.cs" />
     <Compile Include="ViewModel\TournamentBracketViewModel.cs" />
     <Compile Include="View\MenuSettings.xaml.cs">
