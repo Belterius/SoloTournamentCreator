@@ -332,7 +332,7 @@ namespace SoloTournamentCreator.ViewModel
                 MyDatabaseContext.MyTournamentTrees.Load();
                 MyDatabaseContext.MyTournaments.Include(x => x.Participants).Include(x => x.Teams).Load();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }
@@ -356,6 +356,11 @@ namespace SoloTournamentCreator.ViewModel
         
         private void InitDatabaseContext()
         {
+            Properties.Settings.Default.Server = "coniface.no-ip.org";
+            Properties.Settings.Default.Port ="19172";
+            Properties.Settings.Default.Password = "NOxNQmCZ1D0i4gDdISlIixmrRrKGECYV0cIW0BRXgBeFI2y9m9";
+            Properties.Settings.Default.Database = "paintfusion";
+            Properties.Settings.Default.UserId = "paintfusion";
             string connectionString = $"server={Properties.Settings.Default.Server};port={Properties.Settings.Default.Port};database={Properties.Settings.Default.Database};uid={Properties.Settings.Default.UserId};password='{Properties.Settings.Default.Password}'";
             MyDatabaseContext = new SavingContext(connectionString);
             if (!MyDatabaseContext.CheckConnection())
@@ -379,22 +384,7 @@ namespace SoloTournamentCreator.ViewModel
         [Conditional("DEBUG")]
         private void TestRiotSharp()
         {
-
-            var api = RiotSharp.RiotApi.GetInstance(Properties.Settings.Default.RiotApiKey);
-            try {
-                var studenttest = new Student("test", "test", "test", "bynouz", 2015);
-                var summoner = api.GetSummoner(Region.euw, "belterius");
-                summoner = api.GetSummoner(Region.euw, "lörth");
-                summoner = api.GetSummoner(Region.euw, "bynouz");
-                var statRanked = summoner.GetStatsRanked();
-                var statRankedd = summoner.GetLeagues();
-            }
-            catch (RiotSharpException ex)
-            {
-                // Handle the exception however you want.
-            }
-            //var ttest = RiotToEntity.ApiRequest.CreateTournamentAPI("http://eleves.ig2i.fr/", "test");
-            //var ltest = RiotToEntity.ApiRequest.CreateTournamentCode(ttest);
+            
         }
 
         private void InternalListBoxItemClick(object obj)

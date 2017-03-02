@@ -24,16 +24,17 @@ namespace SoloTournamentCreator.Model
         private int _GraduationYear;
         private long _SummonerID;
         private Summoner _MySummonerData;
-        private List<League> _MyLeagues;
+        private List<CSL> _MyLeagues;
+        private RiotSharp.LeagueEndpoint.Enums.Tier BestRankPreviousSeason {get;set;}
         private ICollection<Tournament> _ParticipatingTournament;
         public virtual ICollection<Team> MyTeams { get; set; }
 
 
-        public League MyBestLeague
+        public CSL MyBestLeague
         {
             get
             {
-                List<League> importantLeague = MyLeagues.Where(x => x.Queue == RiotSharp.Queue.RankedFlexSR || x.Queue == RiotSharp.Queue.RankedSolo5x5 ).ToList();
+                List<CSL> importantLeague = MyLeagues.Where(x => x.Queue == RiotSharp.Queue.RankedFlexSR || x.Queue == RiotSharp.Queue.RankedSolo5x5 ).ToList();
                 return importantLeague.OrderBy(x => x, new LeagueComparer()).FirstOrDefault(); 
             }
         }
@@ -105,8 +106,7 @@ namespace SoloTournamentCreator.Model
                 {
                     return 80;
                 }
-                //return GlobalConverters.RankingToPoint(SummonerSoloQueueData.Tier, DetailSoloQueueData.Division, DetailSoloQueueData.LeaguePoints);
-                return 0;
+                return GlobalConverters.RankingToPoint(MyBestLeague.Tier, MyBestLeague.Entries[0].Division, MyBestLeague.Entries[0].LeaguePoints);
             }
         }
 
@@ -150,7 +150,7 @@ namespace SoloTournamentCreator.Model
             }
         }
 
-        public List<League> MyLeagues
+        public List<CSL> MyLeagues
         {
             get
             {
@@ -180,7 +180,11 @@ namespace SoloTournamentCreator.Model
             }
             MySummonerData = riotSharpClient.GetSummoner(RiotSharp.Region.euw, "belterius");
             SummonerID = MySummonerData.Id; //WARNING : EntityFrameWork WILL override the SummonerData.Id to its own, so we NEED to save the Riot SummonerID BEFORE saving into EntityFramework !
-            MyLeagues = MySummonerData.GetLeagues();
+            var AllMyLeagues = MySummonerData.GetLeagues();
+            foreach(var league in AllMyLeagues)
+            {
+                MyLeagues.Add(new CSL(league));
+            }
         }
         /// <summary>
         /// <para/>Create a new Student
@@ -202,12 +206,41 @@ namespace SoloTournamentCreator.Model
             {
                 MySummonerData = MyRiotClient.Instance.riotSharpClient.GetSummoner(RiotSharp.Region.euw, pseudo.Replace(" ", string.Empty));
                 SummonerID = MySummonerData.Id; //WARNING : EntityFrameWork WILL override the SummonerData.Id to its own, so we NEED to save the Riot SummonerID BEFORE saving into EntityFramework !
-                MyLeagues = MySummonerData.GetLeagues();
+                MySummonerData.GetEntireLeagues();
+                var AllMyLeagues = MySummonerData.GetLeagues();
+                MyLeagues = new List<CSL>();
+                foreach (var league in AllMyLeagues)
+                {
+                    MyLeagues.Add(new CSL(league));
+                }
+            }
+            catch (RiotSharp.RiotSharpException ex)
+            {
+                if(ex.Message == "404, Resource not found")
+                {
+                   //Unranked
+                }
+                else
+                {
+                    throw;
+                }
             }
             catch (Exception)
             {
                 throw;
             }
+            try
+            {
+                RiotSharp.GameEndpoint.Game lastGame = MySummonerData.GetRecentGames()[0];
+                var gameData = MyRiotClient.Instance.riotSharpClient.GetMatch(RiotSharp.Region.euw, lastGame.GameId);
+                var playerData = gameData.Participants.Where(x => x.ChampionId == lastGame.ChampionId && x.TeamId == lastGame.TeamId).Single();
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
         }
 
         /// <summary>
@@ -218,7 +251,12 @@ namespace SoloTournamentCreator.Model
         {
             try
             {
-                MyLeagues = MySummonerData.GetLeagues();
+                MyLeagues = new List<CSL>();
+                var AllMyLeagues = MySummonerData.GetLeagues();
+                foreach (var league in AllMyLeagues)
+                {
+                    MyLeagues.Add(new CSL(league));
+                }
                 return true;
             }
             catch (Exception ex)

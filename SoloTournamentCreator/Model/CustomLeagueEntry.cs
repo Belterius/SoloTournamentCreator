@@ -29,6 +29,10 @@ namespace SoloTournamentCreator.Model
             Queue = leagueDto.Queue;
             Tier = leagueDto.Tier;
         }
+        public CLD(RiotSharp.LeagueEndpoint.League league)
+        {
+
+        }
     }
 
     //CustomLeagueEntryDto : AWFULL name, but because of the way EntityFramework maps the ForeignKey in my SKL, on of my Foreign Key ended up being FK_Students_CustomLeagueEntryDtoes_DetailSoloQueueData_CustomLeagueEntryDtoId
@@ -79,29 +83,8 @@ namespace SoloTournamentCreator.Model
 
             if (leagueEntryDto.MiniSeries == null)
                 MiniSeries = null;
-            else
-                MiniSeries = new CustomMiniSeries(leagueEntryDto.MiniSeries);
-        }
-    }
-    public class CustomMiniSeries
-    {
-        //Requiered to have a Key to be able to save the data in EntityFrameWork, so had to create a custom "copy"
-        [Key]
-        public int CustomMiniSeriesId { get; set; }
-        public int Losses { get; set; }
-        public string Progress { get; set; }
-        public int Target { get; set; }
-        public int Wins { get; set; }
-        public CustomMiniSeries()
-        {
-
-        }
-        public CustomMiniSeries(RiotApi.Net.RestClient.Dto.League.LeagueDto.LeagueEntryDto.MiniSeriesDto miniSeries)
-        {
-            Wins = miniSeries.Wins;
-            Losses = miniSeries.Losses;
-            Progress = miniSeries.Progress;
-            Target = miniSeries.Target;
+            //else
+            //    MiniSeries = new CustomMiniSeries(leagueEntryDto.MiniSeries);
         }
     }
 }

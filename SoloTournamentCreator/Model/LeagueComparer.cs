@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace SoloTournamentCreator.Model
 {
-    public class LeagueComparer : IComparer<League>
+    public class LeagueComparer : IComparer<CSL>
     {
-        public int Compare(League a, League b)
+        public int Compare(CSL a, CSL b)
         {
             if (a != null && b != null)
             {

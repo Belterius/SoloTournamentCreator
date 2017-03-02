@@ -124,11 +124,16 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Data\UpdateConnection.cs" />
-    <Compile Include="Migrations\201611101605173_Initial.cs" />
-    <Compile Include="Migrations\201611101605173_Initial.Designer.cs">
-      <DependentUpon>201611101605173_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201702281038448_Initial.cs" />
+    <Compile Include="Migrations\201702281038448_Initial.Designer.cs">
+      <DependentUpon>201702281038448_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703021323371_BestRankPreviousSeason.cs" />
+    <Compile Include="Migrations\201703021323371_BestRankPreviousSeason.Designer.cs">
+      <DependentUpon>201703021323371_BestRankPreviousSeason.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Model\CustomSharpEntry.cs" />
     <Compile Include="Model\LeagueComparer.cs" />
     <Compile Include="ViewModel\MenuSettingsViewModel.cs" />
     <Compile Include="ViewModel\TournamentBracketViewModel.cs" />
@@ -218,8 +223,11 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Migrations\201611101605173_Initial.resx">
-      <DependentUpon>201611101605173_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201702281038448_Initial.resx">
+      <DependentUpon>201702281038448_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703021323371_BestRankPreviousSeason.resx">
+      <DependentUpon>201703021323371_BestRankPreviousSeason.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -233,7 +241,9 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
@@ -241,6 +251,7 @@
   <ItemGroup>
     <Resource Include="Images\settings.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
