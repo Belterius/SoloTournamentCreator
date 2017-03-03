@@ -319,7 +319,7 @@ namespace SoloTournamentCreator.ViewModel
         {
             this.PropertyChanged += CustomPropertyChanged;
             InitDatabaseContext();
-            PopulateDatabase();
+            //PopulateDatabase();
             try
             {
                 //cf http://stackoverflow.com/questions/3356541/entity-framework-linq-query-include-multiple-children-entities

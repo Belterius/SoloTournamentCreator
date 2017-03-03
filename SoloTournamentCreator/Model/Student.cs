@@ -189,7 +189,7 @@ namespace SoloTournamentCreator.Model
         /// <param name="testConfirm">MUST be set to "test" for the function to work</param>
         public Student(string testConfirm)
         {
-            RiotSharp.RiotApi riotSharpClient = RiotSharp.RiotApi.GetInstance("RGAPI-e7c92b92-6c4f-4747-96a9-ac312213da2a");
+            RiotSharp.RiotApi riotSharpClient = RiotSharp.RiotApi.GetInstance("");
             if (testConfirm != "test")
             {
                 throw new NotSupportedException();
