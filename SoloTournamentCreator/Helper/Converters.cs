@@ -68,10 +68,16 @@ namespace SoloTournamentCreator.Helper
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             Student mySummoner = (Student)value;
-            if (mySummoner.SummonerSoloQueueData != null)
-                return $"{mySummoner.Pseudo} ({mySummoner.SummonerSoloQueueData.Tier} {mySummoner.DetailSoloQueueData.Division} {mySummoner.DetailSoloQueueData.LeaguePoints})";
+            if (mySummoner.MyBestLeague != null)
+                return $"{mySummoner.Pseudo} ({mySummoner.MyBestLeague.Tier} {mySummoner.MyBestLeague.Entries[0].Division} {mySummoner.MyBestLeague.Entries[0].LeaguePoints})";
             else
+            {
+                if(mySummoner.BestRankPreviousSeason != 0)
+                {
+                    return $"{mySummoner.Pseudo} (Unranked - {mySummoner.BestRankPreviousSeason})";
+                }
                 return $"{mySummoner.Pseudo} (Unranked)";
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -228,29 +234,31 @@ namespace SoloTournamentCreator.Helper
     public static class GlobalConverters
     {
 
-        public static int RankingToPoint(RiotApi.Net.RestClient.Helpers.Enums.Tier tier, string division, int leaguePoints)
+        public static int RankingToPoint(RiotSharp.LeagueEndpoint.Enums.Tier tier, string division, int leaguePoints)
         {
             int strenght = 0;
             switch (tier)
             {
-                case RiotApi.Net.RestClient.Helpers.Enums.Tier.BRONZE:
+                case RiotSharp.LeagueEndpoint.Enums.Tier.Unranked:
+                    return 80;
+                case RiotSharp.LeagueEndpoint.Enums.Tier.Bronze:
                     break;
-                case RiotApi.Net.RestClient.Helpers.Enums.Tier.SILVER:
+                case RiotSharp.LeagueEndpoint.Enums.Tier.Silver:
                     strenght += 50;
                     break;
-                case RiotApi.Net.RestClient.Helpers.Enums.Tier.GOLD:
+                case RiotSharp.LeagueEndpoint.Enums.Tier.Gold:
                     strenght += 100;
                     break;
-                case RiotApi.Net.RestClient.Helpers.Enums.Tier.PLATINUM:
+                case RiotSharp.LeagueEndpoint.Enums.Tier.Platinum:
                     strenght += 150;
                     break;
-                case RiotApi.Net.RestClient.Helpers.Enums.Tier.DIAMOND:
+                case RiotSharp.LeagueEndpoint.Enums.Tier.Diamond:
                     strenght += 200;
                     break;
-                case RiotApi.Net.RestClient.Helpers.Enums.Tier.MASTER:
+                case RiotSharp.LeagueEndpoint.Enums.Tier.Master:
                     strenght += 250;
                     break;
-                case RiotApi.Net.RestClient.Helpers.Enums.Tier.CHALLENGER:
+                case RiotSharp.LeagueEndpoint.Enums.Tier.Challenger:
                     strenght += 300;
                     break;
                 default:

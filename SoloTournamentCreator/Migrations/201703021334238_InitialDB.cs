@@ -3,7 +3,7 @@ namespace SoloTournamentCreator.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class Initial : DbMigration
+    public partial class InitialDB : DbMigration
     {
         public override void Up()
         {
@@ -52,23 +52,32 @@ namespace SoloTournamentCreator.Migrations
                         LastName = c.String(unicode: false),
                         GraduationYear = c.Int(nullable: false),
                         SummonerID = c.Long(nullable: false),
-                        DetailSoloQueueData_CLEDId = c.Int(),
-                        SummonerData_Id = c.Long(),
-                        SummonerSoloQueueData_CLDId = c.Int(),
+                        BestRankPreviousSeason = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.StudentId)
-                .ForeignKey("dbo.CLEDs", t => t.DetailSoloQueueData_CLEDId)
-                .ForeignKey("dbo.SummonerDtoes", t => t.SummonerData_Id)
-                .ForeignKey("dbo.CLDs", t => t.SummonerSoloQueueData_CLDId)
-                .Index(t => t.DetailSoloQueueData_CLEDId)
-                .Index(t => t.SummonerData_Id)
-                .Index(t => t.SummonerSoloQueueData_CLDId);
+                .ForeignKey("dbo.Summoners", t => t.SummonerID, cascadeDelete: true)
+                .Index(t => t.SummonerID);
             
             CreateTable(
-                "dbo.CLEDs",
+                "dbo.CSLs",
                 c => new
                     {
-                        CLEDId = c.Int(nullable: false, identity: true),
+                        CSLId = c.Int(nullable: false, identity: true),
+                        Name = c.String(unicode: false),
+                        ParticipantId = c.String(unicode: false),
+                        Queue = c.Int(nullable: false),
+                        Tier = c.Int(nullable: false),
+                        Student_StudentId = c.Int(),
+                    })
+                .PrimaryKey(t => t.CSLId)
+                .ForeignKey("dbo.Students", t => t.Student_StudentId)
+                .Index(t => t.Student_StudentId);
+            
+            CreateTable(
+                "dbo.CSLEs",
+                c => new
+                    {
+                        CSLEId = c.Int(nullable: false, identity: true),
                         Division = c.String(unicode: false),
                         IsFreshBlood = c.Boolean(nullable: false),
                         IsHotStreak = c.Boolean(nullable: false),
@@ -80,10 +89,13 @@ namespace SoloTournamentCreator.Migrations
                         PlayerOrTeamName = c.String(unicode: false),
                         Wins = c.Int(nullable: false),
                         MiniSeries_CustomMiniSeriesId = c.Int(),
+                        CSL_CSLId = c.Int(),
                     })
-                .PrimaryKey(t => t.CLEDId)
+                .PrimaryKey(t => t.CSLEId)
                 .ForeignKey("dbo.CustomMiniSeries", t => t.MiniSeries_CustomMiniSeriesId)
-                .Index(t => t.MiniSeries_CustomMiniSeriesId);
+                .ForeignKey("dbo.CSLs", t => t.CSL_CSLId)
+                .Index(t => t.MiniSeries_CustomMiniSeriesId)
+                .Index(t => t.CSL_CSLId);
             
             CreateTable(
                 "dbo.CustomMiniSeries",
@@ -91,11 +103,23 @@ namespace SoloTournamentCreator.Migrations
                     {
                         CustomMiniSeriesId = c.Int(nullable: false, identity: true),
                         Losses = c.Int(nullable: false),
-                        Progress = c.String(unicode: false),
                         Target = c.Int(nullable: false),
                         Wins = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.CustomMiniSeriesId);
+            
+            CreateTable(
+                "dbo.Summoners",
+                c => new
+                    {
+                        Id = c.Long(nullable: false, identity: true),
+                        ProfileIconId = c.Int(nullable: false),
+                        RevisionDate = c.DateTime(nullable: false, precision: 0),
+                        Level = c.Long(nullable: false),
+                        Region = c.Int(nullable: false),
+                        Name = c.String(unicode: false),
+                    })
+                .PrimaryKey(t => t.Id);
             
             CreateTable(
                 "dbo.Tournaments",
@@ -129,30 +153,6 @@ namespace SoloTournamentCreator.Migrations
                 .Index(t => t.MySecondaryTournamentTree_MatchId);
             
             CreateTable(
-                "dbo.SummonerDtoes",
-                c => new
-                    {
-                        Id = c.Long(nullable: false, identity: true),
-                        Name = c.String(unicode: false),
-                        ProfileIconId = c.Int(nullable: false),
-                        RevisionDate = c.Long(nullable: false),
-                        SummonerLevel = c.Long(nullable: false),
-                    })
-                .PrimaryKey(t => t.Id);
-            
-            CreateTable(
-                "dbo.CLDs",
-                c => new
-                    {
-                        CLDId = c.Int(nullable: false, identity: true),
-                        Name = c.String(unicode: false),
-                        ParticipantId = c.String(unicode: false),
-                        Queue = c.Int(nullable: false),
-                        Tier = c.Int(nullable: false),
-                    })
-                .PrimaryKey(t => t.CLDId);
-            
-            CreateTable(
                 "dbo.StudentTeams",
                 c => new
                     {
@@ -183,8 +183,6 @@ namespace SoloTournamentCreator.Migrations
         public override void Down()
         {
             DropForeignKey("dbo.Matches", "Winner_TeamId", "dbo.Teams");
-            DropForeignKey("dbo.Students", "SummonerSoloQueueData_CLDId", "dbo.CLDs");
-            DropForeignKey("dbo.Students", "SummonerData_Id", "dbo.SummonerDtoes");
             DropForeignKey("dbo.Teams", "Tournament_TournamentId", "dbo.Tournaments");
             DropForeignKey("dbo.TournamentStudents", "Student_StudentId", "dbo.Students");
             DropForeignKey("dbo.TournamentStudents", "Tournament_TournamentId", "dbo.Tournaments");
@@ -193,8 +191,10 @@ namespace SoloTournamentCreator.Migrations
             DropForeignKey("dbo.TournamentTrees", "MyMainTournamentTree_MatchId", "dbo.Matches");
             DropForeignKey("dbo.StudentTeams", "Team_TeamId", "dbo.Teams");
             DropForeignKey("dbo.StudentTeams", "Student_StudentId", "dbo.Students");
-            DropForeignKey("dbo.Students", "DetailSoloQueueData_CLEDId", "dbo.CLEDs");
-            DropForeignKey("dbo.CLEDs", "MiniSeries_CustomMiniSeriesId", "dbo.CustomMiniSeries");
+            DropForeignKey("dbo.Students", "SummonerID", "dbo.Summoners");
+            DropForeignKey("dbo.CSLs", "Student_StudentId", "dbo.Students");
+            DropForeignKey("dbo.CSLEs", "CSL_CSLId", "dbo.CSLs");
+            DropForeignKey("dbo.CSLEs", "MiniSeries_CustomMiniSeriesId", "dbo.CustomMiniSeries");
             DropForeignKey("dbo.Matches", "RightContendantId", "dbo.Matches");
             DropForeignKey("dbo.Matches", "LeftContendantId", "dbo.Matches");
             DropIndex("dbo.TournamentStudents", new[] { "Student_StudentId" });
@@ -204,22 +204,22 @@ namespace SoloTournamentCreator.Migrations
             DropIndex("dbo.TournamentTrees", new[] { "MySecondaryTournamentTree_MatchId" });
             DropIndex("dbo.TournamentTrees", new[] { "MyMainTournamentTree_MatchId" });
             DropIndex("dbo.Tournaments", new[] { "MyTournamentTree_TournamentTreeId" });
-            DropIndex("dbo.CLEDs", new[] { "MiniSeries_CustomMiniSeriesId" });
-            DropIndex("dbo.Students", new[] { "SummonerSoloQueueData_CLDId" });
-            DropIndex("dbo.Students", new[] { "SummonerData_Id" });
-            DropIndex("dbo.Students", new[] { "DetailSoloQueueData_CLEDId" });
+            DropIndex("dbo.CSLEs", new[] { "CSL_CSLId" });
+            DropIndex("dbo.CSLEs", new[] { "MiniSeries_CustomMiniSeriesId" });
+            DropIndex("dbo.CSLs", new[] { "Student_StudentId" });
+            DropIndex("dbo.Students", new[] { "SummonerID" });
             DropIndex("dbo.Teams", new[] { "Tournament_TournamentId" });
             DropIndex("dbo.Matches", new[] { "Winner_TeamId" });
             DropIndex("dbo.Matches", new[] { "RightContendantId" });
             DropIndex("dbo.Matches", new[] { "LeftContendantId" });
             DropTable("dbo.TournamentStudents");
             DropTable("dbo.StudentTeams");
-            DropTable("dbo.CLDs");
-            DropTable("dbo.SummonerDtoes");
             DropTable("dbo.TournamentTrees");
             DropTable("dbo.Tournaments");
+            DropTable("dbo.Summoners");
             DropTable("dbo.CustomMiniSeries");
-            DropTable("dbo.CLEDs");
+            DropTable("dbo.CSLEs");
+            DropTable("dbo.CSLs");
             DropTable("dbo.Students");
             DropTable("dbo.Teams");
             DropTable("dbo.Matches");

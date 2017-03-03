@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace SoloTournamentCreator.Model.Tests
 {
+
     [TestClass()]
     public class TeamTests
     {

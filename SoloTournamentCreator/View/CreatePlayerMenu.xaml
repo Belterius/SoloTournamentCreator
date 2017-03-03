@@ -32,6 +32,7 @@
         <TextBox x:Name="textBoxLastName_Copy1" Text="{Binding Mail}" HorizontalAlignment="Left" Height="23" Margin="127,95,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <Label x:Name="label_Copy3" Content="Graduation Year :" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="21,119,0,0"/>
         <TextBox x:Name="textBoxLastName_Copy2" Text="{Binding GraduationYear}" HorizontalAlignment="Left" Height="23" Margin="127,122,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <Button x:Name="buttonCreatePlayer" Content="Create Player" HorizontalAlignment="Left" Margin="90,166,0,0" VerticalAlignment="Top" Width="109" Command="{Binding CreatePlayerCommand}"/>
+        <Button x:Name="buttonCreatePlayer" Content="Create Player" HorizontalAlignment="Left" Margin="89,166,0,0" VerticalAlignment="Top" Width="109" Command="{Binding CreatePlayerCommand}"/>
+        <Button x:Name="buttonImportFromCVS" Content="Import" HorizontalAlignment="Left" Margin="222,171,0,0" VerticalAlignment="Top" Width="51" Command="{Binding ImportPlayerFromCVSCommand}"/>
     </Grid>
 </Window>

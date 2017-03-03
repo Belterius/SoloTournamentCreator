@@ -6,19 +6,19 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="Server" Type="System.String" Scope="User">
-      <Value Profile="(Default)">ns344589.ip-5-39-89.eu</Value>
+      <Value Profile="(Default)">coniface.no-ip.org</Value>
     </Setting>
     <Setting Name="Database" Type="System.String" Scope="User">
-      <Value Profile="(Default)">paintfusiontournament</Value>
+      <Value Profile="(Default)">paintfusion</Value>
     </Setting>
     <Setting Name="Port" Type="System.String" Scope="User">
-      <Value Profile="(Default)">3306</Value>
+      <Value Profile="(Default)">19172</Value>
     </Setting>
     <Setting Name="UserId" Type="System.String" Scope="User">
-      <Value Profile="(Default)">visitor</Value>
+      <Value Profile="(Default)">paintfusion</Value>
     </Setting>
     <Setting Name="Password" Type="System.String" Scope="User">
-      <Value Profile="(Default)">aReallySimplePassword</Value>
+      <Value Profile="(Default)">NOxNQmCZ1D0i4gDdISlIixmrRrKGECYV0cIW0BRXgBeFI2y9m9</Value>
     </Setting>
     <Setting Name="AdminRight" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>

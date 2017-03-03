@@ -37,7 +37,7 @@ namespace SoloTournamentCreator.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("ns344589.ip-5-39-89.eu")]
+        [global::System.Configuration.DefaultSettingValueAttribute("coniface.no-ip.org")]
         public string Server {
             get {
                 return ((string)(this["Server"]));
@@ -49,7 +49,7 @@ namespace SoloTournamentCreator.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("paintfusiontournament")]
+        [global::System.Configuration.DefaultSettingValueAttribute("paintfusion")]
         public string Database {
             get {
                 return ((string)(this["Database"]));
@@ -61,7 +61,7 @@ namespace SoloTournamentCreator.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("3306")]
+        [global::System.Configuration.DefaultSettingValueAttribute("19172")]
         public string Port {
             get {
                 return ((string)(this["Port"]));
@@ -73,7 +73,7 @@ namespace SoloTournamentCreator.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("visitor")]
+        [global::System.Configuration.DefaultSettingValueAttribute("paintfusion")]
         public string UserId {
             get {
                 return ((string)(this["UserId"]));
@@ -85,7 +85,7 @@ namespace SoloTournamentCreator.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("aReallySimplePassword")]
+        [global::System.Configuration.DefaultSettingValueAttribute("NOxNQmCZ1D0i4gDdISlIixmrRrKGECYV0cIW0BRXgBeFI2y9m9")]
         public string Password {
             get {
                 return ((string)(this["Password"]));
