@@ -7,13 +7,13 @@ namespace SoloTournamentCreator.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class BestRankPreviousSeason : IMigrationMetadata
+    public sealed partial class InitialDb : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(BestRankPreviousSeason));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(InitialDb));
         
         string IMigrationMetadata.Id
         {
-            get { return "201703021323371_BestRankPreviousSeason"; }
+            get { return "201702271212112_InitialDb"; }
         }
         
         string IMigrationMetadata.Source

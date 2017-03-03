@@ -71,7 +71,13 @@ namespace SoloTournamentCreator.Helper
             if (mySummoner.MyBestLeague != null)
                 return $"{mySummoner.Pseudo} ({mySummoner.MyBestLeague.Tier} {mySummoner.MyBestLeague.Entries[0].Division} {mySummoner.MyBestLeague.Entries[0].LeaguePoints})";
             else
+            {
+                if(mySummoner.BestRankPreviousSeason != 0)
+                {
+                    return $"{mySummoner.Pseudo} (Unranked - {mySummoner.BestRankPreviousSeason})";
+                }
                 return $"{mySummoner.Pseudo} (Unranked)";
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -233,6 +239,8 @@ namespace SoloTournamentCreator.Helper
             int strenght = 0;
             switch (tier)
             {
+                case RiotSharp.LeagueEndpoint.Enums.Tier.Unranked:
+                    return 80;
                 case RiotSharp.LeagueEndpoint.Enums.Tier.Bronze:
                     break;
                 case RiotSharp.LeagueEndpoint.Enums.Tier.Silver:

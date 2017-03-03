@@ -65,12 +65,8 @@
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="RiotApi.Net.RestClient, Version=1.4.3.39211, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\RiotApi.NET.1.4.4\lib\net452\RiotApi.Net.RestClient.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="RiotSharp, Version=2.5.2.39136, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\RiotSharp.2.5.2\lib\portable45-net45+win8+wpa81\RiotSharp.dll</HintPath>
+      <HintPath>..\packages\RiotSharp.2.5.3\lib\portable45-net45+win8+wpa81\RiotSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -124,13 +120,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Data\UpdateConnection.cs" />
-    <Compile Include="Migrations\201702281038448_Initial.cs" />
-    <Compile Include="Migrations\201702281038448_Initial.Designer.cs">
-      <DependentUpon>201702281038448_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201703021323371_BestRankPreviousSeason.cs" />
-    <Compile Include="Migrations\201703021323371_BestRankPreviousSeason.Designer.cs">
-      <DependentUpon>201703021323371_BestRankPreviousSeason.cs</DependentUpon>
+    <Compile Include="Migrations\201703021334238_InitialDB.cs" />
+    <Compile Include="Migrations\201703021334238_InitialDB.Designer.cs">
+      <DependentUpon>201703021334238_InitialDB.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\CustomSharpEntry.cs" />
@@ -171,7 +163,6 @@
     <Compile Include="Helper\DialogCloser.cs" />
     <Compile Include="Helper\IClosableViewModel.cs" />
     <Compile Include="Helper\RelayCommand.cs" />
-    <Compile Include="Model\CustomLeagueEntry.cs" />
     <Compile Include="Model\Match.cs" />
     <Compile Include="Model\Student.cs" />
     <Compile Include="Model\Team.cs" />
@@ -223,11 +214,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Migrations\201702281038448_Initial.resx">
-      <DependentUpon>201702281038448_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201703021323371_BestRankPreviousSeason.resx">
-      <DependentUpon>201703021323371_BestRankPreviousSeason.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201703021334238_InitialDB.resx">
+      <DependentUpon>201703021334238_InitialDB.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

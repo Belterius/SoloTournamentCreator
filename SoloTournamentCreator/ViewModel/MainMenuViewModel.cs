@@ -16,7 +16,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using SoloTournamentCreator.RiotToEntity;
-using RiotApi.Net.RestClient.Configuration;
 using RiotSharp;
 
 namespace SoloTournamentCreator.ViewModel
@@ -319,14 +318,13 @@ namespace SoloTournamentCreator.ViewModel
         public MainMenuViewModel()
         {
             this.PropertyChanged += CustomPropertyChanged;
-            TestRiotSharp();
             InitDatabaseContext();
-            //PopulateDatabase();
+            PopulateDatabase();
             try
             {
                 //cf http://stackoverflow.com/questions/3356541/entity-framework-linq-query-include-multiple-children-entities
 
-                MyDatabaseContext.MyStudents.Include(x => x.MySummonerData).Include(x => x.MyLeagues).Include(x => x.MySummonerData).Load();
+                MyDatabaseContext.MyStudents.Include(x => x.MyLeagues.Select(league => league.Entries.Select(detailLeague => detailLeague.MiniSeries))).Include(x => x.MySummonerData).Load();
                 MyDatabaseContext.MyMatchs.Load();
                 MyDatabaseContext.MyTeams.Include(x => x.TeamMember).Load();
                 MyDatabaseContext.MyTournamentTrees.Load();
@@ -356,11 +354,6 @@ namespace SoloTournamentCreator.ViewModel
         
         private void InitDatabaseContext()
         {
-            Properties.Settings.Default.Server = "coniface.no-ip.org";
-            Properties.Settings.Default.Port ="19172";
-            Properties.Settings.Default.Password = "NOxNQmCZ1D0i4gDdISlIixmrRrKGECYV0cIW0BRXgBeFI2y9m9";
-            Properties.Settings.Default.Database = "paintfusion";
-            Properties.Settings.Default.UserId = "paintfusion";
             string connectionString = $"server={Properties.Settings.Default.Server};port={Properties.Settings.Default.Port};database={Properties.Settings.Default.Database};uid={Properties.Settings.Default.UserId};password='{Properties.Settings.Default.Password}'";
             MyDatabaseContext = new SavingContext(connectionString);
             if (!MyDatabaseContext.CheckConnection())
@@ -379,12 +372,6 @@ namespace SoloTournamentCreator.ViewModel
             MenuSettings MS = new MenuSettings() { DataContext = new MenuSettingsViewModel(MyDatabaseContext)};
             MS.ShowDialog();
             RaisePropertyChanged("AdminOnlyVisible");
-        }
-
-        [Conditional("DEBUG")]
-        private void TestRiotSharp()
-        {
-            
         }
 
         private void InternalListBoxItemClick(object obj)
@@ -406,11 +393,9 @@ namespace SoloTournamentCreator.ViewModel
         [Conditional("DEBUG")]
         private void PopulateDatabase()// retrieve the Challengers players and add them as sample data
         {
-            IEnumerable<RiotApi.Net.RestClient.Dto.League.LeagueDto.LeagueEntryDto> pgm = RiotToEntity.ApiRequest.GetSampleChallenger();
-            pgm.OrderBy(x => x.LeaguePoints);
-            Thread.Sleep(10000);
-            int i = 190;
-            foreach (RiotApi.Net.RestClient.Dto.League.LeagueDto.LeagueEntryDto challenjour in pgm)
+            RiotSharp.LeagueEndpoint.League pgm = RiotToEntity.ApiRequest.GetSampleChallenger();
+            pgm.Entries.OrderBy(x => x.LeaguePoints);
+            foreach(RiotSharp.LeagueEndpoint.LeagueEntry challenjour in pgm.Entries)
             {
                 try
                 {
@@ -420,19 +405,10 @@ namespace SoloTournamentCreator.ViewModel
                 {
 
                 }
-                i--;
-                Console.WriteLine($"{i} : {challenjour.PlayerOrTeamName}");
-                if (i % 5 == 0)
-                {
-                    MyDatabaseContext.SaveChanges();
-                    Thread.Sleep(10000);
-                }
-                if (i <= 0)
-                    break;
             }
-            MyDatabaseContext.SaveChanges();
-        }
-        private void CreatePlayerIfNotExist(RiotApi.Net.RestClient.Dto.League.LeagueDto.LeagueEntryDto challenjour)
+            //MyDatabaseContext.SaveChanges();
+            }
+        private void CreatePlayerIfNotExist(RiotSharp.LeagueEndpoint.LeagueEntry challenjour)
         {
             try
             {
@@ -453,21 +429,6 @@ namespace SoloTournamentCreator.ViewModel
                     }
                 }
                 MyDatabaseContext.MyStudents.Add(newPlayer);
-            }
-            catch (RiotApi.Net.RestClient.Helpers.RiotExceptionRaiser.RiotApiException ex)
-            {
-                if (ex.RiotErrorCode == RiotApi.Net.RestClient.Helpers.RiotExceptionRaiser.RiotErrorCode.DATA_NOT_FOUND)
-                {
-                    return;
-                }
-                if (ex.RiotErrorCode == RiotApi.Net.RestClient.Helpers.RiotExceptionRaiser.RiotErrorCode.SERVER_ERROR)
-                {
-                    return;
-                }
-                if (ex.RiotErrorCode == RiotApi.Net.RestClient.Helpers.RiotExceptionRaiser.RiotErrorCode.RATE_LIMITED)
-                {
-                    return;
-                }
             }
             catch (Exception)
             {
@@ -637,5 +598,6 @@ namespace SoloTournamentCreator.ViewModel
                 tb.ShowDialog();
             }
         }
+
     }
 }

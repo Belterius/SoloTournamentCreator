@@ -4,13 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using RiotApi.Net.RestClient.Dto.League;
 using SoloTournamentCreator.Helper;
 using System.ComponentModel.DataAnnotations;
-using RiotApi.Net.RestClient.Dto.Summoner;
 using System.ComponentModel.DataAnnotations.Schema;
 using RiotSharp.SummonerEndpoint;
 using RiotSharp.LeagueEndpoint;
+using RiotSharp.LeagueEndpoint.Enums;
 
 namespace SoloTournamentCreator.Model
 {
@@ -25,7 +24,7 @@ namespace SoloTournamentCreator.Model
         private long _SummonerID;
         private Summoner _MySummonerData;
         private List<CSL> _MyLeagues;
-        private RiotSharp.LeagueEndpoint.Enums.Tier BestRankPreviousSeason {get;set;}
+        private Tier _BestRankPreviousSeason;
         private ICollection<Tournament> _ParticipatingTournament;
         public virtual ICollection<Team> MyTeams { get; set; }
 
@@ -102,9 +101,13 @@ namespace SoloTournamentCreator.Model
         {
             get
             {
+                if(MyLeagues == null)
+                {
+                    return GlobalConverters.RankingToPoint(BestRankPreviousSeason, "V", 50);
+                }
                 if(MyLeagues?.Where(x => x.Queue == RiotSharp.Queue.RankedSolo5x5).Count() == 0 && MyLeagues?.Where(x => x.Queue == RiotSharp.Queue.RankedFlexSR).Count() == 0)
                 {
-                    return 80;
+                    return GlobalConverters.RankingToPoint(BestRankPreviousSeason, "V", 50);
                 }
                 return GlobalConverters.RankingToPoint(MyBestLeague.Tier, MyBestLeague.Entries[0].Division, MyBestLeague.Entries[0].LeaguePoints);
             }
@@ -163,6 +166,19 @@ namespace SoloTournamentCreator.Model
             }
         }
 
+        public Tier BestRankPreviousSeason
+        {
+            get
+            {
+                return _BestRankPreviousSeason;
+            }
+
+            set
+            {
+                _BestRankPreviousSeason = value;
+            }
+        }
+
         private Student()
         {
 
@@ -218,7 +234,18 @@ namespace SoloTournamentCreator.Model
             {
                 if(ex.Message == "404, Resource not found")
                 {
-                   //Unranked
+                    //Unranked
+                    try
+                    {
+                        RiotSharp.GameEndpoint.Game lastGame = MySummonerData.GetRecentGames()[0];
+                        var gameData = MyRiotClient.Instance.riotSharpClient.GetMatch(RiotSharp.Region.euw, lastGame.GameId);
+                        var playerData = gameData.Participants.Where(x => x.ChampionId == lastGame.ChampionId && x.TeamId == lastGame.TeamId).Single();
+                        BestRankPreviousSeason = playerData.HighestAchievedSeasonTier;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
                 }
                 else
                 {
@@ -231,14 +258,12 @@ namespace SoloTournamentCreator.Model
             }
             try
             {
-                RiotSharp.GameEndpoint.Game lastGame = MySummonerData.GetRecentGames()[0];
-                var gameData = MyRiotClient.Instance.riotSharpClient.GetMatch(RiotSharp.Region.euw, lastGame.GameId);
-                var playerData = gameData.Participants.Where(x => x.ChampionId == lastGame.ChampionId && x.TeamId == lastGame.TeamId).Single();
+                
 
             }
             catch (Exception)
             {
-                throw;
+                    throw;
             }
 
         }
@@ -258,6 +283,31 @@ namespace SoloTournamentCreator.Model
                     MyLeagues.Add(new CSL(league));
                 }
                 return true;
+            }
+            catch (RiotSharp.RiotSharpException ex)
+            {
+                if (ex.Message == "404, Resource not found")
+                {
+                    //Unranked
+                    try
+                    {
+                        RiotSharp.GameEndpoint.Game lastGame = MySummonerData.GetRecentGames()[0];
+                        var gameData = MyRiotClient.Instance.riotSharpClient.GetMatch(RiotSharp.Region.euw, lastGame.GameId);
+                        var playerData = gameData.Participants.Where(x => x.ChampionId == lastGame.ChampionId && x.TeamId == lastGame.TeamId).Single();
+                        BestRankPreviousSeason = playerData.HighestAchievedSeasonTier;
+                        return true;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                        return false;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine(ex);
+                    return false;
+                }
             }
             catch (Exception ex)
             {

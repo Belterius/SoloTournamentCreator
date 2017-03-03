@@ -185,6 +185,7 @@ namespace SoloTournamentCreator.Model
         {
             Clean();
             CreateTeam();
+            RefreshPlayers();
             BalanceTeam();
             CreateTournamentTree();
         }
@@ -210,6 +211,17 @@ namespace SoloTournamentCreator.Model
             for (int i = 0; i < Math.Min(Participants.Count/nbPlayerPerTeam, NbTeam); i++)
             {
                 Teams.Add(new Team(nbPlayerPerTeam, "TeamNumber"+i.ToString()));
+            }
+
+        }
+        /// <summary>
+        /// Update all the players data to make sure to have up to date information
+        /// </summary>
+        public void RefreshPlayers()
+        {
+            foreach(Student player in Participants)
+            {
+                player.RefreshData();
             }
 
         }
