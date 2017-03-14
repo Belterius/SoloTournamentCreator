@@ -313,6 +313,7 @@ namespace SoloTournamentCreator.ViewModel
         public RelayCommand ArchiveTournamentCommand { get; set; }
         public RelayCommand ClosingCommand { get; set; }
         public RelayCommand OpenSettingsCommand { get; set; }
+        public RelayCommand RefreshPlayerDataCommand { get; set; }
 
 
         public MainMenuViewModel()
@@ -350,8 +351,14 @@ namespace SoloTournamentCreator.ViewModel
             SeeBracketCommand = new RelayCommand(SeeBracket);
             ArchiveTournamentCommand = new RelayCommand(ArchiveTournament);
             OpenSettingsCommand = new RelayCommand(OpenSettings);
+            RefreshPlayerDataCommand = new RelayCommand(RefreshPlayerData);
         }
-        
+
+        private void RefreshPlayerData(object obj)
+        {
+            SelectedTeamSelectedPlayer.RefreshData();
+        }
+
         private void InitDatabaseContext()
         {
             string connectionString = $"server={Properties.Settings.Default.Server};port={Properties.Settings.Default.Port};database={Properties.Settings.Default.Database};uid={Properties.Settings.Default.UserId};password='{Properties.Settings.Default.Password}'";

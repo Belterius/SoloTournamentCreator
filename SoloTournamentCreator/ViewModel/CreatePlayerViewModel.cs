@@ -114,7 +114,7 @@ namespace SoloTournamentCreator.ViewModel
         {
             String sourcePath = "";
             OpenFileDialog excelPlayerData = new OpenFileDialog();
-            excelPlayerData.Filter = "Excel Files (*.xlsx)|*.xlsx";
+            excelPlayerData.Filter = "Excel Files (*.xls)|*.xls";
             excelPlayerData.FilterIndex = 1;
             excelPlayerData.Multiselect = false;
             if (excelPlayerData.ShowDialog() == true)
@@ -122,7 +122,7 @@ namespace SoloTournamentCreator.ViewModel
                 sourcePath = excelPlayerData.FileName;
             }
 
-
+            
             string con =
                   $"Provider=Microsoft.Jet.OLEDB.4.0;Data Source={sourcePath};" +
                   @"Extended Properties='Excel 8.0;HDR=Yes;'";

@@ -48,6 +48,14 @@ namespace SoloTournamentCreator.Model
                 _TeamName = value;
             }
         }
+        public string TeamNameFullDisplay
+        {
+            get
+            {
+                return $"{TeamName} ({TeamPower})";
+            }
+            
+        }
 
         public int NbPlayerMax
         {
@@ -110,5 +118,6 @@ namespace SoloTournamentCreator.Model
             TeamName = teamName;
             return true;
         }
+        
     }
 }

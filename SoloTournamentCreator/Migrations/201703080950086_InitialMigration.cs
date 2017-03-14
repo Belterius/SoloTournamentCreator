@@ -3,7 +3,7 @@ namespace SoloTournamentCreator.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class InitialDB : DbMigration
+    public partial class InitialMigration : DbMigration
     {
         public override void Up()
         {
@@ -53,6 +53,7 @@ namespace SoloTournamentCreator.Migrations
                         GraduationYear = c.Int(nullable: false),
                         SummonerID = c.Long(nullable: false),
                         BestRankPreviousSeason = c.Int(nullable: false),
+                        SavedSummonerID = c.Long(nullable: false),
                     })
                 .PrimaryKey(t => t.StudentId)
                 .ForeignKey("dbo.Summoners", t => t.SummonerID, cascadeDelete: true)

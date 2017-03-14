@@ -125,7 +125,7 @@
                                             <Binding />
                                         </MultiBinding>
                                     </ListBoxItem.Background>
-                                    <TextBlock Text="{Binding TeamName}">
+                                    <TextBlock Text="{Binding TeamNameFullDisplay}">
                                         <i:Interaction.Triggers>
                                             <i:EventTrigger EventName="MouseLeftButtonDown">
                                                 <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext.InternalListBoxItemClickCommand}">
@@ -207,6 +207,7 @@
                     <Button x:Name="buttonCloseTournament" Content="Archive Tournament" Visibility="{Binding AdminOnlyVisible}" HorizontalAlignment="Left" Margin="399,246,0,0" VerticalAlignment="Top" Height="20" Command="{Binding ArchiveTournamentCommand}" IsEnabled="{Binding Converter={StaticResource ValueNotNull}, Path=SelectedStartedTournament}"/>
                     <TextBox x:Name="textBox1" Text="{Binding StartedTournamentSummonerFilter, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Converter={StaticResource ValueNotNull}, Path=SelectedStartedTournament}" HorizontalAlignment="Left" Height="23" Margin="417,105,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="75"/>
                     <Label x:Name="label1" Content="Find player :" HorizontalAlignment="Left" Margin="414,83,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.138,0.319"/>
+                    <Button x:Name="buttonRefreshPlayerData" Content="Refresh Data" Visibility="{Binding AdminOnlyVisible}" HorizontalAlignment="Left" Margin="414,139,0,0" VerticalAlignment="Top" Command="{Binding RefreshPlayerDataCommand}" IsEnabled="{Binding Converter={StaticResource ValueNotNull}, Path=SelectedTeamSelectedPlayer}"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Completed Tournament">

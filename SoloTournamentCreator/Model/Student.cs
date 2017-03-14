@@ -22,6 +22,7 @@ namespace SoloTournamentCreator.Model
         private string _LastName;
         private int _GraduationYear;
         private long _SummonerID;
+        private long _SavedSummonerID;
         private Summoner _MySummonerData;
         private List<CSL> _MyLeagues;
         private Tier _BestRankPreviousSeason;
@@ -179,9 +180,21 @@ namespace SoloTournamentCreator.Model
             }
         }
 
+        public long SavedSummonerID
+        {
+            get
+            {
+                return _SavedSummonerID;
+            }
+
+            set
+            {
+                _SavedSummonerID = value;
+            }
+        }
+
         private Student()
         {
-
         }
         /// <summary>
         /// Should ONLY, EVER be used for testing purpose
@@ -214,6 +227,7 @@ namespace SoloTournamentCreator.Model
         /// <param name="gradYear">The year at which the student is expected to graduate</param>
         public Student(string mail, string firstName, string lastName, string pseudo, int gradYear)
         {
+            //SET FOREIGN_KEY_CHECKS=0;
             Mail = mail;
             FirstName = firstName;
             LastName = lastName;
@@ -222,6 +236,7 @@ namespace SoloTournamentCreator.Model
             {
                 MySummonerData = MyRiotClient.Instance.riotSharpClient.GetSummoner(RiotSharp.Region.euw, pseudo.Replace(" ", string.Empty));
                 SummonerID = MySummonerData.Id; //WARNING : EntityFrameWork WILL override the SummonerData.Id to its own, so we NEED to save the Riot SummonerID BEFORE saving into EntityFramework !
+                SavedSummonerID = MySummonerData.Id;
                 MySummonerData.GetEntireLeagues();
                 var AllMyLeagues = MySummonerData.GetLeagues();
                 MyLeagues = new List<CSL>();
@@ -244,7 +259,16 @@ namespace SoloTournamentCreator.Model
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e.Message);
+                        if (e.Message == "Error setting value to 'GameMode' on 'RiotSharp.GameEndpoint.Game'." || e.Message == "404, Resource not found")
+                        {
+                            Console.WriteLine($"****************************************************************************************************");
+                            Console.WriteLine($"ERROR CREATING {firstName} {lastName} {pseudo}");
+                            Console.WriteLine(e);
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
                 }
                 else
@@ -276,6 +300,7 @@ namespace SoloTournamentCreator.Model
         {
             try
             {
+                MySummonerData.Id = SavedSummonerID;
                 MyLeagues = new List<CSL>();
                 var AllMyLeagues = MySummonerData.GetLeagues();
                 foreach (var league in AllMyLeagues)
@@ -313,6 +338,10 @@ namespace SoloTournamentCreator.Model
             {
                 Console.WriteLine(ex);
                 return false;
+            }
+            finally
+            {
+                MySummonerData.Id = SummonerID;
             }
         }
 

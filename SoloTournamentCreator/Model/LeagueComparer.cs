@@ -24,29 +24,29 @@ namespace SoloTournamentCreator.Model
                 switch (a.Tier)
                 {
                     case RiotSharp.LeagueEndpoint.Enums.Tier.Challenger :
-                        return 1;
+                        return -1;
                     case RiotSharp.LeagueEndpoint.Enums.Tier.Master:
                         if (b.Tier == RiotSharp.LeagueEndpoint.Enums.Tier.Challenger)
-                            return -1;
-                        return 1;
+                            return 1;
+                        return -1;
                     case RiotSharp.LeagueEndpoint.Enums.Tier.Diamond:
                         if (b.Tier == RiotSharp.LeagueEndpoint.Enums.Tier.Challenger || b.Tier == RiotSharp.LeagueEndpoint.Enums.Tier.Master)
-                            return -1;
-                        return 1;
+                            return 1;
+                        return -1;
                     case RiotSharp.LeagueEndpoint.Enums.Tier.Platinum:
                         if (b.Tier == RiotSharp.LeagueEndpoint.Enums.Tier.Challenger || b.Tier == RiotSharp.LeagueEndpoint.Enums.Tier.Master || b.Tier == RiotSharp.LeagueEndpoint.Enums.Tier.Diamond)
-                            return -1;
-                        return 1;
+                            return 1;
+                        return -1;
                     case RiotSharp.LeagueEndpoint.Enums.Tier.Gold:
                         if (b.Tier == RiotSharp.LeagueEndpoint.Enums.Tier.Silver || b.Tier == RiotSharp.LeagueEndpoint.Enums.Tier.Bronze)
-                            return 1;
-                        return -1;
+                            return -1;
+                        return 1;
                     case RiotSharp.LeagueEndpoint.Enums.Tier.Silver:
                         if (b.Tier == RiotSharp.LeagueEndpoint.Enums.Tier.Bronze)
-                            return 1;
-                        return -1;
+                            return -1;
+                        return 1;
                     case RiotSharp.LeagueEndpoint.Enums.Tier.Bronze:
-                        return -1;
+                        return 1;
                 }
             }
 
