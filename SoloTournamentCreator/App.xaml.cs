@@ -1,6 +1,4 @@
-﻿using RiotApi.Net.RestClient;
-using RiotApi.Net.RestClient.Configuration;
-using SoloTournamentCreator.View;
+﻿using SoloTournamentCreator.View;
 using SoloTournamentCreator.RiotToEntity;
 using System;
 using System.Collections.Generic;
