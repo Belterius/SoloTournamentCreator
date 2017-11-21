@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="RiotApiKey" Type="System.String" Scope="User">
-      <Value Profile="(Default)">RGAPI-0e1ff28e-4863-42a9-a57b-904e65d9706e</Value>
+      <Value Profile="(Default)">PutYourKeyHere</Value>
     </Setting>
     <Setting Name="Server" Type="System.String" Scope="User">
       <Value Profile="(Default)">coniface.no-ip.org</Value>
