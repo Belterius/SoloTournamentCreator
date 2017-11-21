@@ -34,7 +34,7 @@ namespace SoloTournamentCreator.Model
         {
             get
             {
-                List<CSL> importantLeague = MyLeagues.Where(x => x.Queue == RiotSharp.Queue.RankedFlexSR || x.Queue == RiotSharp.Queue.RankedSolo5x5 ).ToList();
+                List<CSL> importantLeague = MyLeagues.Where(x => x.Queue == RiotSharp.Misc.Queue.RankedFlexSR || x.Queue == RiotSharp.Misc.Queue.RankedSolo5x5 ).ToList();
                 return importantLeague.OrderBy(x => x, new LeagueComparer()).FirstOrDefault(); 
             }
         }
@@ -106,11 +106,11 @@ namespace SoloTournamentCreator.Model
                 {
                     return GlobalConverters.RankingToPoint(BestRankPreviousSeason, "V", 50);
                 }
-                if(MyLeagues?.Where(x => x.Queue == RiotSharp.Queue.RankedSolo5x5).Count() == 0 && MyLeagues?.Where(x => x.Queue == RiotSharp.Queue.RankedFlexSR).Count() == 0)
+                if(MyLeagues?.Where(x => x.Queue == RiotSharp.Misc.Queue.RankedSolo5x5).Count() == 0 && MyLeagues?.Where(x => x.Queue == RiotSharp.Misc.Queue.RankedFlexSR).Count() == 0)
                 {
                     return GlobalConverters.RankingToPoint(BestRankPreviousSeason, "V", 50);
                 }
-                return GlobalConverters.RankingToPoint(MyBestLeague.Tier, MyBestLeague.Entries[0].Division, MyBestLeague.Entries[0].LeaguePoints);
+                return GlobalConverters.RankingToPoint(MyBestLeague.Tier, MyBestLeague.Entries.Where(x => x.PlayerOrTeamId == SavedSummonerID.ToString()).Single().Division, MyBestLeague.Entries.Where(x => x.PlayerOrTeamId == SavedSummonerID.ToString()).Single().LeaguePoints);
             }
         }
 
@@ -202,15 +202,16 @@ namespace SoloTournamentCreator.Model
         /// <param name="testConfirm">MUST be set to "test" for the function to work</param>
         public Student(string testConfirm)
         {
-            RiotSharp.RiotApi riotSharpClient = RiotSharp.RiotApi.GetInstance("");
+            RiotSharp.RiotApi riotSharpClient = RiotSharp.RiotApi.GetInstance("",200,500);
             if (testConfirm != "test")
             {
                 throw new NotSupportedException();
             }
-            MySummonerData = riotSharpClient.GetSummoner(RiotSharp.Region.euw, "belterius");
+            MySummonerData = riotSharpClient.GetSummonerByName(RiotSharp.Misc.Region.euw, "belterius");
             SummonerID = MySummonerData.Id; //WARNING : EntityFrameWork WILL override the SummonerData.Id to its own, so we NEED to save the Riot SummonerID BEFORE saving into EntityFramework !
-            var AllMyLeagues = MySummonerData.GetLeagues();
-            foreach(var league in AllMyLeagues)
+            //var AllMyLeagues = MySummonerData.GetLeagues();            
+            var AllMyLeagues = riotSharpClient.GetLeagues(RiotSharp.Misc.Region.euw, SummonerID);
+            foreach (var league in AllMyLeagues)
             {
                 MyLeagues.Add(new CSL(league));
             }
@@ -234,11 +235,12 @@ namespace SoloTournamentCreator.Model
             GraduationYear = gradYear;
             try
             {
-                MySummonerData = MyRiotClient.Instance.riotSharpClient.GetSummoner(RiotSharp.Region.euw, pseudo.Replace(" ", string.Empty));
+                MySummonerData = MyRiotClient.Instance.riotSharpClient.GetSummonerByName(RiotSharp.Misc.Region.euw, pseudo.Replace(" ", string.Empty));
                 SummonerID = MySummonerData.Id; //WARNING : EntityFrameWork WILL override the SummonerData.Id to its own, so we NEED to save the Riot SummonerID BEFORE saving into EntityFramework !
                 SavedSummonerID = MySummonerData.Id;
-                MySummonerData.GetEntireLeagues();
-                var AllMyLeagues = MySummonerData.GetLeagues();
+                //MySummonerData.GetEntireLeagues();
+                //var AllMyLeagues = MySummonerData.GetLeagues();
+                var AllMyLeagues = MyRiotClient.Instance.riotSharpClient.GetLeagues(RiotSharp.Misc.Region.euw, SavedSummonerID);
                 MyLeagues = new List<CSL>();
                 foreach (var league in AllMyLeagues)
                 {
@@ -253,7 +255,7 @@ namespace SoloTournamentCreator.Model
                     try
                     {
                         RiotSharp.GameEndpoint.Game lastGame = MySummonerData.GetRecentGames()[0];
-                        var gameData = MyRiotClient.Instance.riotSharpClient.GetMatch(RiotSharp.Region.euw, lastGame.GameId);
+                        var gameData = MyRiotClient.Instance.riotSharpClient.GetMatch(RiotSharp.Misc.Region.euw, lastGame.GameId);
                         var playerData = gameData.Participants.Where(x => x.ChampionId == lastGame.ChampionId && x.TeamId == lastGame.TeamId).Single();
                         BestRankPreviousSeason = playerData.HighestAchievedSeasonTier;
                     }
@@ -302,7 +304,8 @@ namespace SoloTournamentCreator.Model
             {
                 MySummonerData.Id = SavedSummonerID;
                 MyLeagues = new List<CSL>();
-                var AllMyLeagues = MySummonerData.GetLeagues();
+                //var AllMyLeagues = MySummonerData.GetLeagues();
+                var AllMyLeagues = MyRiotClient.Instance.riotSharpClient.GetLeagues(RiotSharp.Misc.Region.euw, MySummonerData.Id);
                 foreach (var league in AllMyLeagues)
                 {
                     MyLeagues.Add(new CSL(league));
@@ -317,7 +320,7 @@ namespace SoloTournamentCreator.Model
                     try
                     {
                         RiotSharp.GameEndpoint.Game lastGame = MySummonerData.GetRecentGames()[0];
-                        var gameData = MyRiotClient.Instance.riotSharpClient.GetMatch(RiotSharp.Region.euw, lastGame.GameId);
+                        var gameData = MyRiotClient.Instance.riotSharpClient.GetMatch(RiotSharp.Misc.Region.euw, lastGame.GameId);
                         var playerData = gameData.Participants.Where(x => x.ChampionId == lastGame.ChampionId && x.TeamId == lastGame.TeamId).Single();
                         BestRankPreviousSeason = playerData.HighestAchievedSeasonTier;
                         return true;

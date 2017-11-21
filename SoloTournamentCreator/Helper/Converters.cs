@@ -69,7 +69,7 @@ namespace SoloTournamentCreator.Helper
         {
             Student mySummoner = (Student)value;
             if (mySummoner.MyBestLeague != null)
-                return $"{mySummoner.Pseudo} ({mySummoner.MyBestLeague.Tier} {mySummoner.MyBestLeague.Entries[0].Division} {mySummoner.MyBestLeague.Entries[0].LeaguePoints})";
+                return $"{mySummoner.Pseudo} ({mySummoner.MyBestLeague.Tier} {mySummoner.MyBestLeague.Entries.Where(x => x.PlayerOrTeamId == mySummoner.SavedSummonerID.ToString()).Single().Division} {mySummoner.MyBestLeague.Entries.Where(x => x.PlayerOrTeamId == mySummoner.SavedSummonerID.ToString()).Single().LeaguePoints})";
             else
             {
                 if(mySummoner.BestRankPreviousSeason != 0)
@@ -259,8 +259,10 @@ namespace SoloTournamentCreator.Helper
                     strenght += 250;
                     break;
                 case RiotSharp.LeagueEndpoint.Enums.Tier.Challenger:
+                    //Challenger have a division == null, so we prefer to return here, that way we still break in case we have a null division when the player is not Challenger
                     strenght += 300;
-                    break;
+                    strenght += Convert.ToInt32(leaguePoints / 10);
+                    return strenght;
                 default:
                     throw new NotSupportedException("This Tier is not supported, Rito added a new one :(");
             }

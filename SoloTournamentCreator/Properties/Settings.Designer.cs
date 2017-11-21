@@ -25,7 +25,7 @@ namespace SoloTournamentCreator.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("RGAPI-0e1ff28e-4863-42a9-a57b-904e65d9706e")]
         public string RiotApiKey {
             get {
                 return ((string)(this["RiotApiKey"]));

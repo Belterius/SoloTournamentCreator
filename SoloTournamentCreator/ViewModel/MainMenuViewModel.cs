@@ -320,6 +320,7 @@ namespace SoloTournamentCreator.ViewModel
         {
             this.PropertyChanged += CustomPropertyChanged;
             InitDatabaseContext();
+            //ClearDatabase();
             //PopulateDatabase();
             try
             {
@@ -367,9 +368,9 @@ namespace SoloTournamentCreator.ViewModel
             {
                 MyDatabaseContext = new SavingContext();
             }
-            if (!MyDatabaseContext.CheckWriteRight())
+            if (MyDatabaseContext.CheckWriteRight())
             {
-                Properties.Settings.Default.AdminRight = false;
+                Properties.Settings.Default.AdminRight = true;
             }
 
         }
@@ -402,7 +403,7 @@ namespace SoloTournamentCreator.ViewModel
         {
             RiotSharp.LeagueEndpoint.League pgm = RiotToEntity.ApiRequest.GetSampleChallenger();
             pgm.Entries.OrderBy(x => x.LeaguePoints);
-            foreach(RiotSharp.LeagueEndpoint.LeagueEntry challenjour in pgm.Entries)
+            foreach(RiotSharp.LeagueEndpoint.LeaguePosition challenjour in pgm.Entries.Take(50))
             {
                 try
                 {
@@ -413,9 +414,9 @@ namespace SoloTournamentCreator.ViewModel
 
                 }
             }
-            //MyDatabaseContext.SaveChanges();
+            MyDatabaseContext.SaveChanges();
             }
-        private void CreatePlayerIfNotExist(RiotSharp.LeagueEndpoint.LeagueEntry challenjour)
+        private void CreatePlayerIfNotExist(RiotSharp.LeagueEndpoint.LeaguePosition challenjour)
         {
             try
             {

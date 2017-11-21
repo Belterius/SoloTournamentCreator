@@ -8,13 +8,16 @@ namespace SoloTournamentCreator.RiotToEntity
 {
     public class ApiRequest
     {
-        public static RiotSharp.TournamentEndpoint.Tournament CreateTournamentAPI(string url, string tournamentName)
-        {
-            var tournamentApi = RiotSharp.TournamentRiotApi.GetInstance(Properties.Settings.Default.RiotTournamentApiKey);
-            var providerw = tournamentApi.CreateProvider(RiotSharp.Region.euw, url);
-            return tournamentApi.CreateTournament(providerw.Id, tournamentName);
+        /*
+         * Deprecated with RiotSharp 2.5.1 -> 3.0 TODO : fix later
+         */
+        //public static RiotSharp.TournamentEndpoint.Tournament CreateTournamentAPI(string url, string tournamentName)
+        //{
+        //    var tournamentApi = RiotSharp.TournamentRiotApi.GetInstance(Properties.Settings.Default.RiotTournamentApiKey);
+        //    var providerw = tournamentApi.CreateProvider(RiotSharp.Region.euw, url);
+        //    return tournamentApi.CreateTournament(providerw.Id, tournamentName);
             
-        }
+        //}
         /*
         public static string CreateTournamentCode(RiotSharp.TournamentEndpoint.Tournament tournament, SoloTournamentCreator.Model.Tournament myTournament)
         {
@@ -25,11 +28,11 @@ namespace SoloTournamentCreator.RiotToEntity
         */
         public static bool ApiKeyIsValid(string key)
         {
-            RiotSharp.RiotApi riotSharpClientTest = RiotSharp.RiotApi.GetInstance(key);
+            RiotSharp.RiotApi riotSharpClientTest = RiotSharp.RiotApi.GetInstance(key, 200, 500);
             try
             {
-                var mySummoner = riotSharpClientTest.GetSummoner(RiotSharp.Region.euw, "Belterius");
-                var info = riotSharpClientTest.GetSummoner(RiotSharp.Region.euw, mySummoner.Id);
+                var mySummoner = riotSharpClientTest.GetSummonerByName(RiotSharp.Misc.Region.euw, "Belterius");
+                var info = riotSharpClientTest.GetSummonerBySummonerId(RiotSharp.Misc.Region.euw, mySummoner.Id);
                 return true;
             }
             catch (Exception)
@@ -42,7 +45,7 @@ namespace SoloTournamentCreator.RiotToEntity
         {
             try
             {
-                return MyRiotClient.Instance.riotSharpClient.GetChallengerLeague(RiotSharp.Region.euw, RiotSharp.Queue.RankedSolo5x5);
+                return MyRiotClient.Instance.riotSharpClient.GetChallengerLeague(RiotSharp.Misc.Region.euw, RiotSharp.Misc.Queue.RankedSolo5x5);
 
             }
             catch (Exception)

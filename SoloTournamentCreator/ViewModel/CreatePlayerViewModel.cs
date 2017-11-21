@@ -138,12 +138,12 @@ namespace SoloTournamentCreator.ViewModel
                         {
                             try
                             {
-                                var mail = reader.GetString(1);
-                                var nom = reader.GetString(2);
-                                var prenom = reader.GetString(3);
-                                var promotion = reader.GetString(4);
+                                var mail = reader.GetValue(0).ToString();
+                                var nom = reader.GetValue(1).ToString();
+                                var prenom = reader.GetValue(2).ToString();
+                                var promotion = reader.GetValue(3).ToString();
                                 int promoYear;
-                                var pseudo = reader.GetString(5);
+                                var pseudo = reader.GetValue(4).ToString();
                                 switch (promotion)
                                 {
                                     case "L1":

@@ -17,19 +17,20 @@ namespace SoloTournamentCreator.Model
         public List<CSLE> Entries { get; set; }
         public String Name { get; set; }
         public String ParticipantId { get; set; }
-        public Queue Queue { get; set; }
+        public String Queue { get; set; }
         public Tier Tier { get; set; }
         
         public CSL(RiotSharp.LeagueEndpoint.League league)
         {
             Entries = new List<CSLE>();
-            foreach(LeagueEntry leagueEntry in league.Entries)
+            foreach(LeaguePosition leagueEntry in league.Entries)
             {
                 CSLE CLE = new CSLE(leagueEntry);
                 Entries.Add(CLE);
             }
             Name = league.Name;
-            ParticipantId = league.ParticipantId;
+            //ParticipantId = league.ParticipantId;
+            ParticipantId = league.Name;
             Queue = league.Queue;
             Tier = league.Tier;
         }
@@ -56,13 +57,14 @@ namespace SoloTournamentCreator.Model
         public String PlayerOrTeamId { get; set; }
         public String PlayerOrTeamName { get; set; }
         public int Wins { get; set; }
-        public CSLE(RiotSharp.LeagueEndpoint.LeagueEntry leagueEntry)
+        public CSLE(RiotSharp.LeagueEndpoint.LeaguePosition leagueEntry)
         {
-            Division = leagueEntry.Division;
-            IsFreshBlood = leagueEntry.IsFreshBlood;
-            IsHotStreak = leagueEntry.IsHotStreak;
-            IsInactive = leagueEntry.IsInactive;
-            IsVeteran = leagueEntry.IsVeteran;
+            //Division = leagueEntry.Division;
+            Division = leagueEntry.Tier;
+            IsFreshBlood = leagueEntry.FreshBlood;
+            IsHotStreak = leagueEntry.HotStreak;
+            IsInactive = leagueEntry.Inactive;
+            IsVeteran = leagueEntry.Veteran;
             LeaguePoints = leagueEntry.LeaguePoints;
             Losses = leagueEntry.Losses;
             PlayerOrTeamId = leagueEntry.PlayerOrTeamId;

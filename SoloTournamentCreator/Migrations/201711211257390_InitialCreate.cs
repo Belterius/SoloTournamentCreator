@@ -3,7 +3,7 @@ namespace SoloTournamentCreator.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class InitialMigration : DbMigration
+    public partial class InitialCreate : DbMigration
     {
         public override void Up()
         {
@@ -66,7 +66,7 @@ namespace SoloTournamentCreator.Migrations
                         CSLId = c.Int(nullable: false, identity: true),
                         Name = c.String(unicode: false),
                         ParticipantId = c.String(unicode: false),
-                        Queue = c.Int(nullable: false),
+                        Queue = c.String(unicode: false),
                         Tier = c.Int(nullable: false),
                         Student_StudentId = c.Int(),
                     })
@@ -118,6 +118,7 @@ namespace SoloTournamentCreator.Migrations
                         RevisionDate = c.DateTime(nullable: false, precision: 0),
                         Level = c.Long(nullable: false),
                         Region = c.Int(nullable: false),
+                        AccountId = c.Long(nullable: false),
                         Name = c.String(unicode: false),
                     })
                 .PrimaryKey(t => t.Id);
